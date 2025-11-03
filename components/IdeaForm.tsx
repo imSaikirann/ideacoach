@@ -6,22 +6,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { ArrowRight, ArrowLeft, Sparkles } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-
+import {stacks,levels,interests} from "@/data/formData"
 export default function IdeaForm() {
   const [step, setStep] = useState(1);
   const [techStack, setTechStack] = useState("");
   const [difficulty, setDifficulty] = useState("");
   const [interest, setInterest] = useState("");
 
-  const stacks = ["React", "Next.js", "Node.js", "Python", "AI/ML"];
-  const levels = ["Beginner", "Intermediate", "Advanced"];
-  const interests = [
-    "AI & Automation",
-    "Web Apps",
-    "Finance / Analytics",
-    "Productivity Tools",
-    "Chatbots",
-  ];
+ 
 
   const fade = {
     initial: { opacity: 0, y: 20, scale: 0.98 },
@@ -40,9 +32,9 @@ export default function IdeaForm() {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-xl"
+        className="w-full max-w-2xl"
       >
-        <Card className="border border-gray-200 shadow-lg rounded-2xl bg-white/70 backdrop-blur-md">
+        <Card className="border border-gray-200 shadow-lg rounded-2xl bg-white/80 backdrop-blur-md">
           <CardHeader>
             <CardTitle className="text-center text-2xl font-bold text-gray-800">
               Find Your Perfect Project 🚀
@@ -52,22 +44,21 @@ export default function IdeaForm() {
             <Progress value={progress} className="mb-8" />
 
             <AnimatePresence mode="wait">
-              {/* STEP 1 */}
+              {/* STEP 1 - Tech Stack */}
               {step === 1 && (
                 <motion.div key="step1" {...fade}>
                   <h3 className="text-lg mb-4 text-center text-gray-600">
                     Step 1: Choose Your Tech Stack
                   </h3>
-                  <div className="grid grid-cols-2 gap-3 mb-8">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[380px] overflow-y-auto mb-8 pr-2">
                     {stacks.map((stack) => (
                       <Button
                         key={stack}
-                        variant={techStack === stack ? "default" : "outline"}
                         onClick={() => setTechStack(stack)}
-                        className={`py-4 rounded-xl transition-all ${
+                        className={`py-3 rounded-xl text-sm ${
                           techStack === stack
                             ? "bg-green-500 text-white shadow-md hover:bg-green-400"
-                            : "border-gray-300 text-gray-600 hover:border-green-400 hover:text-green-600"
+                            : "border border-gray-300 text-gray-700 hover:border-green-400 hover:text-green-600"
                         }`}
                       >
                         {stack}
@@ -87,7 +78,7 @@ export default function IdeaForm() {
                 </motion.div>
               )}
 
-              {/* STEP 2 */}
+              {/* STEP 2 - Difficulty */}
               {step === 2 && (
                 <motion.div key="step2" {...fade}>
                   <h3 className="text-lg mb-4 text-center text-gray-600">
@@ -101,7 +92,7 @@ export default function IdeaForm() {
                         className={`flex-1 py-4 rounded-xl ${
                           difficulty === level
                             ? "bg-green-500 text-white hover:bg-green-400"
-                            : "border border-gray-300 text-gray-600 hover:border-green-400 hover:text-green-600"
+                            : "border border-gray-300 text-gray-700 hover:border-green-400 hover:text-green-600"
                         }`}
                       >
                         {level}
@@ -128,7 +119,7 @@ export default function IdeaForm() {
                 </motion.div>
               )}
 
-              {/* STEP 3 */}
+              {/* STEP 3 - Field / Interest */}
               {step === 3 && (
                 <motion.div key="step3" {...fade}>
                   <h3 className="text-lg mb-4 text-center text-gray-600">
@@ -142,7 +133,7 @@ export default function IdeaForm() {
                         className={`py-4 rounded-xl ${
                           interest === item
                             ? "bg-green-500 text-white hover:bg-green-400"
-                            : "border border-gray-300 text-gray-600 hover:border-green-400 hover:text-green-600"
+                            : "border border-gray-300 text-gray-700 hover:border-green-400 hover:text-green-600"
                         }`}
                       >
                         {item}

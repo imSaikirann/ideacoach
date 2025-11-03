@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import HowItWorks from "@/components/HowItWorks";
+import Link from "next/link";
 
 interface Project {
   title: string;
@@ -72,12 +73,14 @@ export default function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Button
-            size="lg"
-            className="bg-green-500 hover:bg-green-400 text-black font-semibold px-8 py-6 flex items-center gap-2 hover:scale-105 transition-all"
-          >
-            Find My Project <ArrowRight className="w-4 h-4" />
-          </Button>
+          <Link href="/idea-form">
+            <Button
+              size="lg"
+              className="bg-green-500 hover:bg-green-400 text-black font-semibold px-8 py-6 flex items-center gap-2 hover:scale-105 transition-all"
+            >
+              Find My Project <ArrowRight className="w-4 h-4" />
+            </Button>
+          </Link>
           <Button
             size="lg"
             variant="outline"

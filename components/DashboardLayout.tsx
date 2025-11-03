@@ -26,6 +26,12 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           </div>
 
           <nav className="mt-6 space-y-1 px-3">
+             <SidebarLink
+              icon={<Lightbulb className="h-4 w-4" />}
+              label="IdeaSwipe"
+              href="/IdeaSwipe"
+              active={pathname === "/IdeaSwipe"}
+            />
             <SidebarLink
               icon={<Lightbulb className="h-4 w-4" />}
               label="Generate Ideas"
@@ -51,14 +57,14 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
           <div className="flex flex-col gap-4">
             <SidebarLink
               icon={<Coins className="h-4 w-4" />}
-              label="Credits"
+              label="Credits - 100"
               href="/credits"
               active={pathname === "/credits"}
             />
             <Button
               className="w-full bg-green-600 hover:bg-green-500 text-white font-medium rounded-xl"
             >
-              Buy Credits
+              Buy Credits 
             </Button>
           </div>
         </div>

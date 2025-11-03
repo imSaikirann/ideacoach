@@ -58,7 +58,7 @@ export default function IdeaForm() {
                         className={`py-3 rounded-xl text-sm ${
                           techStack === stack
                             ? "bg-green-500 text-white shadow-md hover:bg-green-400"
-                            : "border border-gray-300 text-gray-700 hover:border-green-400 hover:text-green-600"
+                            : "border border-gray-300 text-white hover:border-green-400 hover:text-green-600"
                         }`}
                       >
                         {stack}
@@ -92,7 +92,7 @@ export default function IdeaForm() {
                         className={`flex-1 py-4 rounded-xl ${
                           difficulty === level
                             ? "bg-green-500 text-white hover:bg-green-400"
-                            : "border border-gray-300 text-gray-700 hover:border-green-400 hover:text-green-600"
+                            : "border border-gray-300 text-white hover:border-green-400 hover:text-green-600"
                         }`}
                       >
                         {level}
@@ -133,7 +133,7 @@ export default function IdeaForm() {
                         className={`py-4 rounded-xl ${
                           interest === item
                             ? "bg-green-500 text-white hover:bg-green-400"
-                            : "border border-gray-300 text-gray-700 hover:border-green-400 hover:text-green-600"
+                            : "border border-gray-300 text-white hover:border-green-400 hover:text-green-600"
                         }`}
                       >
                         {item}

@@ -1,4 +1,4 @@
-// components/Navbar.tsx
+
 "use client";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -6,11 +6,12 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { signOut, useSession, signIn } from "next-auth/react";
 // import { signIn } from "@/auth";
+import { UserMenu } from "@/components/UserMenu";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const { data: session, status } = useSession();
-  const isAuthed = status === "authenticated";
+  const { data: session } = useSession();
+  const isAuthed = !!session?.user
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200/70 bg-white/80 backdrop-blur-xl">
@@ -33,41 +34,22 @@ export default function Navbar() {
 
         {/* Call to action */}
         <div className="hidden items-center gap-3 md:flex">
-          {isAuthed ? (
-            <Button className="rounded-lg bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-500">
-              Find My Idea
-            </Button>
-          ) : (
-            <Button
-              onClick={() => signIn("google")}
-              className="rounded-lg bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-500"
-            >
-              Continue with Google
-            </Button>
-          )}
+        {isAuthed ? (
+  <div className="flex items-center gap-4">
+    <Button className="rounded-lg bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-500">
+      Star on GitHub
+    </Button>
+    <UserMenu user={session.user} />
+  </div>
+) : (
+  <>
+    <Button onClick={() => signIn("google")} className="rounded-lg bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-500">
+      Login
+    </Button>
+  </>
+)}
 
-          {isAuthed ? (
-            <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-700">
-                {session?.user?.name ?? session?.user?.email}
-              </span>
-              <Button
-                variant="outline"
-                onClick={() => signOut()}
-                className="rounded-lg"
-              >
-                Sign out
-              </Button>
-            </div>
-          ) : (
-            <Button
-              variant="outline"
-              onClick={() => signIn("google")}
-              className="rounded-lg"
-            >
-              Sign in
-            </Button>
-          )}
+        
         </div>
 
         {/* Mobile menu button */}
@@ -103,12 +85,7 @@ export default function Navbar() {
             <div className="pt-3 grid gap-2">
               {isAuthed ? (
                 <>
-                  {/* Primary CTA when logged in */}
-                  <Link href="/IdeaSwipe" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full rounded-lg bg-green-600 py-2 font-semibold text-white hover:bg-green-500">
-                      Find My Idea
-                    </Button>
-                  </Link>
+              
 
                   {/* Show name/email (optional) */}
                   <div className="text-sm text-gray-700 px-1">

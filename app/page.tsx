@@ -77,7 +77,7 @@ export default function Hero() {
 
         {/* === LEFT SIDE === */}
         <motion.div
-          className="max-w-4xl z-10"
+          className="max-w-3xl z-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}

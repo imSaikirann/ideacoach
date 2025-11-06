@@ -11,10 +11,10 @@
     "MERN", "MEAN", "T3 Stack", "Supabase", "Firebase",
   ];
 
-  // 🔹 Difficulty Levels
+
  export const levels = ["Beginner", "Intermediate", "Advanced", "Expert"];
 
-  // 🔹 Interest / Fields
+
  export const interests = [
     "AI & Automation",
     "Web Apps",

@@ -20,3 +20,27 @@ model User {
   email String @unique
   image String
 }
+
+
+model IdeasGenerated {
+  id            String   @id @default(uuid())
+  userId        String?  // optional for now, required when auth added
+
+  techStack     String
+  difficulty    String
+  interest      String
+  role          String
+  goal          String
+
+  title         String
+  problemSolved String
+  targetUsers   String
+  whyThis       String
+
+  features      String[]   // PostgreSQL / MongoDB supports arrays
+  skillsProved  String[]
+
+  estimatedTime String
+
+  createdAt     DateTime @default(now())
+}

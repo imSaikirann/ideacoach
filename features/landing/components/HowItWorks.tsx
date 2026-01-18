@@ -1,36 +1,69 @@
+import { MessageSquare, Sparkles, Rocket } from "lucide-react";
 
-import HowItWorksItem from "./HowItWorksItem";
-import { HOW_IT_WORKS_STEPS } from "./howItWorks.data";
+const steps = [
+  {
+    icon: MessageSquare,
+    title: "Answer Questions",
+    description:
+      "Tell us about your experience level, preferred tech stack, and what excites you.",
+  },
+  {
+    icon: Sparkles,
+    title: "Get Matched",
+    description:
+      "Our AI analyzes your profile and suggests projects perfectly suited to your skills.",
+  },
+  {
+    icon: Rocket,
+    title: "Start Building",
+    description:
+      "Receive a detailed project brief with resources, milestones, and learning goals.",
+  },
+];
 
 export default function HowItWorks() {
   return (
-    <div className="w-full bg-[#0F0E0E] border-t border-[#2A1F1F]">
-  
-        <div className="mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 md:py-24">
-          {/* Header */}
-          <div className="max-w-2xl space-y-4 mb-12 sm:mb-16 md:mb-20">
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#E5E5E5] tracking-tight">
-              How It Works
-            </h2>
-            <p className="text-lg sm:text-xl text-[#A0A0A0] leading-relaxed">
-              A simple process to turn your inputs into a build-ready project idea. Get started in minutes.
-            </p>
-          </div>
+    <div id="how-it-works" className="scroll-mt-20">
+      <div className="text-center mb-12">
+        <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/50 border border-border text-sm font-medium text-foreground/80 mb-4">
+          Simple Process
+        </span>
+        <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4 text-balance">
+          How It Works
+        </h2>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Get your personalized project recommendation in three simple steps
+        </p>
+      </div>
 
-          {/* Steps */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10 lg:gap-12">
-            {HOW_IT_WORKS_STEPS.map((step, index) => (
-              <HowItWorksItem
-                key={step.step}
-                step={step.step}
-                title={step.title}
-                description={step.description}
-                index={index}
-              />
-            ))}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {steps.map((step, index) => (
+          <div key={step.title} className="relative group">
+            {/* Connector line */}
+            {index < steps.length - 1 && (
+              <div className="hidden md:block absolute top-10 left-[calc(50%+40px)] w-[calc(100%-80px)] h-px bg-gradient-to-r from-border to-transparent" />
+            )}
+
+            <div className="flex flex-col items-center text-center p-6 rounded-2xl bg-card/50 border border-border/50 backdrop-blur-sm transition-all duration-300 hover:bg-card/80 hover:border-border hover:shadow-lg hover:shadow-black/10">
+              {/* Step number */}
+              <div className="absolute -top-3 left-6 px-2.5 py-0.5 rounded-full bg-accent/10 border border-accent/20 text-xs font-semibold text-accent">
+                Step {index + 1}
+              </div>
+
+              <div className="w-16 h-16 rounded-2xl bg-secondary/80 border border-border/50 flex items-center justify-center mb-5 group-hover:bg-accent/10 group-hover:border-accent/20 transition-all duration-300">
+                <step.icon className="w-7 h-7 text-muted-foreground group-hover:text-accent transition-colors duration-300" />
+              </div>
+
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                {step.title}
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {step.description}
+              </p>
+            </div>
           </div>
-        </div>
- 
+        ))}
+      </div>
     </div>
   );
 }

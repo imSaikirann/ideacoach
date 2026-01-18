@@ -1,10 +1,13 @@
+'use client';
+
 import { interests } from "../constants";
 import { StepLayout } from "./StepLayout";
 import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
 
 interface InterestStepProps {
-  value?: string;
+  value: string;
   onChange: (value: string) => void;
   onBack: () => void;
   onGenerate: () => void;
@@ -20,49 +23,44 @@ export function InterestStep({
 }: InterestStepProps) {
   return (
     <StepLayout
-      title="Choose your field"
-      subtitle="What type of product do you want to build?"
+      title="What field interests you?"
+      subtitle="Choose a domain for your project"
       currentStep={4}
       totalSteps={4}
       footer={
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <Button
-            variant="outline"
-            className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-semibold flex-1"
-            onClick={onBack}
-          >
+        <div className="flex gap-3">
+          <Button variant="outline" className="h-12 flex-1 bg-transparent" onClick={onBack} disabled={loading}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-
           <Button
-            className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-semibold flex-1"
+            className="h-12 flex-1"
             disabled={!value || loading}
             onClick={onGenerate}
           >
-            {loading ? "Thinking…" : "Get my project"}
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4 mr-2" />
+                Generate idea
+              </>
+            )}
           </Button>
         </div>
       }
     >
-      {/* Vertical scrollable chips */}
-      <div
-        className="
-          flex flex-col
-          gap-2 sm:gap-3
-          max-h-[50vh]
-          overflow-y-auto
-          pr-1
-          scrollbar-none
-        "
-      >
-        {interests.map((i) => (
+      <div className="flex flex-wrap gap-2">
+        {interests.map((interest) => (
           <Chip
-            key={i}
-            active={value === i}
-            onClick={() => onChange(i)}
-            className="w-full justify-start"
+            key={interest}
+            active={value === interest}
+            onClick={() => onChange(interest)}
           >
-            {i}
+            {interest}
           </Chip>
         ))}
       </div>

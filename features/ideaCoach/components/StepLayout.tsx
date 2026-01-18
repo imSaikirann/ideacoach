@@ -1,3 +1,4 @@
+import React from "react"
 import { StepProgress } from "./StepProgress";
 
 interface StepLayoutProps {
@@ -18,54 +19,24 @@ export function StepLayout({
   totalSteps,
 }: StepLayoutProps) {
   return (
-    <div className="min-h-screen bg-[#0F0E0E]">
-      <div
-        className="
-          mx-auto
-          w-full
-          max-w-4xl
-          px-4
-          sm:px-6
-          md:px-8
-          py-10
-          sm:py-12
-          md:py-16
-          lg:py-20
-        "
-      >
-        {/* Progress */}
-        {typeof currentStep === "number" &&
-          typeof totalSteps === "number" && (
-            <StepProgress
-              currentStep={currentStep}
-              totalSteps={totalSteps}
-            />
-          )}
+    <div className="min-h-screen bg-background">
+      <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 py-12 sm:py-16 lg:py-20">
+        {typeof currentStep === "number" && typeof totalSteps === "number" && (
+          <StepProgress currentStep={currentStep} totalSteps={totalSteps} />
+        )}
 
-        {/* Header */}
-        <div className="mt-10 space-y-3">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#E5E5E5] tracking-tight leading-tight">
+        <div className="mt-12 space-y-2">
+          <h1 className="text-2xl sm:text-3xl font-semibold text-foreground tracking-tight text-balance">
             {title}
           </h1>
-
           {subtitle && (
-            <p className="text-base sm:text-lg text-[#A0A0A0]">
-              {subtitle}
-            </p>
+            <p className="text-base text-muted-foreground">{subtitle}</p>
           )}
         </div>
 
-        {/* Content */}
-        <div className="mt-10 space-y-6 sm:space-y-8">
-          {children}
-        </div>
+        <div className="mt-8">{children}</div>
 
-        {/* Footer */}
-        {footer && (
-          <div className="mt-12 pt-6 border-t border-[#2A1F1F]">
-            {footer}
-          </div>
-        )}
+        {footer && <div className="mt-10 pt-6 border-t border-border">{footer}</div>}
       </div>
     </div>
   );

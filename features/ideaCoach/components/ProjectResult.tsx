@@ -1,97 +1,82 @@
+"use client";
+
+import React from "react"
+
 import { StepLayout } from "./StepLayout";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, Sparkles } from "lucide-react";
-import { useTypewriter } from "../../../hooks/useTypewriter";
-
-interface Project {
-  title: string;
-  problemSolved?: string;
-  whyThisProject?: string;
-  features?: string[];
-  skillsProved?: string[];
-}
+import { ArrowLeft, ArrowRight, Lightbulb, ListChecks, Award } from "lucide-react";
+import { useTypewriter } from "@/hooks/useTypewriter";
+import type { Project } from "../types";
 
 interface ProjectResultProps {
   project: Project;
+  onBack: () => void;
 }
 
-export function ProjectResult({ project }: ProjectResultProps) {
+export function ProjectResult({ project, onBack }: ProjectResultProps) {
   const whyText = useTypewriter(project.whyThisProject ?? "");
   const subtitleText = useTypewriter(
-    project.problemSolved ?? "A project tailored to your inputs."
+    project.problemSolved ?? "A project tailored to your preferences."
   );
 
   return (
     <StepLayout
-      title="Here’s your project idea"
+      title={project.title}
       subtitle={subtitleText}
-    footer={
-  <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4">
-    {/* Secondary action */}
-    <Button
-      variant="outline"
-      className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-semibold"
+      footer={
+        <div className="flex gap-3">
+          <Button variant="outline" className="h-12 flex-1 bg-transparent" onClick={onBack}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Start over
+          </Button>
+          <Button className="h-12 flex-1">
+            Start building
+            <ArrowRight className="w-4 h-4 ml-2" />
+          </Button>
+        </div>
+      }
     >
-      Back
-    </Button>
-
-    {/* Primary action */}
-    <Button
-      className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-semibold group"
-    >
-      Start this project
-      <ArrowRight className="ml-2 w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover:translate-x-1" />
-    </Button>
-  </div>
-}
-
-    >
-      {/* Result Card */}
-      <div className="rounded-2xl border border-[#2A1F1F] bg-[#1A1818] p-6 sm:p-8 md:p-10 space-y-10">
-        
-        {/* Project title */}
-        <h2 className="text-2xl sm:text-3xl font-bold text-[#E5E5E5] tracking-tight">
-          {project.title}
-        </h2>
-
-        {/* WHY */}
+      <div className="space-y-6">
         {project.whyThisProject && (
-          <Section
-            icon={<Sparkles className="w-5 h-5 text-[#A0A0A0]" />}
-            title="Why this project"
-          >
-            <p className="text-[#E5E5E5] leading-relaxed text-base sm:text-lg">
+          <Section icon={<Lightbulb className="w-4 h-4" />} title="Why this project">
+            <p className="text-foreground/90 leading-relaxed">
               {whyText}
-              <Cursor />
+              <span className="inline-block w-0.5 h-4 bg-accent ml-0.5 animate-pulse align-middle" />
             </p>
           </Section>
         )}
 
-        {/* FEATURES */}
         {project.features && project.features.length > 0 && (
-          <Section
-            icon={<CheckCircle2 className="w-5 h-5 text-[#A0A0A0]" />}
-            title="What you'll build"
-          >
-            <BulletList items={project.features} />
+          <Section icon={<ListChecks className="w-4 h-4" />} title="Key features">
+            <ul className="space-y-2">
+              {project.features.map((feature, i) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 shrink-0" />
+                  <span className="text-foreground/90">{feature}</span>
+                </li>
+              ))}
+            </ul>
           </Section>
         )}
 
-        {/* SKILLS */}
         {project.skillsProved && project.skillsProved.length > 0 && (
-          <Section
-            icon={<CheckCircle2 className="w-5 h-5 text-[#A0A0A0]" />}
-            title="Skills this proves"
-          >
-            <BulletList items={project.skillsProved} />
+          <Section icon={<Award className="w-4 h-4" />} title="Skills you'll demonstrate">
+            <div className="flex flex-wrap gap-2">
+              {project.skillsProved.map((skill, i) => (
+                <span
+                  key={i}
+                  className="px-3 py-1.5 text-sm bg-secondary rounded-md text-foreground/80"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
           </Section>
         )}
       </div>
     </StepLayout>
   );
 }
-
-/* ---------- helpers ---------- */
 
 function Section({
   title,
@@ -103,37 +88,12 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <div className="space-y-4">
-      <div className="flex items-center gap-3">
+    <div className="p-5 rounded-lg bg-card border border-border space-y-3">
+      <div className="flex items-center gap-2 text-muted-foreground">
         {icon}
-        <h3 className="text-lg sm:text-xl font-semibold text-[#E5E5E5]">
-          {title}
-        </h3>
+        <h3 className="text-sm font-medium uppercase tracking-wide">{title}</h3>
       </div>
       {children}
     </div>
-  );
-}
-
-function BulletList({ items }: { items: string[] }) {
-  return (
-    <ul className="space-y-3">
-      {items.map((item) => (
-        <li key={item} className="flex items-start gap-3">
-          <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#541212] flex-shrink-0" />
-          <span className="text-[#E5E5E5] text-base sm:text-lg leading-relaxed">
-            {item}
-          </span>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-/* ---------- typing cursor ---------- */
-
-function Cursor() {
-  return (
-    <span className="inline-block w-[2px] h-[1em] bg-[#541212] ml-1 animate-pulse" />
   );
 }

@@ -1,106 +1,74 @@
 export const projectTypes = [
-  "Web Application",
+  "Web App",
   "Mobile App",
-  "API / Backend Service",
-  "Machine Learning Model",
-  "Data Pipeline",
   "CLI Tool",
+  "API / Backend",
+  "Browser Extension",
+  "Desktop App",
 ];
 
 export const stacksByType: Record<string, string[]> = {
-  "Web Application": [
-    "React",
+  "Web App": [
     "Next.js",
+    "React",
     "Vue",
-    "Nuxt",
     "Svelte",
-    "Angular",
+    "Astro",
+    "Remix",
     "Node.js",
-    "TypeScript",
-    "PostgreSQL",
-    "MongoDB",
-    "Tailwind",
+    "Python",
+    "Go",
   ],
-
   "Mobile App": [
     "React Native",
     "Flutter",
     "Swift",
     "Kotlin",
-    "Firebase",
+    "Expo",
   ],
-
-  "API / Backend Service": [
-    "Node.js",
-    "Express",
-    "NestJS",
-    "FastAPI",
-    "Django",
-    "Spring Boot",
-    "PostgreSQL",
-    "Redis",
-  ],
-
-  "Machine Learning Model": [
-    "Python",
-    "PyTorch",
-    "TensorFlow",
-    "Scikit-learn",
-    "Pandas",
-    "NumPy",
-  ],
-
-  "Data Pipeline": [
-    "Python",
-    "Airflow",
-    "Kafka",
-    "Spark",
-    "BigQuery",
-  ],
-
   "CLI Tool": [
     "Node.js",
     "Python",
     "Go",
     "Rust",
+    "Bash",
+  ],
+  "API / Backend": [
+    "Node.js",
+    "Python",
+    "Go",
+    "Rust",
+    "Java",
+    "Ruby",
+  ],
+  "Browser Extension": [
+    "JavaScript",
+    "TypeScript",
+    "React",
+    "Vue",
+  ],
+  "Desktop App": [
+    "Electron",
+    "Tauri",
+    "Swift",
+    "C#",
+    "Python",
   ],
 };
 
-export const levels = [
-  "Beginner",
-  "Intermediate",
-  "Advanced",
-  "Production-Ready",
-];
+export const levels = ["Beginner", "Intermediate", "Advanced"];
 
 export const interests = [
-  "SaaS",
-  "Fintech",
-  "Edtech",
-  "Healthtech",
   "E-commerce",
-  "Marketplaces",
-  "CRM",
-  "HR Tech",
-  "PropTech",
-  "Logistics",
-  "Travel Tech",
-
-  "AI Tools",
-  "DevTools",
-  "Open-Source",
-  "Analytics",
-  "Automation",
-  "Cybersecurity",
-  "Payments",
-  "Video Streaming",
-  "Search Engines",
-  "Recommendation Systems",
-
   "Social Media",
-  "Creator Tools",
-  "Communities",
-  "No-Code Tools",
   "Productivity",
-  "Personal Finance",
+  "Education",
+  "Healthcare",
+  "Finance",
+  "Entertainment",
+  "Gaming",
+  "AI / Machine Learning",
+  "Developer Tools",
+  "IoT / Hardware",
+  "Sustainability",
 ];

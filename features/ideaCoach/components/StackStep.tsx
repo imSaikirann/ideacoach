@@ -1,42 +1,65 @@
+'use client';
+
 import { stacksByType } from "../constants";
 import { StepLayout } from "./StepLayout";
 import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
-export function StackStep({ projectType, value, onChange, onBack, onNext }: any) {
-  const stacksList = projectType && stacksByType[projectType] 
-    ? stacksByType[projectType] 
-    : [];
+interface StackStepProps {
+  projectType: string;
+  value: string[];
+  onChange: (value: string[]) => void;
+  onBack: () => void;
+  onNext: () => void;
+}
+
+export function StackStep({
+  projectType,
+  value,
+  onChange,
+  onBack,
+  onNext,
+}: StackStepProps) {
+  const stacksList = projectType && stacksByType[projectType] ? stacksByType[projectType] : [];
+
+  const toggleStack = (stack: string) => {
+    onChange(
+      value.includes(stack) ? value.filter((s) => s !== stack) : [...value, stack]
+    );
+  };
 
   return (
     <StepLayout
-      title="Choose your stack"
-      subtitle={`Stacks suitable for ${projectType}`}
+      title="Pick your tech stack"
+      subtitle={`Select one or more technologies for your ${projectType.toLowerCase()}`}
       currentStep={2}
       totalSteps={4}
       footer={
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-          <Button variant="outline" className="h-12 sm:h-14 px-6 sm:px-8 text-sm sm:text-base font-semibold flex-1 transition-all" onClick={onBack}>Back</Button>
-          <Button  className="rounded-lg bg-neutral-700 px-4 py-2 font-semibold text-white hover:bg-neutral-800  transition-colors" disabled={!value.length} onClick={onNext}>
+        <div className="flex gap-3">
+          <Button variant="outline" className="h-12 flex-1 bg-transparent" onClick={onBack}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
+          </Button>
+          <Button
+            className="h-12 flex-1"
+            disabled={!value.length}
+            onClick={onNext}
+          >
             Continue
+            <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
       }
     >
-      <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
-        {stacksList.map((s) => (
+      <div className="flex flex-wrap gap-2">
+        {stacksList.map((stack) => (
           <Chip
-            key={s}
-            active={value.includes(s)}
-            onClick={() =>
-              onChange(
-                value.includes(s)
-                  ? value.filter((x: string) => x !== s)
-                  : [...value, s]
-              )
-            }
+            key={stack}
+            active={value.includes(stack)}
+            onClick={() => toggleStack(stack)}
           >
-            {s}
+            {stack}
           </Chip>
         ))}
       </div>

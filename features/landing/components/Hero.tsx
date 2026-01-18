@@ -1,4 +1,3 @@
-
 import HeroLayout from "./HeroLayout";
 import HeroContent from "./HeroContent";
 import HeroPreview from "./HeroPreview";

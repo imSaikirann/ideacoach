@@ -1,22 +1,36 @@
+'use client';
+
 import { projectTypes } from "../constants";
 import { StepLayout } from "./StepLayout";
 import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
 
-export function ProjectTypeStep({ value, onChange, onNext }: any) {
+interface ProjectTypeStepProps {
+  value: string;
+  onChange: (value: string) => void;
+  onNext: () => void;
+}
+
+export function ProjectTypeStep({ value, onChange, onNext }: ProjectTypeStepProps) {
   return (
     <StepLayout
-      title="Choose project type"
-      subtitle="What type of project do you want to build?"
+      title="What do you want to build?"
+      subtitle="Select the type of project you have in mind"
       currentStep={1}
       totalSteps={4}
       footer={
-        <Button className="w-full h-12 sm:h-14 text-sm sm:text-base font-semibold transition-all" disabled={!value} onClick={onNext}>
+        <Button
+          className="w-full h-12 font-medium"
+          disabled={!value}
+          onClick={onNext}
+        >
           Continue
+          <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       }
     >
-      <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4">
+      <div className="flex flex-wrap gap-2">
         {projectTypes.map((type) => (
           <Chip key={type} active={value === type} onClick={() => onChange(type)}>
             {type}

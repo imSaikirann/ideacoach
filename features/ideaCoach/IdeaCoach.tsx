@@ -8,9 +8,11 @@ import { InterestStep } from "./components/InterestStep";
 import { ProjectResult } from "./components/ProjectResult";
 import { Project } from "./types";
 
-export function IdeaCoach() {
-  const [step, setStep] = useState<"projectType" | "stack" | "difficulty" | "interest" | "result">("projectType");
 
+type Step = "projectType" | "stack" | "difficulty" | "interest" | "result";
+
+export function IdeaCoach() {
+  const [step, setStep] = useState<Step>("projectType");
   const [projectType, setProjectType] = useState("");
   const [techStack, setTechStack] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState("");
@@ -21,70 +23,83 @@ export function IdeaCoach() {
   async function generate() {
     setLoading(true);
 
-    const res = await fetch("/api/generate-idea", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        techStack: techStack.join(", "),
-        difficulty,
-        interest,
-      }),
-    });
+    try {
+      const res = await fetch("/api/generate-idea", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          projectType,
+          techStack: techStack.join(", "),
+          difficulty,
+          interest,
+        }),
+      });
 
-    const data = await res.json();
-    setProject(data);
-    setLoading(false);
-    setStep("result");
+      const data = await res.json();
+      setProject(data);
+      setStep("result");
+    } catch (error) {
+      console.error("Failed to generate idea:", error);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  if (step === "projectType") {
-    return (
-      <ProjectTypeStep
-        value={projectType}
-        onChange={setProjectType}
-        onNext={() => setStep("stack")}
-      />
-    );
+  function reset() {
+    setStep("projectType");
+    setProjectType("");
+    setTechStack([]);
+    setDifficulty("");
+    setInterest("");
+    setProject(null);
   }
 
-  if (step === "stack") {
-    return (
-      <StackStep
-        projectType={projectType}
-        value={techStack}
-        onChange={setTechStack}
-        onBack={() => setStep("projectType")}
-        onNext={() => setStep("difficulty")}
-      />
-    );
-  }
+  switch (step) {
+    case "projectType":
+      return (
+        <ProjectTypeStep
+          value={projectType}
+          onChange={setProjectType}
+          onNext={() => setStep("stack")}
+        />
+      );
 
-  if (step === "difficulty") {
-    return (
-      <DifficultyStep
-        value={difficulty}
-        onChange={setDifficulty}
-        onBack={() => setStep("stack")}
-        onNext={() => setStep("interest")}
-      />
-    );
-  }
+    case "stack":
+      return (
+        <StackStep
+          projectType={projectType}
+          value={techStack}
+          onChange={setTechStack}
+          onBack={() => setStep("projectType")}
+          onNext={() => setStep("difficulty")}
+        />
+      );
 
-  if (step === "interest") {
-    return (
-      <InterestStep
-        value={interest}
-        onChange={setInterest}
-        onBack={() => setStep("difficulty")}
-        onGenerate={generate}
-        loading={loading}
-      />
-    );
-  }
+    case "difficulty":
+      return (
+        <DifficultyStep
+          value={difficulty}
+          onChange={setDifficulty}
+          onBack={() => setStep("stack")}
+          onNext={() => setStep("interest")}
+        />
+      );
 
-  if (step === "result" && project) {
-    return <ProjectResult project={project} />;
-  }
+    case "interest":
+      return (
+        <InterestStep
+          value={interest}
+          onChange={setInterest}
+          onBack={() => setStep("difficulty")}
+          onGenerate={generate}
+          loading={loading}
+        />
+      );
 
-  return null;
+    case "result":
+      return project ? <ProjectResult project={project} onBack={reset} /> : null;
+
+    default:
+      return null;
+  }
 }

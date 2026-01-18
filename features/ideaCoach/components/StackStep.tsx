@@ -21,7 +21,7 @@ export function StackStep({
   onBack,
   onNext,
 }: StackStepProps) {
-  const stacksList = projectType && stacksByType[projectType] ? stacksByType[projectType] : [];
+  const stacksList = projectType && stacksByType[projectType as keyof typeof stacksByType] ? stacksByType[projectType as keyof typeof stacksByType] : [];
 
   const toggleStack = (stack: string) => {
     onChange(

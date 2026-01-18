@@ -6,8 +6,7 @@ import { StackStep } from "./components/StackStep";
 import { DifficultyStep } from "./components/DifficultyStep";
 import { InterestStep } from "./components/InterestStep";
 import { ProjectResult } from "./components/ProjectResult";
-import { Project } from "./types";
-
+import type { Project } from "./types";
 
 type Step = "projectType" | "stack" | "difficulty" | "interest" | "result";
 
@@ -97,7 +96,20 @@ export function IdeaCoach() {
       );
 
     case "result":
-      return project ? <ProjectResult project={project} onBack={reset} /> : null;
+      return project ? (
+        <ProjectResult
+          project={project}
+          selections={{
+            projectType,
+            techStack,
+            difficulty,
+            interest,
+          }}
+          onBack={reset}
+          onGenerateAnother={generate}
+          isGenerating={loading}
+        />
+      ) : null;
 
     default:
       return null;

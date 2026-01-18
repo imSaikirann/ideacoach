@@ -31,7 +31,7 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="relative bg-gradient-to-b from-gray-950 to-gray-900 text-white py-24 px-6 md:px-20 overflow-hidden">
+    <section className="relative bg-gradient-to-b from-foreground to-accent text-background py-24 px-6 md:px-20 overflow-hidden">
       {/* Section Header */}
       <motion.div
         className="text-center mb-16"
@@ -41,9 +41,9 @@ export default function HowItWorks() {
         viewport={{ once: true }}
       >
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
-          How <span className="text-green-400">IdeaCoach</span> Works
+          How <span className="text-primary">IdeaCoach</span> Works
         </h2>
-        <p className="text-gray-400 max-w-2xl mx-auto text-lg">
+        <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
           Turn your skills into real projects in just a few simple steps — designed to eliminate overthinking.
         </p>
       </motion.div>
@@ -57,13 +57,13 @@ export default function HowItWorks() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: i * 0.15 }}
             viewport={{ once: true }}
-            className="bg-gray-900/60 border border-gray-800 rounded-2xl p-8 text-center hover:border-green-500/40 transition-all group"
+            className="bg-card/60 border border-border rounded-2xl p-8 text-center hover:border-primary/40 transition-all group"
           >
             <div className="flex justify-center mb-5">
-              <step.icon className="w-12 h-12 text-green-400 group-hover:scale-110 transition-transform" />
+              <step.icon className="w-12 h-12 text-primary group-hover:scale-110 transition-transform" />
             </div>
             <h3 className="text-xl font-semibold mb-3">{step.title}</h3>
-            <p className="text-gray-400 text-sm leading-relaxed">
+            <p className="text-muted-foreground text-sm leading-relaxed">
               {step.description}
             </p>
           </motion.div>
@@ -72,7 +72,7 @@ export default function HowItWorks() {
 
       {/* Subtle Glow Background */}
       <motion.div
-        className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-green-500/10 blur-3xl rounded-full -z-10"
+        className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 blur-3xl rounded-full -z-10"
         animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
         transition={{ duration: 6, repeat: Infinity }}
       />

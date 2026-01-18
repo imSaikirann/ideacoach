@@ -24,13 +24,13 @@ export function UserMenu({ user }: { user: any }) {
       </button>
 
       {open && (
-        <div className="absolute right-0 mt-2 w-40 rounded-md border bg-white shadow-lg">
-          <div className="px-3 py-2 text-sm text-gray-700 border-b">
+        <div className="absolute right-0 mt-2 w-40 rounded-md border bg-popover shadow-lg">
+          <div className="px-3 py-2 text-sm text-popover-foreground border-b border-border">
             {user.name ?? user.email}
           </div>
           <button
             onClick={() => signOut()}
-            className="w-full px-3 py-2 text-left text-sm hover:bg-gray-100"
+            className="w-full px-3 py-2 text-left text-sm text-popover-foreground hover:bg-secondary"
           >
             Sign out
           </button>

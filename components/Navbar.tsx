@@ -47,7 +47,7 @@ export default function Navbar() {
       )}
     >
       <Container size="xl">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-16 items-center justify-between px-4 sm:px-6">
           {/* Brand */}
           <Link href="/" className="group flex items-center gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-accent/20 transition-colors group-hover:bg-accent/30">

@@ -1,6 +1,6 @@
 /* =========================================
    IDEA COACH — DEVELOPER CONSTANTS
-   Single source of truth
+   Single source of truth (DEEP)
 ========================================= */
 
 /* ---------- PROJECT TYPES ---------- */
@@ -21,7 +21,7 @@ export const projectTypes = [
 
 export type ProjectType = (typeof projectTypes)[number];
 
-/* ---------- TECH STACKS BY PROJECT TYPE ---------- */
+/* ---------- TECH STACKS BY PROJECT TYPE (EXPANDED) ---------- */
 export const stacksByType: Record<ProjectType, string[]> = {
   "Web App": [
     "Next.js",
@@ -31,8 +31,12 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Astro",
     "Remix",
     "Node.js",
+    "Bun",
     "Django",
     "Rails",
+    "GraphQL",
+    "tRPC",
+    "Tailwind CSS",
   ],
 
   "Mobile App": [
@@ -41,6 +45,7 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Flutter",
     "Swift",
     "Kotlin",
+    "Capacitor",
   ],
 
   "API / Backend": [
@@ -52,6 +57,9 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Go",
     "Rust",
     "Spring Boot",
+    "GraphQL",
+    "gRPC",
+    "tRPC",
   ],
 
   "CLI Tool": [
@@ -61,6 +69,7 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Rust",
     "Bash",
     "Zsh",
+    "Deno",
   ],
 
   "Browser Extension": [
@@ -69,6 +78,7 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "React",
     "Vue",
     "Plasmo",
+    "WebExtensions API",
   ],
 
   "Desktop App": [
@@ -86,6 +96,8 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Rust",
     "Java",
     "gRPC",
+    "Kafka",
+    "RabbitMQ",
   ],
 
   "Internal Tool": [
@@ -94,6 +106,8 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Node.js",
     "PostgreSQL",
     "Prisma",
+    "Redis",
+    "tRPC",
   ],
 
   "Dev Tool / Library": [
@@ -102,6 +116,8 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Rust",
     "Go",
     "Python",
+    "AST Tooling",
+    "Compiler APIs",
   ],
 
   "Automation Script": [
@@ -109,6 +125,7 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Node.js",
     "Bash",
     "PowerShell",
+    "GitHub Actions",
   ],
 
   "AI Tool": [
@@ -117,6 +134,7 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "LangChain",
     "OpenAI API",
     "Hugging Face",
+    "Vector DBs",
   ],
 
   "Open Source Project": [
@@ -125,6 +143,7 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Go",
     "Rust",
     "Python",
+    "Monorepos",
   ],
 };
 
@@ -132,7 +151,7 @@ export const stacksByType: Record<ProjectType, string[]> = {
 export const levels = ["Beginner", "Intermediate", "Advanced"] as const;
 export type DifficultyLevel = (typeof levels)[number];
 
-/* ---------- DEVELOPER INTERESTS / DOMAINS ---------- */
+/* ---------- DEVELOPER INTERESTS / DOMAINS (EXPANDED) ---------- */
 export const interests = [
   // Core engineering
   "System Design",
@@ -142,6 +161,34 @@ export const interests = [
   "Scalability",
   "Distributed Systems",
 
+  // Databases & state
+  "SQL Databases",
+  "NoSQL Databases",
+  "Redis & Caching",
+  "Search Engines",
+  "Data Modeling",
+
+  // Backend internals
+  "Authentication & Authorization",
+  "API Design",
+  "Webhooks & Events",
+  "Rate Limiting",
+  "Background Jobs & Queues",
+
+  // Infra & ops
+  "DevOps",
+  "CI/CD",
+  "Docker & Containers",
+  "Kubernetes",
+  "Cloud Infrastructure",
+  "Serverless",
+  "Observability & Monitoring",
+
+  // Messaging & async
+  "Event-Driven Systems",
+  "Kafka & Message Brokers",
+  "Streaming Systems",
+
   // Developer experience
   "Developer Productivity",
   "Code Quality",
@@ -150,29 +197,16 @@ export const interests = [
   "Debugging",
   "Tooling",
 
-  // Infra & ops
-  "DevOps",
-  "CI/CD",
-  "Docker & Containers",
-  "Kubernetes",
-  "Cloud Infrastructure",
-  "Observability & Monitoring",
-
-  // Data & backend
-  "Databases",
-  "Caching",
-  "Search Systems",
-  "Event-Driven Systems",
-
   // Security
-  "Authentication & Authorization",
   "Web Security",
   "API Security",
+  "Secrets Management",
 
   // AI & modern systems
   "AI Engineering",
   "LLM Apps",
   "MLOps",
+  "Vector Databases",
   "Data Pipelines",
 
   // Product-focused (still dev-centric)
@@ -183,3 +217,46 @@ export const interests = [
 ] as const;
 
 export type DeveloperInterest = (typeof interests)[number];
+
+/* ---------- SUB QUESTIONS (THIS IS THE POWER) ---------- */
+export const subQuestions = {
+  scale: [
+    "Solo developer",
+    "Small team (2–5)",
+    "Startup scale",
+    "Enterprise scale",
+  ],
+
+  timeCommitment: [
+    "Weekend project",
+    "1–2 weeks",
+    "1 month",
+    "Long-term / production",
+  ],
+
+  infraLevel: [
+    "Local only",
+    "Cloud hosted",
+    "Distributed",
+    "High availability",
+  ],
+
+  dataComplexity: [
+    "Simple CRUD",
+    "Relational data",
+    "High read/write load",
+    "Event-driven / streaming",
+  ],
+
+  learningGoal: [
+    "Learn fundamentals",
+    "Improve architecture skills",
+    "Practice system design",
+    "Build portfolio project",
+    "Prepare for interviews",
+  ],
+} as const;
+
+export type SubQuestionCategory = keyof typeof subQuestions;
+export type SubQuestionOption =
+  (typeof subQuestions)[SubQuestionCategory][number];

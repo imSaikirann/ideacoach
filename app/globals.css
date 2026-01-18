@@ -8,6 +8,7 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -26,11 +27,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
+
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar-primary: var(--sidebar-primary);
@@ -41,89 +38,77 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-:root {
+/* ======================================================
+   🌙 IDEA COACH — DARK SAGE THEME (EYE FRIENDLY)
+====================================================== */
+
+:root,
+.dark {
   --radius: 0.625rem;
-  /* Dark theme colors - #0F0E0E background, #541212 primary */
-  --background: #0F0E0E;
-  --foreground: #E5E5E5;
-  --card: #1A1818;
-  --card-foreground: #E5E5E5;
-  --popover: #1A1818;
-  --popover-foreground: #E5E5E5;
-  --primary: #541212;
-  --primary-foreground: #FFFFFF;
-  --secondary: #2A1F1F;
-  --secondary-foreground: #E5E5E5;
-  --muted: #1A1818;
-  --muted-foreground: #A0A0A0;
-  --accent: #6B1A1A;
-  --accent-foreground: #FFFFFF;
-  --destructive: #8B1A1A;
-  --border: #2A1F1F;
-  --input: #1A1818;
-  --ring: #541212;
-  --chart-1: #541212;
-  --chart-2: #6B1A1A;
-  --chart-3: #8B1A1A;
-  --chart-4: #A02A2A;
-  --chart-5: #B83A3A;
-  --sidebar: #1A1818;
-  --sidebar-foreground: #E5E5E5;
-  --sidebar-primary: #541212;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #2A1F1F;
-  --sidebar-accent-foreground: #E5E5E5;
-  --sidebar-border: #2A1F1F;
-  --sidebar-ring: #541212;
+
+  --background: #111513;
+  --foreground: #E8ECE9;
+
+  --card: #1C211F;
+  --card-foreground: #E8ECE9;
+
+  --popover: #1C211F;
+  --popover-foreground: #E8ECE9;
+
+  --primary: #7B9A87;
+  --primary-foreground: #111513;
+
+  --secondary: #232826;
+  --secondary-foreground: #DDE4DF;
+
+  --muted: #1F2422;
+  --muted-foreground: #A9B4AD;
+
+  --accent: #648B75;
+  --accent-foreground: #111513;
+
+  --destructive: #C46655;
+
+  --border: #2F3532;
+  --input: #232826;
+  --ring: #7B9A87;
+
+  --sidebar: #191E1C;
+  --sidebar-foreground: #E8ECE9;
+  --sidebar-primary: #7B9A87;
+  --sidebar-primary-foreground: #111513;
+  --sidebar-accent: #232826;
+  --sidebar-accent-foreground: #DDE4DF;
+  --sidebar-border: #2F3532;
+  --sidebar-ring: #7B9A87;
 }
 
-.dark {
-  --background: #0F0E0E;
-  --foreground: #E5E5E5;
-  --card: #1A1818;
-  --card-foreground: #E5E5E5;
-  --popover: #1A1818;
-  --popover-foreground: #E5E5E5;
-  --primary: #541212;
-  --primary-foreground: #FFFFFF;
-  --secondary: #2A1F1F;
-  --secondary-foreground: #E5E5E5;
-  --muted: #1A1818;
-  --muted-foreground: #A0A0A0;
-  --accent: #6B1A1A;
-  --accent-foreground: #FFFFFF;
-  --destructive: #8B1A1A;
-  --border: #2A1F1F;
-  --input: #1A1818;
-  --ring: #541212;
-  --chart-1: #541212;
-  --chart-2: #6B1A1A;
-  --chart-3: #8B1A1A;
-  --chart-4: #A02A2A;
-  --chart-5: #B83A3A;
-  --sidebar: #1A1818;
-  --sidebar-foreground: #E5E5E5;
-  --sidebar-primary: #541212;
-  --sidebar-primary-foreground: #FFFFFF;
-  --sidebar-accent: #2A1F1F;
-  --sidebar-accent-foreground: #E5E5E5;
-  --sidebar-border: #2A1F1F;
-  --sidebar-ring: #541212;
-}
+
+
+/* ======================================================
+   BASE LAYER
+====================================================== */
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
-    background-color: #0F0E0E;
-    color: #E5E5E5;
+    background-color: #0F1512;
+    color: #E4ECE7;
   }
+
   html {
-    background-color: #0F0E0E;
+    background-color: #0F1512;
   }
 }
 
 
-
+@theme inline {
+  --font-sans: var(--font-sans);
+}
+@theme inline {
+  --font-sans: var(--font-sans);
+}

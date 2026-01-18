@@ -53,9 +53,9 @@ export default function IdeaSwipe() {
   if (ideas.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-[70vh] text-center">
-        <Lightbulb className="w-10 h-10 text-yellow-500 mb-4" />
-        <h2 className="text-xl font-semibold">No more ideas!</h2>
-        <p className="text-sm text-gray-500">Check back later for fresh inspiration.</p>
+        <Lightbulb className="w-10 h-10 text-primary mb-4" />
+        <h2 className="text-xl font-semibold text-foreground">No more ideas!</h2>
+        <p className="text-sm text-muted-foreground">Check back later for fresh inspiration.</p>
       </div>
     );
   }
@@ -73,17 +73,17 @@ export default function IdeaSwipe() {
       {nextIdeas.map((idea) => (
         <div
           key={idea.id}
-          className="absolute w-80 sm:w-96 bg-gray-50 shadow-md rounded-2xl p-6 opacity-70 scale-95 border border-gray-200"
+          className="absolute w-80 sm:w-96 bg-card shadow-md rounded-2xl p-6 opacity-70 scale-95 border border-border"
         >
-          <h3 className="text-2xl font-bold mb-2">{idea.title}</h3>
-          <p className="text-gray-600 text-sm">{idea.description}</p>
+          <h3 className="text-2xl font-bold mb-2 text-card-foreground">{idea.title}</h3>
+          <p className="text-muted-foreground text-sm">{idea.description}</p>
         </div>
       ))}
 
       {/* Top swipeable card */}
       <motion.div
         key={topIdea.id}
-        className="absolute w-80 sm:w-96 bg-white shadow-xl rounded-2xl p-6 text-center cursor-grab border border-gray-200"
+        className="absolute w-80 sm:w-96 bg-card shadow-xl rounded-2xl p-6 text-center cursor-grab border border-border"
         style={{ x, rotate, opacity }}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
@@ -93,13 +93,13 @@ export default function IdeaSwipe() {
           else if (info.offset.x < -150) handleSwipe("left");
         }}
       >
-        <h3 className="text-2xl font-bold mb-2">{topIdea.title}</h3>
-        <p className="text-gray-600 mb-4">{topIdea.description}</p>
+        <h3 className="text-2xl font-bold mb-2 text-card-foreground">{topIdea.title}</h3>
+        <p className="text-muted-foreground mb-4">{topIdea.description}</p>
         <div className="flex justify-center flex-wrap gap-2">
           {topIdea.tags.map((tag) => (
             <span
               key={tag}
-              className="bg-gray-100 text-gray-700 text-xs px-3 py-1 rounded-full"
+              className="bg-secondary text-secondary-foreground text-xs px-3 py-1 rounded-full"
             >
               {tag}
             </span>
@@ -111,15 +111,15 @@ export default function IdeaSwipe() {
       <div className="absolute bottom-12 flex gap-8">
         <button
           onClick={() => handleSwipe("left")}
-          className="p-4 bg-red-100 hover:bg-red-200 rounded-full"
+          className="p-4 bg-destructive/10 hover:bg-destructive/20 rounded-full"
         >
-          <X className="text-red-500 w-6 h-6" />
+          <X className="text-destructive w-6 h-6" />
         </button>
         <button
           onClick={() => handleSwipe("right")}
-          className="p-4 bg-green-100 hover:bg-green-200 rounded-full"
+          className="p-4 bg-primary/10 hover:bg-primary/20 rounded-full"
         >
-          <Heart className="text-green-500 w-6 h-6" />
+          <Heart className="text-primary w-6 h-6" />
         </button>
       </div>
     </div>

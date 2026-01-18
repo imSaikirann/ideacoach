@@ -2,6 +2,7 @@ import React from "react"
 import Container from "@/components/common/Container";
 import HeroBackground from "./HeroBackground";
 import HowItWorks from "./HowItWorks";
+import Footer from "./Footer";
 
 export default function HeroLayout({
   left,
@@ -31,6 +32,11 @@ export default function HeroLayout({
         <div className="py-20 sm:py-24 md:py-28 lg:py-32 border-t border-border/30">
           <HowItWorks />
         </div>
+
+          <div >
+          <Footer/>
+        </div>
+
       </Container>
     </section>
   );

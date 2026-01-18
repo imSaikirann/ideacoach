@@ -2,102 +2,116 @@
 
 import { Button } from "@/components/ui/button";
 import { useHeroProjects } from "../hooks/useHeroProjects";
-import { Lightbulb, RefreshCw, Code, Target, ArrowUpRight } from "lucide-react";
+import {
+  Lightbulb,
+  RefreshCw,
+  Code,
+  Target,
+  ArrowUpRight,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export default function HeroPreview() {
   const { project, next, loading } = useHeroProjects();
 
   return (
-    <div className="w-full max-w-lg">
-      {/* Floating decoration */}
-      <div className="absolute -top-4 -right-4 w-24 h-24 bg-accent/10 rounded-full blur-2xl" />
-      <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-accent/5 rounded-full blur-3xl" />
+    <div className="relative w-full max-w-lg">
+      {/* Subtle ambient glow (reduced noise) */}
+      <div className="pointer-events-none absolute -top-6 -right-6 w-28 h-28 bg-accent/10 rounded-full blur-3xl" />
 
-      <div className="relative border border-border/50 rounded-2xl bg-card/80 backdrop-blur-xl overflow-hidden shadow-2xl shadow-black/20">
-        {/* Card header */}
-        <div className="flex items-center justify-between p-5 border-b border-border/50">
+      <div className="relative rounded-2xl border border-border/60 bg-card/90 backdrop-blur-xl shadow-xl">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-5 border-b border-border/50">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center">
-              <Lightbulb className="w-5 h-5 text-accent" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent/10">
+              <Lightbulb className="h-5 w-5 text-accent" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">
-                Suggested Project
+                Suggested project
               </h3>
               <p className="text-xs text-muted-foreground">
-                Tailored for your skills
+                Generated for your profile
               </p>
             </div>
           </div>
+
           <div className="flex gap-1.5">
-            <div className="w-3 h-3 rounded-full bg-accent/50" />
-            <div className="w-3 h-3 rounded-full bg-muted" />
-            <div className="w-3 h-3 rounded-full bg-muted" />
+            <span className="h-2.5 w-2.5 rounded-full bg-accent/60" />
+            <span className="h-2.5 w-2.5 rounded-full bg-muted" />
+            <span className="h-2.5 w-2.5 rounded-full bg-muted" />
           </div>
         </div>
 
-        {/* Card content */}
-        <div className="p-6 space-y-5">
+        {/* Content */}
+        <div className="px-6 py-6 space-y-6">
+          {/* Title + description */}
           <div
             className={cn(
               "space-y-3 transition-opacity duration-300",
-              loading && "opacity-50"
+              loading && "opacity-60"
             )}
           >
-            <h4 className="text-xl sm:text-2xl font-bold text-foreground leading-tight text-balance">
+            <h4 className="text-xl sm:text-2xl font-semibold leading-tight text-balance">
               {project.title}
             </h4>
-            <p className="text-base text-muted-foreground leading-relaxed">
+
+            <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
               {project.description}
             </p>
           </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-2.5">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/80 border border-border/50">
-              <Target className="w-3.5 h-3.5 text-accent" />
-              <span className="text-sm font-medium text-foreground/90">
+          {/* Meta */}
+          <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-2 rounded-lg border border-border/50 bg-secondary/60 px-3 py-1.5">
+              <Target className="h-3.5 w-3.5 text-accent" />
+              <span className="text-sm font-medium">
                 {project.level}
               </span>
             </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/80 border border-border/50">
-              <Code className="w-3.5 h-3.5 text-accent" />
-              <span className="text-sm font-medium text-foreground/90">
+
+            <div className="flex items-center gap-2 rounded-lg border border-border/50 bg-secondary/60 px-3 py-1.5">
+              <Code className="h-3.5 w-3.5 text-accent" />
+              <span className="text-sm font-medium">
                 {project.stack}
               </span>
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex items-center gap-3 pt-2">
             <Button
               onClick={next}
               disabled={loading}
               variant="outline"
-              className="flex-1 border-border/50 hover:bg-secondary/50 bg-transparent"
+              className="flex-1 border-border/60 bg-transparent hover:bg-secondary/60"
             >
               {loading ? (
                 <>
-                  <RefreshCw className="mr-2 w-4 h-4 animate-spin" />
-                  Generating...
+                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                  Thinking…
                 </>
               ) : (
                 <>
-                  <RefreshCw className="mr-2 w-4 h-4" />
-                  Generate Another
+                  <RefreshCw className="mr-2 h-4 w-4" />
+                  Try another idea
                 </>
               )}
             </Button>
-            <Button size="icon" variant="outline" className="border-border/50 hover:bg-secondary/50 bg-transparent">
-              <ArrowUpRight className="w-4 h-4" />
-              <span className="sr-only">View project details</span>
+
+            <Button
+              size="icon"
+              variant="outline"
+              className="border-border/60 bg-transparent hover:bg-secondary/60"
+            >
+              <ArrowUpRight className="h-4 w-4" />
+              <span className="sr-only">View details</span>
             </Button>
           </div>
         </div>
 
-        {/* Decorative gradient line at bottom */}
-        <div className="h-1 w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
+        {/* Bottom focus line */}
+        <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-accent/40 to-transparent" />
       </div>
     </div>
   );

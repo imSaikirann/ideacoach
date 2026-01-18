@@ -9,7 +9,7 @@ if (!GEMINI_KEYS.length) {
 
 export async function getGeminiModel() {
   // increment index atomically
-  const index = await redis.incr("gemini:key:index");
+  const index = await redis.incr("ideacoach:gemini:key:index");
 
   // round-robin selection
   const key = GEMINI_KEYS[index % GEMINI_KEYS.length];

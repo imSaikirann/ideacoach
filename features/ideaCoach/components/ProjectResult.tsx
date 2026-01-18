@@ -47,20 +47,20 @@ export function ProjectResult({ project }: ProjectResultProps) {
 
     >
       {/* Result Card */}
-      <div className="rounded-2xl border border-neutral-200 bg-white p-6 sm:p-8 md:p-10 space-y-10 shadow-sm">
+      <div className="rounded-2xl border border-[#2A1F1F] bg-[#1A1818] p-6 sm:p-8 md:p-10 space-y-10">
         
         {/* Project title */}
-        <h2 className="text-2xl sm:text-3xl font-bold text-neutral-900 tracking-tight">
+        <h2 className="text-2xl sm:text-3xl font-bold text-[#E5E5E5] tracking-tight">
           {project.title}
         </h2>
 
         {/* WHY */}
         {project.whyThisProject && (
           <Section
-            icon={<Sparkles className="w-5 h-5 text-neutral-700" />}
+            icon={<Sparkles className="w-5 h-5 text-[#A0A0A0]" />}
             title="Why this project"
           >
-            <p className="text-neutral-700 leading-relaxed text-base sm:text-lg">
+            <p className="text-[#E5E5E5] leading-relaxed text-base sm:text-lg">
               {whyText}
               <Cursor />
             </p>
@@ -70,8 +70,8 @@ export function ProjectResult({ project }: ProjectResultProps) {
         {/* FEATURES */}
         {project.features && project.features.length > 0 && (
           <Section
-            icon={<CheckCircle2 className="w-5 h-5 text-neutral-700" />}
-            title="What you’ll build"
+            icon={<CheckCircle2 className="w-5 h-5 text-[#A0A0A0]" />}
+            title="What you'll build"
           >
             <BulletList items={project.features} />
           </Section>
@@ -80,7 +80,7 @@ export function ProjectResult({ project }: ProjectResultProps) {
         {/* SKILLS */}
         {project.skillsProved && project.skillsProved.length > 0 && (
           <Section
-            icon={<CheckCircle2 className="w-5 h-5 text-neutral-700" />}
+            icon={<CheckCircle2 className="w-5 h-5 text-[#A0A0A0]" />}
             title="Skills this proves"
           >
             <BulletList items={project.skillsProved} />
@@ -106,7 +106,7 @@ function Section({
     <div className="space-y-4">
       <div className="flex items-center gap-3">
         {icon}
-        <h3 className="text-lg sm:text-xl font-semibold text-neutral-900">
+        <h3 className="text-lg sm:text-xl font-semibold text-[#E5E5E5]">
           {title}
         </h3>
       </div>
@@ -120,8 +120,8 @@ function BulletList({ items }: { items: string[] }) {
     <ul className="space-y-3">
       {items.map((item) => (
         <li key={item} className="flex items-start gap-3">
-          <span className="mt-2 h-1.5 w-1.5 rounded-full bg-neutral-400 flex-shrink-0" />
-          <span className="text-neutral-700 text-base sm:text-lg leading-relaxed">
+          <span className="mt-2 h-1.5 w-1.5 rounded-full bg-[#541212] flex-shrink-0" />
+          <span className="text-[#E5E5E5] text-base sm:text-lg leading-relaxed">
             {item}
           </span>
         </li>
@@ -134,6 +134,6 @@ function BulletList({ items }: { items: string[] }) {
 
 function Cursor() {
   return (
-    <span className="inline-block w-[2px] h-[1em] bg-neutral-400 ml-1 animate-pulse" />
+    <span className="inline-block w-[2px] h-[1em] bg-[#541212] ml-1 animate-pulse" />
   );
 }

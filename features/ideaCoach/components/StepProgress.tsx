@@ -12,10 +12,10 @@ export function StepProgress({ currentStep, totalSteps }: { currentStep: number;
               <div
                 className={`w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 flex items-center justify-center text-sm sm:text-base font-bold transition-all duration-300 ${
                   isActive
-                    ? "bg-neutral-900 text-white"
+                    ? "bg-[#541212] text-white"
                     : isCompleted
-                    ? "bg-neutral-200 text-neutral-600"
-                    : "bg-neutral-100 text-neutral-400"
+                    ? "bg-[#2A1F1F] text-[#A0A0A0]"
+                    : "bg-[#1A1818] text-[#6B6B6B]"
                 }`}
               >
                 {isCompleted ? (
@@ -28,7 +28,7 @@ export function StepProgress({ currentStep, totalSteps }: { currentStep: number;
             {index < totalSteps - 1 && (
               <div
                 className={`w-8 sm:w-12 md:w-16 h-0.5 mx-1 sm:mx-2 transition-all duration-300 ${
-                  isCompleted ? "bg-neutral-300" : "bg-neutral-200"
+                  isCompleted ? "bg-[#541212]" : "bg-[#2A1F1F]"
                 }`}
               />
             )}

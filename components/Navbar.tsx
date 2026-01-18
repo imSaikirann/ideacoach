@@ -14,15 +14,15 @@ export default function Navbar() {
   const isAuthed = !!session?.user;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-neutral-200/70 bg-white/80 backdrop-blur-xl">
+    <nav className="fixed top-0 left-0 right-0 z-50 border-b border-[#2A1F1F] bg-[#0F0E0E]/95 backdrop-blur-xl">
       <Container size="xl">
         <div className="flex h-16 items-center justify-between    ">
           {/* Brand */}
           <Link
             href="/"
-            className="flex items-center gap-2 text-xl font-bold tracking-tight text-neutral-900"
+            className="flex items-center gap-2 text-xl font-bold tracking-tight text-[#E5E5E5]"
           >
-            <span className="text-neutral-700">Idea</span>Coach
+            <span className="text-[#E5E5E5]">Idea</span>Coach
           </Link>
 
           {/* Desktop Nav */}
@@ -37,7 +37,7 @@ export default function Navbar() {
           <div className="hidden items-center gap-3 md:flex">
             {isAuthed ? (
               <div className="flex items-center gap-4">
-                <Button className="rounded-lg bg-neutral-700 px-4 py-2 font-semibold text-white hover:bg-blue-500 transition-colors">
+                <Button className="rounded-lg bg-[#541212] px-4 py-2 font-semibold text-white hover:bg-[#6B1A1A] transition-colors">
                   Star on GitHub
                 </Button>
                 <UserMenu user={session.user} />
@@ -45,7 +45,7 @@ export default function Navbar() {
             ) : (
               <Button
                 onClick={() => signIn("google")}
-                className="rounded-lg bg-neutral-700 px-4 py-2 font-semibold text-white hover:bg-neutral-800  transition-colors"
+                className="rounded-lg bg-[#541212] px-4 py-2 font-semibold text-white hover:bg-[#6B1A1A] transition-colors"
               >
                 Login
               </Button>
@@ -56,7 +56,7 @@ export default function Navbar() {
           <button
             aria-label="Toggle Menu"
             aria-expanded={isOpen}
-            className="inline-flex items-center justify-center rounded-md p-2 text-neutral-700 hover:bg-neutral-100 md:hidden transition-colors"
+            className="inline-flex items-center justify-center rounded-md p-2 text-[#E5E5E5] hover:bg-[#1A1818] md:hidden transition-colors"
             onClick={() => setIsOpen((v) => !v)}
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -66,7 +66,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="md:hidden border-t border-neutral-200 bg-white/90 backdrop-blur">
+        <div className="md:hidden border-t border-[#2A1F1F] bg-[#0F0E0E]/95 backdrop-blur">
           <Container size="xl">
             <div className="space-y-1 py-4">
               <MobileLink href="/" onClick={() => setIsOpen(false)}>
@@ -86,13 +86,13 @@ export default function Navbar() {
               <div className="pt-4 grid gap-2">
                 {isAuthed ? (
                   <>
-                    <div className="text-sm text-gray-700 px-1">
+                    <div className="text-sm text-[#E5E5E5] px-1">
                       {session?.user?.name ?? session?.user?.email}
                     </div>
 
                     <Button
                       variant="outline"
-                      className="w-full rounded-lg"
+                      className="w-full rounded-lg border-[#2A1F1F] text-[#E5E5E5] hover:bg-[#1A1818]"
                       onClick={() => {
                         setIsOpen(false);
                         signOut();
@@ -103,7 +103,7 @@ export default function Navbar() {
                   </>
                 ) : (
                   <Button
-                    className="w-full rounded-lg bg-neutral-700 py-2 font-semibold text-white hover:bg-neutral-800 transition-colors"
+                    className="w-full rounded-lg bg-[#541212] py-2 font-semibold text-white hover:bg-[#6B1A1A] transition-colors"
                     onClick={() => {
                       setIsOpen(false);
                       signIn("google");
@@ -133,7 +133,7 @@ function NavLink({
   return (
     <Link
       href={href}
-      className="text-sm font-medium text-neutral-700 transition-colors hover:text-neutral-700"
+      className="text-sm font-medium text-[#E5E5E5] transition-colors hover:text-[#A0A0A0]"
     >
       {children}
     </Link>
@@ -153,7 +153,7 @@ function MobileLink({
     <Link
       href={href}
       onClick={onClick}
-      className="block rounded-md px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100"
+      className="block rounded-md px-2 py-2 text-sm font-medium text-[#E5E5E5] hover:bg-[#1A1818]"
     >
       {children}
     </Link>

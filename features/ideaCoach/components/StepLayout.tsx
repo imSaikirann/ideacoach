@@ -18,7 +18,7 @@ export function StepLayout({
   totalSteps,
 }: StepLayoutProps) {
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-[#0F0E0E]">
       <div
         className="
           mx-auto
@@ -44,12 +44,12 @@ export function StepLayout({
 
         {/* Header */}
         <div className="mt-10 space-y-3">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-neutral-900 tracking-tight leading-tight">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-[#E5E5E5] tracking-tight leading-tight">
             {title}
           </h1>
 
           {subtitle && (
-            <p className="text-base sm:text-lg text-neutral-600">
+            <p className="text-base sm:text-lg text-[#A0A0A0]">
               {subtitle}
             </p>
           )}
@@ -62,7 +62,7 @@ export function StepLayout({
 
         {/* Footer */}
         {footer && (
-          <div className="mt-12 pt-6 border-t border-neutral-200">
+          <div className="mt-12 pt-6 border-t border-[#2A1F1F]">
             {footer}
           </div>
         )}

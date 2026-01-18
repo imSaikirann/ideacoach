@@ -17,9 +17,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`  antialiased font-mono`}
+        className={`antialiased font-mono bg-[#0F0E0E] text-[#E5E5E5]`}
       >
         <Providers>
           <Navbar />

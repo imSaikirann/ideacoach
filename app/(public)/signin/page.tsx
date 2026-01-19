@@ -84,7 +84,10 @@ export default function SignInPage() {
             variant="outline"
             className="w-full h-14 gap-3 text-base font-medium bg-background hover:bg-secondary/50 border-border/60 transition-all duration-300"
             onClick={() =>
-              signIn("google", { callbackUrl: "/dashboard/idea-form" })
+signIn("google", {
+  callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/idea-form`,
+})
+
             }
           >
             <GoogleIcon className="w-5 h-5" />

@@ -4,7 +4,7 @@ import { ArrowRight, Sparkles, Zap, GraduationCap } from "lucide-react";
 
 export default function HeroContent() {
   return (
-    <div className="space-y-8 max-w-xl">
+    <div className="space-y-8 ">
       {/* Badge */}
       <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-secondary/50 border border-border backdrop-blur-sm animate-fade-in">
         <span className="relative flex h-2 w-2">
@@ -17,12 +17,12 @@ export default function HeroContent() {
       </div>
 
       {/* Heading */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground leading-[1.1] tracking-tight text-balance">
-          {"Don't know what to build?"}
+          {"Not sure what project to build next?"}
         </h1>
-        <p className="text-3xl sm:text-4xl lg:text-5xl font-bold text-muted-foreground leading-[1.1] tracking-tight">
-          {"We'll pick the right project for you."}
+        <p className="text-3xl sm:text-4xl lg:text-3xl font-bold text-muted-foreground leading-[1.1] tracking-tight">
+          {" Get a clear, build-ready idea in minutes."}
         </p>
       </div>
 
@@ -70,7 +70,7 @@ export default function HeroContent() {
           Build School
         </span>
         <span className="text-sm text-muted-foreground">
-          Learn how to build projects from scratch — free
+          Learn how to build projects from scratch for free
         </span>
         <ArrowRight className="w-4 h-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
       </Link>

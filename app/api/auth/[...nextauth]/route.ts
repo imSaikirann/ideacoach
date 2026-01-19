@@ -1,6 +1,6 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+// import { PrismaAdapter } from "@auth/prisma-adapter";
 // import { prisma } from "@/lib/prisma";
 
 const handler = NextAuth({
@@ -17,9 +17,12 @@ const handler = NextAuth({
     strategy: "jwt",
   },
 
+  pages: {
+    signIn: "/signin", 
+  },
+
   callbacks: {
     async jwt({ token, account, profile }) {
-      // On first sign in
       if (account && profile) {
         token.sub = profile.sub;
       }
@@ -28,7 +31,6 @@ const handler = NextAuth({
 
     async session({ session, token }) {
       if (session.user) {
-        // expose user id on session
         (session.user as any).sub = token.sub;
       }
       return session;

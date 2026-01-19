@@ -5,17 +5,27 @@ import { ProjectTypeStep } from "./components/ProjectTypeStep";
 import { StackStep } from "./components/StackStep";
 import { DifficultyStep } from "./components/DifficultyStep";
 import { InterestStep } from "./components/InterestStep";
+import { CustomProblemStep } from "./components/CustomProblemStep";
 import { ProjectResult } from "./components/ProjectResult";
 import type { Project } from "./types";
 
-type Step = "projectType" | "stack" | "difficulty" | "interest" | "result";
+type Step =
+  | "projectType"
+  | "stack"
+  | "difficulty"
+  | "interest"
+  | "customProblem"
+  | "result";
 
 export function IdeaCoach() {
   const [step, setStep] = useState<Step>("projectType");
+
   const [projectType, setProjectType] = useState("");
   const [techStack, setTechStack] = useState<string[]>([]);
   const [difficulty, setDifficulty] = useState("");
   const [interest, setInterest] = useState("");
+  const [customProblem, setCustomProblem] = useState("");
+
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +41,7 @@ export function IdeaCoach() {
           techStack: techStack.join(", "),
           difficulty,
           interest,
+          customProblem,
         }),
       });
 
@@ -50,6 +61,7 @@ export function IdeaCoach() {
     setTechStack([]);
     setDifficulty("");
     setInterest("");
+    setCustomProblem("");
     setProject(null);
   }
 
@@ -90,6 +102,17 @@ export function IdeaCoach() {
           value={interest}
           onChange={setInterest}
           onBack={() => setStep("difficulty")}
+          onNext={() => setStep("customProblem")}
+
+        />
+      );
+
+    case "customProblem":
+      return (
+        <CustomProblemStep
+          value={customProblem}
+          onChange={setCustomProblem}
+          onBack={() => setStep("interest")}
           onGenerate={generate}
           loading={loading}
         />
@@ -104,6 +127,7 @@ export function IdeaCoach() {
             techStack,
             difficulty,
             interest,
+
           }}
           onBack={reset}
           onGenerateAnother={generate}

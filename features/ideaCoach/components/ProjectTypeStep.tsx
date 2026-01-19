@@ -18,7 +18,7 @@ export function ProjectTypeStep({ value, onChange, onNext }: ProjectTypeStepProp
       title="What do you want to build?"
       subtitle="Select the type of project you have in mind"
       currentStep={1}
-      totalSteps={4}
+      totalSteps={5}
       footer={
         <Button
           className="w-full h-12 font-medium"

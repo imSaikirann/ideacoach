@@ -1,54 +1,50 @@
-'use client';
+"use client";
 
 import { interests } from "../constants";
 import { StepLayout } from "./StepLayout";
 import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Sparkles, Loader2 } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 interface InterestStepProps {
   value: string;
   onChange: (value: string) => void;
   onBack: () => void;
-  onGenerate: () => void;
-  loading?: boolean;
+  onNext: () => void;
 }
 
 export function InterestStep({
   value,
   onChange,
   onBack,
-  onGenerate,
-  loading,
+  onNext,
 }: InterestStepProps) {
   return (
     <StepLayout
       title="What field interests you?"
       subtitle="Choose a domain for your project"
       currentStep={4}
-      totalSteps={4}
+      totalSteps={5}
       footer={
         <div className="flex gap-3">
-          <Button variant="outline" className="h-12 flex-1 bg-transparent" onClick={onBack} disabled={loading}>
+          {/* Back */}
+          <Button
+            variant="outline"
+            className="h-12 flex-1 bg-transparent"
+            onClick={onBack}
+          >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
+
+          {/* Continue */}
           <Button
             className="h-12 flex-1"
-            disabled={!value || loading}
-            onClick={onGenerate}
+            disabled={!value}
+            onClick={onNext}
           >
-            {loading ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 mr-2" />
-                Generate idea
-              </>
-            )}
+            Continue
+            <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
       }

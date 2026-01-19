@@ -34,7 +34,7 @@ export function StackStep({
       title="Pick your tech stack"
       subtitle={`Select one or more technologies for your ${projectType.toLowerCase()}`}
       currentStep={2}
-      totalSteps={4}
+      totalSteps={5}
       footer={
         <div className="flex gap-3">
           <Button variant="outline" className="h-12 flex-1 bg-transparent" onClick={onBack}>

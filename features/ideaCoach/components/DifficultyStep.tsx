@@ -39,7 +39,7 @@ export function DifficultyStep({
       title="How challenging should it be?"
       subtitle="Choose a difficulty level that matches your skills"
       currentStep={3}
-      totalSteps={4}
+      totalSteps={5}
       footer={
         <div className="flex gap-3">
           <Button variant="outline" className="h-12 flex-1 bg-transparent" onClick={onBack}>

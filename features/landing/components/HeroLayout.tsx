@@ -3,7 +3,7 @@ import HeroBackground from "./HeroBackground";
 import HowItWorks from "./HowItWorks";
 import Format from "./Format";
 import Compare from "./Compare";
-import Pricing from "./Princings";
+// import Pricing from "./Princings";
 import Footer from "./Footer";
 
 export default function HeroLayout({
@@ -54,11 +54,11 @@ export default function HeroLayout({
       </section>
 
       {/* PRICING */}
-      <section className="border-t border-border/30">
+      {/* <section className="border-t border-border/30">
         <Container size="xl" className="py-20 sm:py-24 md:py-28 lg:py-32">
           <Pricing />
         </Container>
-      </section>
+      </section> */}
 
       {/* FOOTER */}
       <Footer />

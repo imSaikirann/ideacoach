@@ -1,8 +1,15 @@
-export type Project = {
+export interface EstimatedTime {
+  days: string;
+  dailyEffort: string;
+}
+
+export interface Project {
   title: string;
-  problemSolved: string;
-  whyThisProject: string;
-  features: string[];
-  skillsProved: string[];
-  estimatedTime: string;
-};
+  problemStatement?: string;
+  problemSolved?: string;
+  features?: string[];
+  whatYouWillLearn?: string[];
+  estimatedTime?: EstimatedTime;
+  buildRoadmap?: string[];
+  designTradeoffs?: string[];
+}

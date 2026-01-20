@@ -30,7 +30,12 @@ export function IdeaCoach() {
   const [loading, setLoading] = useState(false);
 
   async function generate() {
+
+      // scroll to top smoothly
+  window.scrollTo({ top: 0, behavior: "smooth" });
     setLoading(true);
+
+
 
     try {
       const res = await fetch("/api/generate-idea", {

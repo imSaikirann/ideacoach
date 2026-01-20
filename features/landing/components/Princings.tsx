@@ -41,6 +41,23 @@ const plans = [
 
 
 export default function Pricing() {
+
+//   const handleUpgrade = async () => {
+//   const res = await fetch("/api/payments/checkout", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({
+//       planSlug: "pro", // map this to PricingPlan in DB
+//     }),
+//   });
+
+//   const data = await res.json();
+
+//   if (data.checkoutUrl) {
+//     window.location.href = data.checkoutUrl;
+//   }
+// };
+
   return (
     <section className="max-w-5xl mx-auto px-6 py-20">
       {/* Header - matching hero style */}
@@ -146,17 +163,19 @@ export default function Pricing() {
             </ul>
 
             {/* CTA Button */}
-            <Button
-              size="lg"
-              className={`w-full h-12 font-semibold transition-all duration-300 ${
-                plan.popular
-                  ? "shadow-lg shadow-primary/20 hover:shadow-primary/30"
-                  : "bg-transparent"
-              }`}
-              variant={plan.popular ? "default" : "outline"}
-            >
-              {plan.cta}
-            </Button>
+            {/* <Button
+  size="lg"
+  className={`w-full h-12 font-semibold transition-all duration-300 ${
+    plan.popular
+      ? "shadow-lg shadow-primary/20 hover:shadow-primary/30"
+      : "bg-transparent"
+  }`}
+  variant={plan.popular ? "default" : "outline"}
+  onClick={plan.name === "Pro" ? handleUpgrade : undefined}
+>
+  {plan.cta}
+</Button> */}
+
           </div>
         ))}
       </div>

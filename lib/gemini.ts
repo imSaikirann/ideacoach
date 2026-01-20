@@ -8,18 +8,17 @@ if (!GEMINI_KEYS.length) {
 }
 
 export async function getGeminiModel() {
-  // increment index atomically
+
   const index = await redis.incr("ideacoach:gemini:key:index");
 
-  // round-robin selection
-  const key = GEMINI_KEYS[index % GEMINI_KEYS.length];
+  const keyIndex = index % GEMINI_KEYS.length;
+  const apiKey = GEMINI_KEYS[keyIndex];
 
+  console.log("Using Gemini key index:", keyIndex);
 
-  console.log("Using Gemini key index:", index % GEMINI_KEYS.length);
-
-  const genAI = new GoogleGenerativeAI(key);
+  const genAI = new GoogleGenerativeAI(apiKey);
 
   return genAI.getGenerativeModel({
-    model: "gemini-2.5-flash",
+    model: "models/gemini-2.5-flash-lite",
   });
 }

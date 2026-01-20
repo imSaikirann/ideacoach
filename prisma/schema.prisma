@@ -1,22 +1,16 @@
-// ================================
-// Prisma Client
-// ================================
+
 generator client {
   provider = "prisma-client-js"
   output   = "../lib/generated/prisma"
 }
 
-// ================================
-// MongoDB Datasource
-// ================================
+
 datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
-// ================================
-// NextAuth Models (MongoDB)
-// ================================
+
 
 model User {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -27,7 +21,10 @@ model User {
 
   accounts Account[]
   sessions Session[]
-  ideas     IdeasGenerated[]
+  ideas     Idea[]
+
+  
+  credits   UserCredits?
 }
 
 model Account {
@@ -69,31 +66,61 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
-// ================================
-// Your App Model
-// ================================
 
-model IdeasGenerated {
-  id     String  @id @default(auto()) @map("_id") @db.ObjectId
 
-  userId String? @db.ObjectId
-  user   User?   @relation(fields: [userId], references: [id])
+enum IdeaVisibility {
+  PRIVATE
+  PUBLIC
+}
 
-  techStack     String
-  difficulty    String
-  interest      String
-  role          String
-  goal          String
+model Idea {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId        String         @db.ObjectId
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   title         String
   problemSolved String
-  targetUsers   String
-  whyThis       String
+  features      String[]       
 
-  features     String[]
-  skillsProved String[]
+  projectType   String
+  techStack     String
+  difficulty    String
+  interest      String
 
-  estimatedTime String
+  visibility    IdeaVisibility @default(PRIVATE)
+
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  @@index([userId])
+  @@index([visibility])
+  @@index([createdAt])
+}
+
+
+enum UserPlan {
+  FREE
+  PRO
+}
+
+
+model UserCredits {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId    String   @unique @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  plan      UserPlan @default(FREE)
+
+  credits   Int      @default(3)
+
+
+  monthlyLimit Int?    
+  resetsAt    DateTime? 
 
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
+

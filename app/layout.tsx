@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-
 import "./globals.css";
 import Navbar from "@/components/Navbar";
-import Providers from "@/components/SessionProvider";
+import AppProviders from "@/components/AppProviders";
 import { IBM_Plex_Sans } from "next/font/google";
 
-/* ✅ IBM Plex Sans — primary UI font */
 export const plex = IBM_Plex_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
@@ -26,10 +24,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={plex.variable}>
       <body className="font-sans antialiased bg-background text-foreground">
-        <Providers>
+        {/* ✅ Navbar is now INSIDE SessionProvider */}
+        <AppProviders>
           <Navbar />
           {children}
-        </Providers>
+        </AppProviders>
       </body>
     </html>
   );

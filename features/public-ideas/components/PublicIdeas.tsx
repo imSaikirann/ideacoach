@@ -14,75 +14,7 @@ import {
   X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-const publicIdeas = [
-  {
-    id: 1,
-    title: "Expense Tracker for Students",
-    problem:
-      "Students struggle to track daily expenses and often overspend without realizing it.",
-    stack: ["React", "Tailwind", "Node.js"],
-    difficulty: "Beginner",
-    time: "4–5 days",
-    author: "Ankit",
-    category: "Finance",
-  },
-  {
-    id: 2,
-    title: "Habit Streak Tracker",
-    problem:
-      "People lose motivation when they can't see their consistency visually.",
-    stack: ["Next.js", "Prisma", "PostgreSQL"],
-    difficulty: "Intermediate",
-    time: "6–7 days",
-    author: "Priya",
-    category: "Productivity",
-  },
-  {
-    id: 3,
-    title: "Local Service Finder",
-    problem:
-      "Finding trusted local electricians or plumbers is still word-of-mouth driven.",
-    stack: ["React", "MongoDB", "Express"],
-    difficulty: "Intermediate",
-    time: "8–10 days",
-    author: "Rahul",
-    category: "Marketplace",
-  },
-  {
-    id: 4,
-    title: "Interview Prep Planner",
-    problem:
-      "Job seekers fail interviews due to unstructured preparation plans.",
-    stack: ["Next.js", "Tailwind", "Firebase"],
-    difficulty: "Beginner",
-    time: "5–6 days",
-    author: "Sneha",
-    category: "Education",
-  },
-  {
-    id: 5,
-    title: "Meal Planning Assistant",
-    problem:
-      "Families waste food and money because they don't plan meals ahead.",
-    stack: ["React", "Supabase", "Tailwind"],
-    difficulty: "Beginner",
-    time: "4–5 days",
-    author: "Meera",
-    category: "Lifestyle",
-  },
-  {
-    id: 6,
-    title: "Code Snippet Manager",
-    problem:
-      "Developers lose time searching for code snippets scattered across projects.",
-    stack: ["Next.js", "PostgreSQL", "Redis"],
-    difficulty: "Advanced",
-    time: "10–12 days",
-    author: "Kiran",
-    category: "Developer Tools",
-  },
-];
+import { useIdeas } from "../hooks/useIdeas";
 
 const difficulties = ["All", "Beginner", "Intermediate", "Advanced"];
 const categories = [
@@ -96,6 +28,8 @@ const categories = [
 ];
 
 export default function PublicIdeas() {
+  const { data: publicIdeas = [], isLoading, isError } = useIdeas();
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -111,14 +45,15 @@ export default function PublicIdeas() {
         );
 
       const matchesDifficulty =
-        selectedDifficulty === "All" || idea.difficulty === selectedDifficulty;
+        selectedDifficulty === "All" ||
+        idea.difficulty === selectedDifficulty;
 
       const matchesCategory =
         selectedCategory === "All" || idea.category === selectedCategory;
 
       return matchesSearch && matchesDifficulty && matchesCategory;
     });
-  }, [searchQuery, selectedDifficulty, selectedCategory]);
+  }, [publicIdeas, searchQuery, selectedDifficulty, selectedCategory]);
 
   const clearFilters = () => {
     setSearchQuery("");
@@ -129,266 +64,158 @@ export default function PublicIdeas() {
   const hasActiveFilters =
     searchQuery || selectedDifficulty !== "All" || selectedCategory !== "All";
 
+  /* ---------- Loading ---------- */
+  if (isLoading) {
+    return (
+      <section className="max-w-6xl mx-auto px-6 py-20 text-center">
+        <p className="text-muted-foreground">Loading public ideas…</p>
+      </section>
+    );
+  }
+
+  /* ---------- Error ---------- */
+  if (isError) {
+    return (
+      <section className="max-w-6xl mx-auto px-6 py-20 text-center">
+        <p className="text-destructive">
+          Failed to load public ideas. Please try again later.
+        </p>
+      </section>
+    );
+  }
+
   return (
     <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
       {/* Header */}
-      <div className="space-y-4 sm:space-y-6 text-center mb-10 sm:mb-14">
-        {/* Badge */}
-        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-secondary/50 border border-border backdrop-blur-sm">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-foreground" />
-          </span>
-          <span className="text-sm font-medium text-foreground/90">
-            Community Showcase
-          </span>
+      <div className="space-y-6 text-center mb-14">
+        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-secondary/50 border border-border">
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-sm font-medium">Community Showcase</span>
         </div>
 
-        {/* Heading */}
-        <div className="space-y-2 sm:space-y-3">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-foreground leading-[1.1] tracking-tight text-balance">
-            Public Ideas
-          </h2>
-          <p className="text-lg sm:text-xl md:text-2xl font-bold text-muted-foreground leading-[1.1] tracking-tight">
-            Get inspired by the community.
-          </p>
-        </div>
+        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
+          Public Ideas
+        </h2>
 
-        {/* Description */}
-        <p className="text-base sm:text-lg text-muted-foreground leading-relaxed max-w-2xl mx-auto">
-          Explore project ideas generated by developers using IdeaCoach. Find
-          inspiration, then build your own.
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Explore project ideas generated by developers using IdeaCoach.
         </p>
       </div>
 
-      {/* Search & Filters */}
-      <div className="mb-8 space-y-4">
-        {/* Search Bar */}
-        <div className="relative max-w-2xl mx-auto">
-          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-            <Search className="w-5 h-5 text-muted-foreground" />
-          </div>
-          <input
-            type="text"
-            placeholder="Search ideas, problems, or tech stack..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 sm:h-14 pl-12 pr-4 rounded-xl border border-border/50 bg-secondary/20 backdrop-blur-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => setSearchQuery("")}
-              className="absolute inset-y-0 right-4 flex items-center text-muted-foreground hover:text-foreground transition-colors"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          )}
-        </div>
-
-        {/* Filter Toggle (Mobile) */}
-        <div className="flex items-center justify-center sm:hidden">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowFilters(!showFilters)}
-            className="gap-2 bg-transparent"
+      {/* Search */}
+      <div className="relative max-w-2xl mx-auto mb-6">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+        <input
+          type="text"
+          placeholder="Search ideas, problems, or tech stack..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full h-12 pl-12 pr-4 rounded-xl border bg-secondary/20"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-4 top-1/2 -translate-y-1/2"
           >
-            <Filter className="w-4 h-4" />
-            Filters
-            {hasActiveFilters && (
-              <span className="w-2 h-2 rounded-full bg-primary" />
-            )}
-          </Button>
-        </div>
-
-        {/* Filter Pills */}
-        <div
-          className={`space-y-4 ${showFilters ? "block" : "hidden sm:block"}`}
-        >
-          {/* Difficulty Filter */}
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground mr-2">
-              Difficulty:
-            </span>
-            {difficulties.map((difficulty) => (
-              <button
-                key={difficulty}
-                onClick={() => setSelectedDifficulty(difficulty)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  selectedDifficulty === difficulty
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground border border-border/50"
-                }`}
-              >
-                {difficulty}
-              </button>
-            ))}
-          </div>
-
-          {/* Category Filter */}
-          <div className="flex flex-wrap items-center justify-center gap-2">
-            <span className="text-sm font-medium text-muted-foreground mr-2">
-              Category:
-            </span>
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-all ${
-                  selectedCategory === category
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary/50 text-muted-foreground hover:bg-secondary hover:text-foreground border border-border/50"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-
-          {/* Clear Filters */}
-          {hasActiveFilters && (
-            <div className="flex justify-center">
-              <button
-                onClick={clearFilters}
-                className="text-sm text-muted-foreground hover:text-foreground underline underline-offset-4 transition-colors"
-              >
-                Clear all filters
-              </button>
-            </div>
-          )}
-        </div>
+            <X className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
-      {/* Results Count */}
-      <div className="flex items-center justify-between mb-6 px-1">
-        <p className="text-sm text-muted-foreground">
-          Showing{" "}
-          <span className="font-semibold text-foreground">
-            {filteredIdeas.length}
-          </span>{" "}
-          {filteredIdeas.length === 1 ? "idea" : "ideas"}
-        </p>
+      {/* Filters */}
+      <div className="space-y-4 mb-8">
+        <div className="flex flex-wrap justify-center gap-2">
+          {difficulties.map((difficulty) => (
+            <button
+              key={difficulty}
+              onClick={() => setSelectedDifficulty(difficulty)}
+              className={`px-3 py-1.5 rounded-full text-sm ${
+                selectedDifficulty === difficulty
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary"
+              }`}
+            >
+              {difficulty}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-2">
+          {categories.map((category) => (
+            <button
+              key={category}
+              onClick={() => setSelectedCategory(category)}
+              className={`px-3 py-1.5 rounded-full text-sm ${
+                selectedCategory === category
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary"
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+
+        {hasActiveFilters && (
+          <div className="text-center">
+            <button
+              onClick={clearFilters}
+              className="text-sm underline text-muted-foreground"
+            >
+              Clear all filters
+            </button>
+          </div>
+        )}
       </div>
 
-      {/* Cards Grid */}
+      {/* Grid */}
       {filteredIdeas.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredIdeas.map((idea) => (
             <div
               key={idea.id}
-              className="group relative rounded-2xl border border-border/50 bg-secondary/20 backdrop-blur-sm overflow-hidden hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+              className="rounded-2xl border bg-secondary/20 p-6 flex flex-col"
             >
-              {/* Category Badge */}
-              <div className="absolute top-4 right-4">
-                <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20">
-                  {idea.category}
-                </span>
+              <h3 className="text-lg font-semibold mb-2">{idea.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
+                {idea.problem}
+              </p>
+
+              <div className="flex flex-wrap gap-2 mb-4">
+                {idea.stack.map((tech) => (
+                  <span
+                    key={tech}
+                    className="px-2 py-1 text-xs rounded bg-secondary"
+                  >
+                    {tech}
+                  </span>
+                ))}
               </div>
 
-              {/* Card Content */}
-              <div className="p-5 sm:p-6 flex flex-col h-full">
-                {/* Title */}
-                <h3 className="text-lg font-semibold text-foreground mb-2 pr-20 group-hover:text-primary transition-colors">
-                  {idea.title}
-                </h3>
-
-                {/* Problem */}
-                <p className="text-sm text-muted-foreground mb-5 line-clamp-2 leading-relaxed">
-                  {idea.problem}
-                </p>
-
-                {/* Tech Stack */}
-                <div className="flex flex-wrap gap-2 mb-5">
-                  {idea.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-2.5 py-1 rounded-md text-xs font-medium bg-secondary/80 text-foreground border border-border/50"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-
-                {/* Meta Info */}
-                <div className="mt-auto pt-4 border-t border-border/30 space-y-2.5">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <Clock className="w-3.5 h-3.5" />
-                      <span>{idea.time}</span>
-                    </div>
-                    <div
-                      className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium ${
-                        idea.difficulty === "Beginner"
-                          ? "bg-chart-2/10 text-chart-2"
-                          : idea.difficulty === "Intermediate"
-                            ? "bg-chart-4/10 text-chart-4"
-                            : "bg-destructive/10 text-destructive"
-                      }`}
-                    >
-                      <Layers className="w-3 h-3" />
-                      {idea.difficulty}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                      <User className="w-3.5 h-3.5" />
-                      <span>by {idea.author}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <button className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors">
-                        <Bookmark className="w-4 h-4" />
-                      </button>
-                      <button className="p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-colors">
-                        <ExternalLink className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
+              <div className="mt-auto pt-4 border-t flex justify-between text-xs text-muted-foreground">
+                <span className="flex items-center gap-1">
+                  <Clock className="w-3 h-3" /> {idea.time}
+                </span>
+                <span>{idea.difficulty}</span>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        /* Empty State */
-        <div className="text-center py-16 px-4">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-secondary/50 flex items-center justify-center">
-            <Search className="w-8 h-8 text-muted-foreground" />
-          </div>
-          <h3 className="text-lg font-semibold text-foreground mb-2">
-            No ideas found
-          </h3>
-          <p className="text-muted-foreground mb-4 max-w-md mx-auto">
-            Try adjusting your search or filters to find what you&apos;re
-            looking for.
-          </p>
-          <Button
-            variant="outline"
-            onClick={clearFilters}
-            className="bg-transparent"
-          >
+        <div className="text-center py-16">
+          <p className="text-muted-foreground">No ideas found.</p>
+          <Button variant="outline" onClick={clearFilters} className="mt-4">
             Clear filters
           </Button>
         </div>
       )}
 
       {/* CTA */}
-      <div className="mt-12 sm:mt-16 text-center space-y-4">
-        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-secondary/50 border border-border backdrop-blur-sm">
-          <Sparkles className="w-4 h-4 text-primary" />
-          <span className="text-base sm:text-lg font-semibold text-foreground">
-            Want your own personalized idea?
-          </span>
-        </div>
-        <div>
-          <Button
-            size="lg"
-            className="h-12 sm:h-13 px-6 sm:px-8 text-base font-semibold group shadow-lg shadow-primary/10 hover:shadow-primary/20 transition-all duration-300"
-          >
-            Generate My Idea
-            <ArrowRight className="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" />
-          </Button>
-        </div>
+      <div className="mt-16 text-center">
+        <Button size="lg" className="gap-2">
+          Generate My Idea
+          <ArrowRight className="w-5 h-5" />
+        </Button>
       </div>
     </section>
   );

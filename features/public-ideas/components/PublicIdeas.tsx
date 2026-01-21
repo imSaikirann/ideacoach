@@ -40,7 +40,7 @@ export default function PublicIdeas() {
       const matchesSearch =
         idea.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         idea.problem.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        idea.stack.some((tech) =>
+        idea.stack.some((tech: string) =>
           tech.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
@@ -182,7 +182,7 @@ export default function PublicIdeas() {
               </p>
 
               <div className="flex flex-wrap gap-2 mb-4">
-                {idea.stack.map((tech) => (
+                {idea.stack.map((tech:string) => (
                   <span
                     key={tech}
                     className="px-2 py-1 text-xs rounded bg-secondary"

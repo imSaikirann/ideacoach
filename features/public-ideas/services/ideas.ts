@@ -1,4 +1,8 @@
 export interface Idea {
+  time: string;
+  category: string;
+  stack: any;
+  problem: any;
   id: string;
   title: string;
   problemStatement: string | null;

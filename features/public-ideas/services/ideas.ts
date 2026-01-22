@@ -1,16 +1,18 @@
 export interface Idea {
-  time: string;
-  category: string;
-  stack: any;
-  problem: any;
   id: string;
   title: string;
-  problemStatement: string | null;
+  problem?: string;
+  problemStatement?: string | null;
   features: string[];
   difficulty: string;
-  techStack: string;
-  interest: string;
+  techStack?: string | string[];
+  stack?: string[];
+  projectType?: string;
+  interest?: string;
+  time?: string;
+  category?: string;
   createdAt: string;
+  author?: string;
 }
 
 export async function fetchIdeas(): Promise<Idea[]> {

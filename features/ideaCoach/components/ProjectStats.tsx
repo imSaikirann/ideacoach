@@ -2,12 +2,9 @@
 
 import React from "react";
 import { Target, Zap, BookOpen } from "lucide-react";
+import { ProjectStatsProps } from "../types";
 
-interface ProjectStatsProps {
-  features: number;
-  skills: number;
-  revealed: boolean;
-}
+
 
 export function ProjectStats({
   features,
@@ -49,21 +46,21 @@ export function ProjectStats({
       }`}
       style={{ transitionDelay: "250ms" }}
     >
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {stats.map((stat, index) => {
           const Icon = stat.icon;
           return (
             <div
               key={index}
-              className={`p-4 rounded-lg border ${stat.bgColor} ${stat.borderColor} hover:border-opacity-40 transition-all duration-300 group`}
+              className={`p-3 sm:p-4 rounded-lg border ${stat.bgColor} ${stat.borderColor} hover:border-opacity-40 transition-all duration-300 group`}
             >
-              <div className="flex items-center gap-2 mb-3">
-                <Icon className={`w-4 h-4 ${stat.color} group-hover:scale-110 transition-transform`} />
+              <div className="flex items-center gap-2 mb-2 sm:mb-3">
+                <Icon className={`w-4 h-4 ${stat.color} group-hover:scale-110 transition-transform flex-shrink-0`} />
               </div>
-              <p className="text-xs text-muted-foreground mb-2 uppercase tracking-wider font-medium">
+              <p className="text-xs text-muted-foreground mb-1.5 sm:mb-2 uppercase tracking-wider font-medium line-clamp-1">
                 {stat.label}
               </p>
-              <p className={`text-2xl font-bold ${stat.color}`}>
+              <p className={`text-lg sm:text-xl lg:text-2xl font-bold ${stat.color} truncate`}>
                 {stat.isText ? stat.value : stat.value}
               </p>
             </div>

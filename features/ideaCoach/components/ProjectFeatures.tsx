@@ -3,11 +3,9 @@
 import React from "react";
 import { ListChecks } from "lucide-react";
 import { ProjectSection } from "./ProjectSection";
+import { ProjectFeaturesProps } from "../types";
 
-interface ProjectFeaturesProps {
-  features: string[];
-  revealed: boolean;
-}
+
 
 export function ProjectFeatures({
   features,
@@ -22,11 +20,11 @@ export function ProjectFeatures({
       delay={400}
       revealed={revealed}
     >
-      <ul className="space-y-2">
+      <ul className="space-y-2.5">
         {features.map((feature, index) => (
           <li key={index} className="flex gap-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2" />
-            <span>{feature}</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-accent mt-2 flex-shrink-0" />
+            <span className="text-sm sm:text-base text-foreground/90 leading-relaxed">{feature}</span>
           </li>
         ))}
       </ul>

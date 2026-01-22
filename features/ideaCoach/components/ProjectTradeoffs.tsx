@@ -2,11 +2,9 @@
 
 import React from "react";
 import { AlertCircle } from "lucide-react";
+import { ProjectTradeoffsProps } from "../types";
 
-interface ProjectTradeoffsProps {
-  tradeoffs: string[];
-  revealed: boolean;
-}
+
 
 export function ProjectTradeoffs({ tradeoffs, revealed }: ProjectTradeoffsProps) {
   if (!tradeoffs || tradeoffs.length === 0) return null;

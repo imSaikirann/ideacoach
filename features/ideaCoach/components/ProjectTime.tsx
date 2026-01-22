@@ -3,16 +3,9 @@
 import React from "react";
 import { Clock } from "lucide-react";
 import { ProjectSection } from "./ProjectSection";
+import { ProjectTimeProps } from "../types";
 
-interface EstimatedTime {
-  days: string;
-  dailyEffort: string;
-}
 
-interface ProjectTimeProps {
-  estimatedTime: EstimatedTime;
-  revealed: boolean;
-}
 
 export function ProjectTime({
   estimatedTime,

@@ -5,13 +5,8 @@ import { StepLayout } from "./StepLayout";
 import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { InterestStepProps } from "../types";
 
-interface InterestStepProps {
-  value: string;
-  onChange: (value: string) => void;
-  onBack: () => void;
-  onNext: () => void;
-}
 
 export function InterestStep({
   value,

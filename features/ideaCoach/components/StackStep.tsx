@@ -5,14 +5,9 @@ import { StepLayout } from "./StepLayout";
 import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { StackStepProps } from "../types";
 
-interface StackStepProps {
-  projectType: string;
-  value: string[];
-  onChange: (value: string[]) => void;
-  onBack: () => void;
-  onNext: () => void;
-}
+
 
 export function StackStep({
   projectType,

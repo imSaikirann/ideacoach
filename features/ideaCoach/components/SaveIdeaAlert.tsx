@@ -12,13 +12,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Share2, Lightbulb } from "lucide-react";
+import { SaveIdeaAlertProps } from "../types";
 
-interface SaveIdeaAlertProps {
-  isOpen: boolean;
-  projectTitle: string;
-  onSave: () => void;
-  onSkip: () => void;
-}
+
 
 export function SaveIdeaAlert({
   isOpen,

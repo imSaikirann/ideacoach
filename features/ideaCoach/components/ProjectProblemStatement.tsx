@@ -2,11 +2,9 @@
 
 import React from "react";
 import { Lightbulb } from "lucide-react";
+import { ProjectProblemStatementProps } from "../types";
 
-interface ProjectProblemStatementProps {
-  problemStatement: string;
-  revealed: boolean;
-}
+
 
 export function ProjectProblemStatement({
   problemStatement,

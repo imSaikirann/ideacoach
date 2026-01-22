@@ -3,11 +3,8 @@
 import React from "react";
 import { GraduationCap } from "lucide-react";
 import { ProjectSection } from "./ProjectSection";
+import { ProjectLearningProps } from "../types";
 
-interface ProjectLearningProps {
-  skills: string[];
-  revealed: boolean;
-}
 
 export function ProjectLearning({
   skills,

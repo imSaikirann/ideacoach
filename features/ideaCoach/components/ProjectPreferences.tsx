@@ -4,18 +4,9 @@ import React from "react";
 import { Code2, Gauge, Heart, Sparkles, Settings2 } from "lucide-react";
 import { ProjectSection } from "./ProjectSection";
 import { PreferenceItem } from "./PreferenceItem";
+import { ProjectPreferencesProps } from "../types";
 
-interface UserSelections {
-  projectType: string;
-  techStack: string[];
-  difficulty: string;
-  interest: string;
-}
 
-interface ProjectPreferencesProps {
-  selections: UserSelections;
-  revealed: boolean;
-}
 
 export function ProjectPreferences({
   selections,
@@ -28,7 +19,7 @@ export function ProjectPreferences({
       delay={200}
       revealed={revealed}
     >
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <PreferenceItem
           label="Type"
           value={selections.projectType}

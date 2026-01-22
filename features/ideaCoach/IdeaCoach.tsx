@@ -1,13 +1,19 @@
 "use client";
 
 import { useState } from "react";
+
 import { ProjectTypeStep } from "./components/ProjectTypeStep";
 import { StackStep } from "./components/StackStep";
 import { DifficultyStep } from "./components/DifficultyStep";
 import { InterestStep } from "./components/InterestStep";
 import { CustomProblemStep } from "./components/CustomProblemStep";
 import { ProjectResult } from "./components/ProjectResult";
+import { ErrorState } from "./components/ErrorState";
+import { GeneratingScreen } from "./components/GeneratingScreen";
+
 import type { Project } from "./types";
+import { useCredits } from "./hooks/useCredits";
+import { useGenerateIdea } from "./hooks/useGenerateIdea";
 
 type Step =
   | "projectType"
@@ -27,40 +33,36 @@ export function IdeaCoach() {
   const [customProblem, setCustomProblem] = useState("");
 
   const [project, setProject] = useState<Project | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  const { data: credits } = useCredits();
+  const generateIdeaMutation = useGenerateIdea();
+
+  const loading = generateIdeaMutation.isPending;
+  const error = generateIdeaMutation.error as Error | null
+
 
   async function generate() {
-
-      // scroll to top smoothly
-  window.scrollTo({ top: 0, behavior: "smooth" });
-    setLoading(true);
-
-
+    window.scrollTo({ top: 0, behavior: "smooth" });
 
     try {
-      const res = await fetch("/api/generate-idea", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          projectType,
-          techStack: techStack.join(", "),
-          difficulty,
-          interest,
-          customProblem,
-        }),
+      const data = await generateIdeaMutation.mutateAsync({
+        projectType,
+        techStack: techStack.join(", "),
+        difficulty,
+        interest,
+        customProblem,
       });
 
-      const data = await res.json();
       setProject(data);
       setStep("result");
-    } catch (error) {
-      console.error("Failed to generate idea:", error);
-    } finally {
-      setLoading(false);
+    } catch {
+      // ❌ No console.error needed
+      // Error UI is handled declaratively
     }
   }
 
   function reset() {
+    generateIdeaMutation.reset();
     setStep("projectType");
     setProjectType("");
     setTechStack([]);
@@ -70,6 +72,25 @@ export function IdeaCoach() {
     setProject(null);
   }
 
+  // 🔴 Show generating screen when loading
+  if (loading) {
+    return <GeneratingScreen isGenerating={loading} />;
+  }
+
+  // 🔴 Global error display (shown on any step)
+  if (error) {
+    return (
+      <div className="mx-auto max-w-2xl p-4">
+        <ErrorState
+          title="Idea generation failed"
+          message={error.message}
+          onRetry={generate}
+          onDismiss={() => generateIdeaMutation.reset()}
+        />
+      </div>
+    );
+  }
+
   switch (step) {
     case "projectType":
       return (
@@ -77,6 +98,8 @@ export function IdeaCoach() {
           value={projectType}
           onChange={setProjectType}
           onNext={() => setStep("stack")}
+          creditsLeft={credits?.creditsLeft ?? 0}
+          creditsPerMonth={credits?.creditsPerMonth ?? 0}
         />
       );
 
@@ -108,7 +131,6 @@ export function IdeaCoach() {
           onChange={setInterest}
           onBack={() => setStep("difficulty")}
           onNext={() => setStep("customProblem")}
-
         />
       );
 
@@ -120,6 +142,8 @@ export function IdeaCoach() {
           onBack={() => setStep("interest")}
           onGenerate={generate}
           loading={loading}
+          creditsLeft={credits?.creditsLeft ?? 0}
+          creditsPerMonth={credits?.creditsPerMonth ?? 0}
         />
       );
 
@@ -132,11 +156,13 @@ export function IdeaCoach() {
             techStack,
             difficulty,
             interest,
-
+            customProblem: customProblem || undefined,
           }}
           onBack={reset}
           onGenerateAnother={generate}
           isGenerating={loading}
+          creditsLeft={credits?.creditsLeft ?? 0}
+          creditsPerMonth={credits?.creditsPerMonth ?? 0}
         />
       ) : null;
 

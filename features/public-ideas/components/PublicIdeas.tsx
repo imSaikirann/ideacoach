@@ -37,10 +37,11 @@ export default function PublicIdeas() {
 
   const filteredIdeas = useMemo(() => {
     return publicIdeas.filter((idea) => {
+      const stackArray = Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : [];
       const matchesSearch =
         idea.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        idea.problem.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        idea.stack.some((tech: string) =>
+        (idea.problem || idea.problemStatement || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
+        stackArray.some((tech: string) =>
           tech.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
@@ -176,16 +177,16 @@ export default function PublicIdeas() {
               key={idea.id}
               className="rounded-2xl border bg-secondary/20 p-6 flex flex-col"
             >
-              <h3 className="text-lg font-semibold mb-2">{idea.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                {idea.problem}
+              <h3 className="text-lg font-semibold mb-2 text-foreground">{idea.title}</h3>
+              <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
+                {idea.problem || idea.problemStatement || "No description available"}
               </p>
 
               <div className="flex flex-wrap gap-2 mb-4">
-                {idea.stack.map((tech:string) => (
+                {(Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : []).map((tech: string) => (
                   <span
                     key={tech}
-                    className="px-2 py-1 text-xs rounded bg-secondary"
+                    className="px-2 py-1 text-xs rounded bg-secondary text-foreground"
                   >
                     {tech}
                   </span>
@@ -212,10 +213,12 @@ export default function PublicIdeas() {
 
       {/* CTA */}
       <div className="mt-16 text-center">
-        <Button size="lg" className="gap-2">
-          Generate My Idea
-          <ArrowRight className="w-5 h-5" />
-        </Button>
+        <a href="/dashboard/idea-form">
+          <Button size="lg" className="gap-2">
+            Generate My Idea
+            <ArrowRight className="w-5 h-5" />
+          </Button>
+        </a>
       </div>
     </section>
   );

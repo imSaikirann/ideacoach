@@ -15,25 +15,13 @@ import { ProjectRoadmap } from "./ProjectRoadmap";
 import { ProjectTradeoffs } from "./ProjectTradeoffs";
 import { ProjectProblemStatement } from "./ProjectProblemStatement";
 import { ProjectStats } from "./ProjectStats";
-import type { Project } from "../types";
+import { ProjectDescription } from "./ProjectDescription";
+import { ProjectTechnicalFocus } from "./ProjectTechnicalFocus";
+import { ProjectStarterCode } from "./ProjectStarterCode";
+import { ProjectStretchGoals } from "./ProjectStretchGoals";
+import { useSaveIdea } from "../hooks/useSaveIdea";
+import type { Project, ProjectResultProps } from "../types";
 
-interface UserSelections {
-  projectType: string;
-  techStack: string[];
-  difficulty: string;
-  interest: string;
-  customProblem?: string;
-}
-
-interface ProjectResultProps {
-  project: Project;
-  selections: UserSelections;
-  onBack: () => void;
-  onGenerateAnother: () => void;
-  isGenerating?: boolean;
-  creditsLeft?: number;
-  creditsPerMonth?: number;
-}
 
 const COOLDOWN_SECONDS = 60;
 
@@ -43,17 +31,20 @@ export function ProjectResult({
   onBack,
   onGenerateAnother,
   isGenerating = false,
-  creditsLeft = 10,
-  creditsPerMonth = 50,
+  creditsLeft ,
+  creditsPerMonth
 }: ProjectResultProps) {
   const [revealed, setRevealed] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [showSaveAlert, setShowSaveAlert] = useState(false);
+  
+  const saveIdeaMutation = useSaveIdea();
 
   const subtitleText = useTypewriter(
     revealed
-      ? project.problemStatement ??
+      ? project.description ??
+          project.problemStatement ??
           project.problemSolved ??
           "A project tailored to your preferences."
       : "",
@@ -76,6 +67,24 @@ export function ProjectResult({
     return () => clearInterval(interval);
   }, [cooldown]);
 
+  function handleSaveIdea() {
+    saveIdeaMutation.mutate(
+      {
+        project,
+        selections,
+        visibility: "PUBLIC", // Save as public to show in public ideas
+      },
+      {
+        onSuccess: () => {
+          setIsSaved(true);
+        },
+        onError: (error) => {
+          console.error("Failed to save idea:", error);
+        },
+      }
+    );
+  }
+
   function handleGenerateAnother() {
     if (cooldown > 0 || isGenerating) return;
     
@@ -84,6 +93,16 @@ export function ProjectResult({
   }
 
   function handleConfirmGenerate() {
+    // Save the idea before generating another
+    if (!isSaved) {
+      handleSaveIdea();
+    }
+    setCooldown(COOLDOWN_SECONDS);
+    setShowSaveAlert(false);
+    onGenerateAnother();
+  }
+
+  function handleSkipSave() {
     setCooldown(COOLDOWN_SECONDS);
     setShowSaveAlert(false);
     onGenerateAnother();
@@ -101,6 +120,10 @@ export function ProjectResult({
             isGenerating={isGenerating}
             onBack={onBack}
             onGenerateAnother={handleGenerateAnother}
+            onSave={handleSaveIdea}
+            isSaving={saveIdeaMutation.isPending}
+            creditsLeft={creditsLeft!}
+            creditsPerMonth={creditsPerMonth!}
           />
         }
       >
@@ -119,13 +142,21 @@ export function ProjectResult({
 
           {/* Title */}
           <ProjectTitle
-            title={project.title}
+            title={project.projectName || project.title || "Project Idea"}
             subtitle={subtitleText}
             revealed={revealed}
           />
 
-          {/* Problem Statement */}
-          {project.problemStatement && (
+          {/* Description */}
+          {project.description && (
+            <ProjectDescription
+              description={project.description}
+              revealed={revealed}
+            />
+          )}
+
+          {/* Problem Statement (legacy) */}
+          {project.problemStatement && !project.description && (
             <ProjectProblemStatement
               problemStatement={project.problemStatement}
               revealed={revealed}
@@ -134,8 +165,8 @@ export function ProjectResult({
 
           {/* Stats Overview */}
           <ProjectStats
-            features={project.features?.length || 0}
-            skills={project.whatYouWillLearn?.length || 0}
+            features={project.features?.length || project.technicalFocus?.length || 0}
+            skills={project.learningObjectives?.length || project.whatYouWillLearn?.length || 0}
             revealed={revealed}
           />
 
@@ -145,17 +176,53 @@ export function ProjectResult({
             revealed={revealed}
           />
 
-          {/* Features */}
-          <ProjectFeatures
-            features={project.features ?? []}
-            revealed={revealed}
-          />
+          {/* Learning Objectives */}
+          {project.learningObjectives && project.learningObjectives.length > 0 && (
+            <ProjectLearning
+              skills={project.learningObjectives}
+              revealed={revealed}
+            />
+          )}
 
-          {/* What you will learn */}
-          <ProjectLearning
-            skills={project.whatYouWillLearn ?? []}
-            revealed={revealed}
-          />
+          {/* What you will learn (legacy) */}
+          {project.whatYouWillLearn && project.whatYouWillLearn.length > 0 && !project.learningObjectives && (
+            <ProjectLearning
+              skills={project.whatYouWillLearn}
+              revealed={revealed}
+            />
+          )}
+
+          {/* Technical Focus */}
+          {project.technicalFocus && project.technicalFocus.length > 0 && (
+            <ProjectTechnicalFocus
+              technicalFocus={project.technicalFocus}
+              revealed={revealed}
+            />
+          )}
+
+          {/* Features (legacy) */}
+          {project.features && project.features.length > 0 && !project.technicalFocus && (
+            <ProjectFeatures
+              features={project.features}
+              revealed={revealed}
+            />
+          )}
+
+          {/* Starter Code Examples */}
+          {project.starterCodeExamples && project.starterCodeExamples.length > 0 && (
+            <ProjectStarterCode
+              starterCodeExamples={project.starterCodeExamples}
+              revealed={revealed}
+            />
+          )}
+
+          {/* Stretch Goals */}
+          {project.stretchGoals && project.stretchGoals.length > 0 && (
+            <ProjectStretchGoals
+              stretchGoals={project.stretchGoals}
+              revealed={revealed}
+            />
+          )}
 
           {/* Estimated time */}
           {project.estimatedTime && (
@@ -166,29 +233,29 @@ export function ProjectResult({
           )}
 
           {/* Build Roadmap */}
-          <ProjectRoadmap
-            roadmap={project.buildRoadmap ?? []}
-            revealed={revealed}
-          />
+          {project.buildRoadmap && project.buildRoadmap.length > 0 && (
+            <ProjectRoadmap
+              roadmap={project.buildRoadmap}
+              revealed={revealed}
+            />
+          )}
 
           {/* Design Tradeoffs */}
-          <ProjectTradeoffs
-            tradeoffs={project.designTradeoffs ?? []}
-            revealed={revealed}
-          />
+          {project.designTradeoffs && project.designTradeoffs.length > 0 && (
+            <ProjectTradeoffs
+              tradeoffs={project.designTradeoffs}
+              revealed={revealed}
+            />
+          )}
         </div>
       </StepLayout>
 
       {/* Save Idea Alert */}
       <SaveIdeaAlert
         isOpen={showSaveAlert}
-        projectTitle={project.title}
+        projectTitle={project.projectName || project.title || "Project Idea"}
         onSave={handleConfirmGenerate}
-        onSkip={() => {
-          setCooldown(COOLDOWN_SECONDS);
-          setShowSaveAlert(false);
-          onGenerateAnother();
-        }}
+        onSkip={handleSkipSave}
       />
     </>
   );

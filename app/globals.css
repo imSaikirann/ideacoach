@@ -3,6 +3,10 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* ======================================================
+   THEME TOKEN MAPPING (TAILWIND v4)
+====================================================== */
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -39,76 +43,84 @@
 }
 
 /* ======================================================
-   🌙 IDEA COACH — DARK SAGE THEME (EYE FRIENDLY)
+   🌿 IDEA COACH — CALM AUTHORITY THEME
+   Built for deep thinking & long sessions
 ====================================================== */
 
-:root,
-.dark {
-  --radius: 0.625rem;
+:root {
+  --radius: 0.75rem;
 
-  --background: #111513;
-  --foreground: #E8ECE9;
+  /* Base */
+  --background: #0B1110;
+  --foreground: #E9EEE9;
 
-  --card: #1C211F;
-  --card-foreground: #E8ECE9;
+  /* Surfaces */
+  --card: #141B19;
+  --card-foreground: #E9EEE9;
 
-  --popover: #1C211F;
-  --popover-foreground: #E8ECE9;
+  --popover: #141B19;
+  --popover-foreground: #E9EEE9;
 
-  --primary: #7B9A87;
-  --primary-foreground: #111513;
+  /* Brand / Focus */
+  --primary: #8FB6A1;
+  --primary-foreground: #0B1110;
 
-  --secondary: #232826;
-  --secondary-foreground: #DDE4DF;
+  /* Secondary */
+  --secondary: #1C2421;
+  --secondary-foreground: #D7E0DA;
 
-  --muted: #1F2422;
-  --muted-foreground: #A9B4AD;
+  /* Muted */
+  --muted: #18201D;
+  --muted-foreground: #B4C1BA;
 
-  --accent: #648B75;
-  --accent-foreground: #111513;
+  /* Accent */
+  --accent: #6FA38B;
+  --accent-foreground: #0B1110;
 
-  --destructive: #C46655;
+  /* Feedback */
+  --destructive: #D07A6A;
 
-  --border: #2F3532;
-  --input: #232826;
-  --ring: #7B9A87;
+  /* Borders & Inputs */
+  --border: #25302C;
+  --input: #1C2421;
+  --ring: #8FB6A1;
 
-  --sidebar: #191E1C;
-  --sidebar-foreground: #E8ECE9;
-  --sidebar-primary: #7B9A87;
-  --sidebar-primary-foreground: #111513;
-  --sidebar-accent: #232826;
-  --sidebar-accent-foreground: #DDE4DF;
-  --sidebar-border: #2F3532;
-  --sidebar-ring: #7B9A87;
+  /* Sidebar */
+  --sidebar: #0E1513;
+  --sidebar-foreground: #E9EEE9;
+  --sidebar-primary: #8FB6A1;
+  --sidebar-primary-foreground: #0B1110;
+  --sidebar-accent: #1C2421;
+  --sidebar-accent-foreground: #D7E0DA;
+  --sidebar-border: #25302C;
+  --sidebar-ring: #8FB6A1;
 }
 
-
-
 /* ======================================================
-   BASE LAYER
+   BASE LAYER (SAFE & CLEAN)
 ====================================================== */
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    border-color: hsl(var(--border));
   }
 
+  html,
   body {
     @apply bg-background text-foreground;
-    background-color: #0F1512;
-    color: #E4ECE7;
   }
 
-  html {
-    background-color: #0F1512;
+  /* Generating screen animations */
+  @keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
   }
-}
-
-
-@theme inline {
-  --font-sans: var(--font-sans);
-}
-@theme inline {
-  --font-sans: var(--font-sans);
+  
+  @keyframes glitch {
+    0%, 100% { transform: translate(0); }
+    20% { transform: translate(-2px, 2px); }
+    40% { transform: translate(-2px, -2px); }
+    60% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+  }
 }

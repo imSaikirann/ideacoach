@@ -2,12 +2,9 @@
 
 import React from "react";
 import { Sparkles } from "lucide-react";
+import { ProjectTitleProps } from "../types";
 
-interface ProjectTitleProps {
-  title: string;
-  subtitle: string;
-  revealed: boolean;
-}
+
 
 export function ProjectTitle({
   title,
@@ -27,12 +24,12 @@ export function ProjectTitle({
         </span>
       </div>
 
-      <h2 className="text-2xl font-semibold text-foreground">
+      <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-foreground leading-tight">
         {title}
       </h2>
 
       {subtitle && (
-        <p className="text-muted-foreground mt-2">{subtitle}</p>
+        <p className="text-sm sm:text-base text-muted-foreground mt-2 leading-relaxed">{subtitle}</p>
       )}
     </div>
   );

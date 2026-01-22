@@ -1,27 +1,53 @@
 import { NextResponse } from "next/server";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 
 export async function GET() {
   try {
-    // 1️⃣ Get session
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
-    }
-
-    // 2️⃣ Fetch only this user's ideas
+    // 1️⃣ Fetch PUBLIC ideas (no auth required for public ideas)
     const ideas = await prisma.idea.findMany({
-
+      where: {
+        visibility: "PUBLIC",
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 100, // Limit to 100 most recent
     });
 
-    console.log(ideas)
-    return NextResponse.json(ideas);
+    // 2️⃣ Safely resolve author (some older records may reference deleted users)
+    const userIds = Array.from(new Set(ideas.map((i) => i.userId)));
+    const users = await prisma.user.findMany({
+      where: { id: { in: userIds } },
+      select: { id: true, name: true, email: true },
+    });
+    const userById = new Map(users.map((u) => [u.id, u]));
+
+    // 3️⃣ Map to frontend format
+    const mappedIdeas = ideas.map((idea) => {
+      const author = userById.get(idea.userId);
+      const stack = idea.techStack
+        ? idea.techStack.split(",").map((s) => s.trim()).filter(Boolean)
+        : [];
+
+      return {
+        id: idea.id,
+        title: idea.title,
+        problem: idea.problemSolved,
+        problemStatement: idea.problemSolved,
+        features: idea.features,
+        difficulty: idea.difficulty,
+        techStack: stack,
+        stack,
+        projectType: idea.projectType,
+        interest: idea.interest,
+        time: "1-2 weeks", // Default (can be improved later)
+        category: idea.interest || "General",
+        createdAt: idea.createdAt.toISOString(),
+        author: author?.name || author?.email || "Anonymous",
+      };
+    });
+
+    return NextResponse.json(mappedIdeas);
   } catch (error) {
     console.error("Failed to fetch ideas:", error);
 

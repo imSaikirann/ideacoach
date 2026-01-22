@@ -2,11 +2,8 @@
 
 import React from "react";
 import { Zap, TrendingUp } from "lucide-react";
+import { ProjectCreditsHeaderProps } from "../types";
 
-interface ProjectCreditsHeaderProps {
-  creditsLeft: number;
-  creditsPerMonth: number;
-}
 
 export function ProjectCreditsHeader({
   creditsLeft,
@@ -31,25 +28,25 @@ export function ProjectCreditsHeader({
       </div>
 
       {/* Credit Stats */}
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {/* Credits Left */}
-        <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+        <div className="p-2.5 sm:p-3 rounded-lg bg-primary/5 border border-primary/20">
           <p className="text-xs text-muted-foreground mb-1">Credits Left</p>
-          <p className="text-2xl font-bold text-primary">{creditsLeft}</p>
+          <p className="text-xl sm:text-2xl font-bold text-primary">{creditsLeft}</p>
         </div>
 
         {/* Used */}
-        <div className="p-3 rounded-lg bg-accent/5 border border-accent/20">
+        <div className="p-2.5 sm:p-3 rounded-lg bg-accent/5 border border-accent/20">
           <p className="text-xs text-muted-foreground mb-1">Used</p>
-          <p className="text-2xl font-bold text-accent">
+          <p className="text-xl sm:text-2xl font-bold text-accent">
             {creditsPerMonth - creditsLeft}
           </p>
         </div>
 
         {/* Total */}
-        <div className="p-3 rounded-lg bg-muted/30 border border-border">
+        <div className="p-2.5 sm:p-3 rounded-lg bg-muted/30 border border-border">
           <p className="text-xs text-muted-foreground mb-1">Total</p>
-          <p className="text-2xl font-bold text-foreground">{creditsPerMonth}</p>
+          <p className="text-xl sm:text-2xl font-bold text-foreground">{creditsPerMonth}</p>
         </div>
       </div>
 

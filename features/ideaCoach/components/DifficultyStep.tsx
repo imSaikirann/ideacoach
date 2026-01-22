@@ -5,13 +5,8 @@ import { StepLayout } from "./StepLayout";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Zap, Flame, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { DifficultyStepProps } from "../types";
 
-interface DifficultyStepProps {
-  value: string;
-  onChange: (value: string) => void;
-  onBack: () => void;
-  onNext: () => void;
-}
 
 const levelConfig = {
   Beginner: {
@@ -69,24 +64,25 @@ export function DifficultyStep({
               type="button"
               onClick={() => onChange(level)}
               className={cn(
-                "flex items-center gap-4 p-4 rounded-lg border text-left transition-all duration-200",
+                "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border text-left transition-all duration-200",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                "min-h-[72px] touch-manipulation", // Better touch target
                 isActive
-                  ? "border-accent bg-accent/10"
+                  ? "border-accent bg-accent/10 shadow-sm"
                   : "border-border bg-secondary/50 hover:border-accent/50"
               )}
             >
               <div
                 className={cn(
-                  "w-10 h-10 rounded-lg flex items-center justify-center transition-colors",
+                  "w-10 h-10 rounded-lg flex items-center justify-center transition-colors flex-shrink-0",
                   isActive ? "bg-accent text-accent-foreground" : "bg-secondary text-muted-foreground"
                 )}
               >
                 <Icon className="w-5 h-5" />
               </div>
-              <div>
-                <p className="font-medium text-foreground">{level}</p>
-                <p className="text-sm text-muted-foreground">{config.description}</p>
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-foreground text-sm sm:text-base">{level}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{config.description}</p>
               </div>
             </button>
           );

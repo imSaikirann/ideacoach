@@ -260,3 +260,12 @@ export const subQuestions = {
 export type SubQuestionCategory = keyof typeof subQuestions;
 export type SubQuestionOption =
   (typeof subQuestions)[SubQuestionCategory][number];
+
+/* ---------- GENERATION MESSAGES ---------- */
+export const generationMessages = [
+  "Analyzing your inputs…",
+  "Understanding your goals and constraints…",
+  "Matching tech stack to learning outcomes…",
+  "Generating project ideas…",
+  "Refining ideas for real-world use…",
+] as const;

@@ -18,20 +18,23 @@ const handler = NextAuth({
   },
 
   pages: {
-    signIn: "/signin", 
+    signIn: "/signin",
   },
 
   callbacks: {
-    async jwt({ token, account, profile }) {
-      if (account && profile) {
-        token.sub = profile.sub;
+  
+    async jwt({ token, user }) {
+      if (user) {
+       
+        token.userId = user.id;
       }
       return token;
     },
 
     async session({ session, token }) {
       if (session.user) {
-        (session.user as any).sub = token.sub;
+        // 👇 Make userId available everywhere
+        (session.user as any).id = token.userId;
       }
       return session;
     },

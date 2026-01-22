@@ -1,14 +1,9 @@
 "use client";
 
 import React from "react";
+import { ProjectSectionProps } from "../types";
 
-interface ProjectSectionProps {
-  title: string;
-  icon: React.ReactNode;
-  children: React.ReactNode;
-  delay?: number;
-  revealed: boolean;
-}
+
 
 export function ProjectSection({
   title,

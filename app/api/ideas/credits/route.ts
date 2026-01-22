@@ -3,9 +3,13 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getNextResetDate, shouldReset } from "@/lib/credits";
+import { rateLimitCheck } from "@/lib/rateLimitCheck";
 
-export async function GET() {
+export async function GET(req:Request) {
   try {
+
+      const rateLimitResponse = await rateLimitCheck(req);
+      if (rateLimitResponse) return rateLimitResponse;
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {

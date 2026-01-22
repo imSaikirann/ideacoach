@@ -3,12 +3,15 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getGeminiModel } from "@/lib/gemini";
+import { rateLimitCheck } from "@/lib/rateLimitCheck";
 
 const MAX_RETRIES = 1;
 
 export async function POST(req: NextRequest) {
   try {
-    // 1️⃣ Auth
+    
+      const rateLimitResponse = await rateLimitCheck(req);
+      if (rateLimitResponse) return rateLimitResponse;
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.id) {
@@ -18,7 +21,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2️⃣ Get credits
+  
     const userCredits = await prisma.userCredits.findUnique({
       where: { userId: session.user.id },
     });
@@ -30,7 +33,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3️⃣ Validate input
+   
     const body = await req.json();
     const {
       projectType,
@@ -47,7 +50,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 4️⃣ Prompt
+
     const prompt = `
 You are IdeaCoach — a calm, experienced senior developer mentor who helps developers build REAL, practical projects while learning how to think like engineers.
 
@@ -108,7 +111,6 @@ STRICT OUTPUT RULES:
 
     const text = result.response.text();
 
-    // 6️⃣ Safe JSON extraction
     const jsonStart = text.indexOf("{");
     const jsonEnd = text.lastIndexOf("}");
 
@@ -131,7 +133,7 @@ STRICT OUTPUT RULES:
       );
     }
 
-    // 7️⃣ 🔥 Deduct credit AFTER success
+
     await prisma.userCredits.updateMany({
       where: { 
         userId: session.user.id,

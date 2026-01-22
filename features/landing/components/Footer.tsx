@@ -1,4 +1,4 @@
-import { UmamiVisitors } from "@/components/common/UmamiVisitors";
+import UmamiAnalytics from "@/components/common/UmamiVisitors";
 
 export default function Footer() {
   return (
@@ -14,7 +14,7 @@ export default function Footer() {
           </p>
 
           {/* Right */}
-          <UmamiVisitors />
+          <UmamiAnalytics />
         </div>
       </div>
     </footer>

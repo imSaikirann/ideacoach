@@ -1,12 +1,21 @@
-export function UmamiVisitors() {
+import Script from "next/script";
+
+export default function UmamiAnalytics() {
+  const umamiSrc = process.env.NEXT_PUBLIC_UMAMI_SRC;
+  const umamiId = process.env.NEXT_PUBLIC_UMAMI_ID;
+
+  if (!umamiSrc || !umamiId) {
+    console.error("Umami Analytics is not configured.");
+    return null;
+  }
+
   return (
-    <div className="flex items-center gap-2 text-sm text-muted-foreground">
-      <span>Visitors:</span>
-      <iframe
-        src="https://cloud.umami.is/share/sxiXDgri8m6ulaNe?view=stats"
-        className="h-6 w-24 border-0"
-        loading="lazy"
-      />
-    </div>
+    <Script
+      id="umami-analytics"
+      src={umamiSrc}
+      data-website-id={umamiId}
+      strategy="afterInteractive"
+      async
+    />
   );
 }

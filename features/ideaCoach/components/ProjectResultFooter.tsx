@@ -91,7 +91,7 @@ export function ProjectResultFooter({
 
       {/* Generate CTA or Upgrade */}
       {creditsLeft === 0 ? (
-        <Link href="/upgrade" className="block">
+        <Link href="/dashboard/upgrade-page" className="block">
           <Button className="h-12 w-full text-base sm:text-sm bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 text-primary-foreground font-medium">
             <Crown className="w-4 h-4 mr-2" />
             Upgrade to Pro - Generate More Ideas

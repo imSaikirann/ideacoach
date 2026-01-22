@@ -49,14 +49,7 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Links */}
-          <div className="hidden md:flex items-center gap-1">
-            <NavLink href="/">Home</NavLink>
-            <NavLink href="/how-it-works">How It Works</NavLink>
-            <NavLink href="/ideas">Ideas</NavLink>
-            <NavLink href="/about">About</NavLink>
-          </div>
-
+ 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-3">
             {isAuthed ? (

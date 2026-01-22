@@ -34,7 +34,7 @@ export function IdeaCoach() {
 
   const [project, setProject] = useState<Project | null>(null);
 
-  const { data: credits } = useCredits();
+  const { data: credits ,isLoading } = useCredits();
   const generateIdeaMutation = useGenerateIdea();
 
   const loading = generateIdeaMutation.isPending;
@@ -56,8 +56,7 @@ export function IdeaCoach() {
       setProject(data);
       setStep("result");
     } catch {
-      // ❌ No console.error needed
-      // Error UI is handled declaratively
+   
     }
   }
 
@@ -99,6 +98,7 @@ export function IdeaCoach() {
           onChange={setProjectType}
           onNext={() => setStep("stack")}
           creditsLeft={credits?.creditsLeft ?? 0}
+          loading={isLoading}
           creditsPerMonth={credits?.creditsPerMonth ?? 0}
         />
       );

@@ -77,6 +77,7 @@ export interface ProjectTypeStepProps {
   onNext: () => void;
   creditsLeft?: number;
   creditsPerMonth?: number;
+  loading:boolean
 }
 
 

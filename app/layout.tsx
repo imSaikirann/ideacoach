@@ -2,15 +2,26 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import AppProviders from "@/components/AppProviders";
-import { IBM_Plex_Sans } from "next/font/google";
+import {  Bricolage_Grotesque } from "next/font/google";
 import Script from "next/script";
+import { Lora } from "next/font/google";
 
-export const plex = IBM_Plex_Sans({
+
+
+
+export const plex = Bricolage_Grotesque({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
-  variable: "--font-sans",
+  variable: "--font-bgro",
   display: "swap",
 });
+const lora = Lora({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-lora", 
+  display: "swap",
+});
+
 
 export const metadata: Metadata = {
   title: "Idea Coach",
@@ -23,7 +34,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={plex.variable}>
+  <html lang="en" className={` ${plex.variable} ${lora.variable}`}>
+
       <head>
         {/* ✅ Umami Analytics */}
         <Script
@@ -33,7 +45,7 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="font-sans antialiased bg-background text-foreground">
+      <body className="font-bgro antialiased bg-background text-foreground">
         <AppProviders>
           <Navbar />
           {children}

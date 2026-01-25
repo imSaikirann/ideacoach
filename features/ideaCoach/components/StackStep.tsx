@@ -6,6 +6,8 @@ import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { StackStepProps } from "../types";
+import { motion } from "framer-motion";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 
 
@@ -47,17 +49,23 @@ export function StackStep({
         </div>
       }
     >
-      <div className="flex flex-wrap gap-2">
-        {stacksList.map((stack) => (
-          <Chip
-            key={stack}
-            active={value.includes(stack)}
-            onClick={() => toggleStack(stack)}
-          >
-            {stack}
-          </Chip>
+      <motion.div
+        className="flex flex-wrap gap-2"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
+        {stacksList.map((stack, index) => (
+          <motion.div key={stack} variants={staggerItem}>
+            <Chip
+              active={value.includes(stack)}
+              onClick={() => toggleStack(stack)}
+            >
+              {stack}
+            </Chip>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </StepLayout>
   );
 }

@@ -1,6 +1,8 @@
 "use client";
 
 import { Check, X, Sparkles, Zap } from "lucide-react";
+import { motion } from "framer-motion";
+import { fadeInUp, staggerContainer, staggerItem, viewportFadeInUp } from "@/lib/animations";
 
 const comparisons = [
   {
@@ -47,7 +49,13 @@ const comparisons = [
 
 export default function Compare() {
   return (
-    <section className="max-w-6xl mx-auto ">
+    <motion.section
+      className="max-w-6xl mx-auto"
+      variants={viewportFadeInUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+    >
       {/* Header */}
       <div className="space-y-4 sm:space-y-6 text-center mb-12 sm:mb-16">
         {/* Badge with animation */}
@@ -79,7 +87,14 @@ export default function Compare() {
       </div>
 
       {/* Desktop Table View */}
-      <div className="hidden lg:block rounded-2xl border border-border/50 bg-secondary/20 backdrop-blur-sm overflow-hidden">
+      <motion.div
+        className="hidden lg:block rounded-2xl border border-border/50 bg-secondary/20 backdrop-blur-sm overflow-hidden"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ delay: 0.2 }}
+      >
         <table className="w-full">
           <thead>
             <tr className="border-b border-border/50">
@@ -134,10 +149,16 @@ export default function Compare() {
             ))}
           </tbody>
         </table>
-      </div>
+      </motion.div>
 
       {/* Mobile/Tablet Card View */}
-      <div className="lg:hidden space-y-4">
+      <motion.div
+        className="lg:hidden space-y-4"
+        variants={staggerContainer}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+      >
         {/* Column Labels */}
         <div className="flex items-center justify-between px-2 mb-2">
           <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
@@ -151,9 +172,10 @@ export default function Compare() {
         </div>
 
         {comparisons.map((item) => (
-          <div
+          <motion.div
             key={item.feature}
             className="rounded-xl border border-border/50 bg-secondary/20 backdrop-blur-sm overflow-hidden"
+            variants={staggerItem}
           >
             {/* Feature Header */}
             <div className="px-4 py-3 border-b border-border/30 bg-secondary/30">
@@ -191,12 +213,19 @@ export default function Compare() {
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
      
-     <section className="max-w-5xl mx-auto px-40">
+     <motion.section
+       className="max-w-5xl mx-auto px-40"
+       variants={fadeInUp}
+       initial="hidden"
+       whileInView="visible"
+       viewport={{ once: true }}
+       transition={{ delay: 0.3 }}
+     >
          <div className="flex flex-col items-center text-center gap-10">
           <div className="w-72 sm:w-full text-muted-foreground/70">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" id="Online-Test-2--Streamline-Free-Illustrations">
@@ -216,7 +245,7 @@ export default function Compare() {
 </svg>
           </div>
         </div>
-    </section>
-    </section>
+    </motion.section>
+    </motion.section>
   );
 }

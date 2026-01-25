@@ -1,10 +1,18 @@
 "use client";
 
 import { Clock, Lightbulb, Code, ListChecks, GraduationCap, FileText } from "lucide-react";
+import { motion } from "framer-motion";
+import { fadeInUp, staggerContainer, staggerItem, viewportFadeInUp } from "@/lib/animations";
 
 export default function Format() {
   return (
-    <section className="max-w-5xl mx-auto px-6 py-20">
+    <motion.section
+      className="max-w-5xl mx-auto px-6 py-20"
+      variants={viewportFadeInUp}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+    >
       {/* Header - matching hero style */}
       <div className="space-y-6 text-center mb-16">
         {/* Badge with animation */}
@@ -35,7 +43,14 @@ export default function Format() {
       </div>
 
       {/* Markdown-style Card */}
-      <div className="rounded-2xl border border-border/50 bg-secondary/20 backdrop-blur-sm overflow-hidden">
+      <motion.div
+        className="rounded-2xl border border-border/50 bg-secondary/20 backdrop-blur-sm overflow-hidden"
+        variants={fadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        transition={{ delay: 0.2 }}
+      >
         {/* Card Header - like a code editor tab */}
         <div className="flex items-center gap-2 px-6 py-4 border-b border-border/50 bg-secondary/30">
           <FileText className="w-4 h-4 text-muted-foreground" />
@@ -139,9 +154,9 @@ export default function Format() {
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
     
-    </section>
+    </motion.section>
   );
 }

@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight, Zap, Flame, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DifficultyStepProps } from "../types";
+import { motion } from "framer-motion";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 
 const levelConfig = {
@@ -52,17 +54,23 @@ export function DifficultyStep({
         </div>
       }
     >
-      <div className="grid gap-3">
-        {levels.map((level) => {
+      <motion.div
+        className="grid gap-3"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
+        {levels.map((level, index) => {
           const config = levelConfig[level as keyof typeof levelConfig];
           const Icon = config.icon;
           const isActive = value === level;
 
           return (
-            <button
+            <motion.button
               key={level}
               type="button"
               onClick={() => onChange(level)}
+              variants={staggerItem}
               className={cn(
                 "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border text-left transition-all duration-200",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
@@ -84,10 +92,10 @@ export function DifficultyStep({
                 <p className="font-medium text-foreground text-sm sm:text-base">{level}</p>
                 <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">{config.description}</p>
               </div>
-            </button>
+            </motion.button>
           );
         })}
-      </div>
+      </motion.div>
     </StepLayout>
   );
 }

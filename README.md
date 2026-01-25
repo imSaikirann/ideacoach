@@ -1,36 +1,124 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# IdeaCoach
+
+An AI-powered platform that generates personalized project ideas for developers using Google Gemini AI.
+
+## Features
+
+- 🤖 **AI-Powered Generation**: Uses Google Gemini to create tailored project ideas
+- 🎯 **Personalized Suggestions**: Based on project type, tech stack, difficulty, and interests
+- 💾 **Save & Share**: Save ideas privately or share them publicly with the community
+- 🔍 **Browse Ideas**: Explore public ideas from other developers
+- 💳 **Credit System**: Free tier with limited credits, upgrade to Pro for more
+- 🎨 **Modern UI**: Clean, responsive design built with Next.js and Tailwind CSS
+
+## Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Database**: MongoDB (via Prisma)
+- **AI**: Google Gemini
+- **Auth**: NextAuth.js
+- **Styling**: Tailwind CSS
+- **State Management**: TanStack Query (React Query)
+- **UI Components**: Radix UI
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ or Bun
+- MongoDB database
+- Google Gemini API key
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd ideacoach
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+bun install
+```
+
+3. Set up environment variables:
+Create a `.env.local` file:
+```env
+# Database
+DATABASE_URL="your-mongodb-connection-string"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="your-secret-key"
+
+# Google Gemini
+GOOGLE_GENERATIVE_AI_API_KEY="your-gemini-api-key"
+
+# Upstash Redis (for rate limiting)
+UPSTASH_REDIS_REST_URL="your-redis-url"
+UPSTASH_REDIS_REST_TOKEN="your-redis-token"
+```
+
+4. Set up the database:
+```bash
+# Generate Prisma client
+npm run prisma:generate
+
+# Run migrations
+npm run prisma:migrate
+```
+
+5. Start the development server:
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 # or
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+├── app/                    # Next.js app router pages
+│   ├── api/               # API routes
+│   └── dashboard/         # Dashboard pages
+├── components/            # Reusable UI components
+├── features/              # Feature modules
+│   ├── ideaCoach/        # Idea generation flow
+│   └── public-ideas/     # Public ideas browsing
+├── lib/                   # Utilities and configurations
+│   ├── ai/               # AI generation logic
+│   └── prisma.ts         # Prisma client
+└── prisma/                # Database schema
+```
 
-## Learn More
+## Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run prisma:studio` - Open Prisma Studio
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## How It Works
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. **Select Preferences**: Choose project type, tech stack, difficulty, and interests
+2. **Add Custom Problem** (optional): Describe a specific problem you want to solve
+3. **Generate**: AI creates a personalized project idea with:
+   - Problem statement
+   - Key features
+   - Why it fits you
+   - Upgrade paths (beginner/intermediate/advanced)
+   - Common mistakes to avoid
+   - Interview talking points
+   - First things to Google
+4. **Save & Share**: Save ideas privately or make them public
 
-## Deploy on Vercel
+## License
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Private project

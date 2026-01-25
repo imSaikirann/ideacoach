@@ -8,6 +8,8 @@ import { ArrowRight, Coins, Crown } from "lucide-react";
 import Link from "next/link";
 import { ProjectTypeStepProps } from "../types";
 import { CreditsSkeleton } from "./CreditsSkeleton";
+import { motion } from "framer-motion";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 
 export function ProjectTypeStep({
@@ -88,17 +90,23 @@ export function ProjectTypeStep({
       }
     >
       {/* Project types */}
-      <div className="flex flex-wrap gap-2">
+      <motion.div
+        className="flex flex-wrap gap-2"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
         {projectTypes.map((type) => (
-          <Chip
-            key={type}
-            active={value === type}
-            onClick={() => !loading && onChange(type)}
-          >
-            {type}
-          </Chip>
+          <motion.div key={type} variants={staggerItem}>
+            <Chip
+              active={value === type}
+              onClick={() => !loading && onChange(type)}
+            >
+              {type}
+            </Chip>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </StepLayout>
   );
 }

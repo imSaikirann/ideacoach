@@ -1,3 +1,5 @@
+"use client";
+
 import Container from "@/components/common/Container";
 import HeroBackground from "./HeroBackground";
 import HowItWorks from "./HowItWorks";
@@ -6,6 +8,8 @@ import Compare from "./Compare";
 // import Pricing from "./Princings";
 import Footer from "./Footer";
 import Cta from "./Cta";
+import { motion } from "framer-motion";
+import { fadeInUp, viewportFadeInUp } from "@/lib/animations";
 
 export default function HeroLayout({
   left,
@@ -32,13 +36,24 @@ export default function HeroLayout({
               items-center
             "
           >
-            <div className="flex justify-center lg:justify-start animate-fade-in-up">
+            <motion.div
+              className="flex justify-center lg:justify-start"
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+            >
               {left}
-            </div>
+            </motion.div>
 
-            <div className="relative flex justify-center lg:justify-end animate-fade-in-up animation-delay-200">
+            <motion.div
+              className="relative flex justify-center lg:justify-end"
+              variants={fadeInUp}
+              initial="hidden"
+              animate="visible"
+              transition={{ delay: 0.2 }}
+            >
               {right}
-            </div>
+            </motion.div>
           </div>
         </Container>
       </section>
@@ -46,35 +61,58 @@ export default function HeroLayout({
       {/* =========================
           HOW IT WORKS
       ========================= */}
-      <section>
+      <motion.section
+        variants={viewportFadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+      >
         <Container size="xl" className="py-14 sm:py-16 md:py-20 lg:py-24">
           <HowItWorks />
         </Container>
-      </section>
+      </motion.section>
 
       {/* =========================
           RESPONSE FORMAT
       ========================= */}
-      <section className="border-t border-border/30">
+      <motion.section
+        className="border-t border-border/30"
+        variants={viewportFadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+      >
         <Container size="xl" className="py-14 sm:py-16 md:py-20 lg:py-24">
           <Format />
         </Container>
-      </section>
+      </motion.section>
 
       {/* =========================
           COMPARE
       ========================= */}
-      <section className="border-t border-border/30">
+      <motion.section
+        className="border-t border-border/30"
+        variants={viewportFadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+      >
         <Container size="xl" className="py-14 sm:py-16 md:py-20 lg:py-24">
           <Compare />
         </Container>
-      </section>
+      </motion.section>
 
-       <section className="border-t border-border/30">
+      <motion.section
+        className="border-t border-border/30"
+        variants={viewportFadeInUp}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, margin: "-100px" }}
+      >
         <Container size="xl" className="">
           <Cta />
         </Container>
-      </section>
+      </motion.section>
       {/* =========================
           PRICING (OPTIONAL)
       ========================= */}

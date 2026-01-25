@@ -133,7 +133,7 @@ export function ProjectResult({
             <Share2 className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
           </button>
         </div>
-        <div className="space-y-6 sm:space-y-8 lg:space-y-10">
+        <div className="space-y-6">
           {/* Credits Header */}
           {/* <div
             className={`transition-all duration-700 ${
@@ -282,10 +282,10 @@ export function ProjectResult({
           )}
 
           {/* Share Project Card */}
-          <ShareProjectCard
+          {/* <ShareProjectCard
             projectTitle={project.title || project.projectName || "Project Idea"}
             revealed={revealed}
-          />
+          /> */}
         </div>
         <ProjectResultFooter
           isSaved={isSaved}

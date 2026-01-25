@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,12 +9,19 @@ import {
   GraduationCap,
   Rocket,
 } from "lucide-react";
+import { motion } from "framer-motion";
+import { fadeInUp, staggerContainer, staggerItem } from "@/lib/animations";
 
 export default function HeroContent() {
   return (
-    <div className="mx-auto max-w-xl lg:max-w-2xl text-center lg:text-left space-y-10">
+    <motion.div
+      className="mx-auto max-w-xl lg:max-w-2xl text-center lg:text-left space-y-10"
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Status Badge */}
-      <div className="flex justify-center lg:justify-start">
+      <motion.div className="flex justify-center lg:justify-start" variants={staggerItem}>
         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border backdrop-blur-sm">
           <span className="relative flex h-2 w-2">
             <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
@@ -22,10 +31,10 @@ export default function HeroContent() {
             AI-powered project discovery for developers
           </span>
         </div>
-      </div>
+      </motion.div>
 
       {/* Headline */}
-      <div className="space-y-4">
+      <motion.div className="space-y-4" variants={staggerItem}>
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-balance">
           Build projects that actually
           <span className="text-primary"> matter</span>
@@ -34,17 +43,23 @@ export default function HeroContent() {
         <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground font-medium">
           Stop guessing. Start building portfolio-ready projects with clarity.
         </p>
-      </div>
+      </motion.div>
 
       {/* Description */}
-      <p className="mx-auto lg:mx-0 max-w-lg text-base sm:text-lg leading-relaxed text-muted-foreground">
+      <motion.p
+        className="mx-auto lg:mx-0 max-w-lg text-base sm:text-lg leading-relaxed text-muted-foreground"
+        variants={staggerItem}
+      >
         IdeaCoach helps you discover **high-signal project ideas** tailored to
         your skills, goals, and experience complete with scope, features, and
         real-world relevance.
-      </p>
+      </motion.p>
 
       {/* Primary CTAs */}
-      <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+      <motion.div
+        className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+        variants={staggerItem}
+      >
         <Link href="/dashboard/idea-form" className="w-full sm:w-auto">
           <Button
             size="lg"
@@ -81,10 +96,13 @@ export default function HeroContent() {
             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
         </Link>
-      </div>
+      </motion.div>
 
       {/* Build School */}
-      <div className="flex justify-center lg:justify-start">
+      <motion.div
+        className="flex justify-center lg:justify-start"
+        variants={staggerItem}
+      >
         <Link
           href="/dashboard/playbook"
           className="
@@ -106,10 +124,13 @@ export default function HeroContent() {
           </span>
           <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
         </Link>
-      </div>
+      </motion.div>
 
       {/* Social Proof */}
-      <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+      <motion.div
+        className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2"
+        variants={staggerItem}
+      >
         <div className="flex -space-x-3">
           {["JS", "TS", "FE", "BE"].map((label, i) => (
             <div
@@ -134,7 +155,7 @@ export default function HeroContent() {
           </span>{" "}
           building real-world projects
         </p>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

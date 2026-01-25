@@ -60,7 +60,7 @@ export function ProjectStats({
               <p className="text-xs text-muted-foreground mb-1.5 sm:mb-2 uppercase tracking-wider font-medium line-clamp-1">
                 {stat.label}
               </p>
-              <p className={`text-lg sm:text-xl lg:text-2xl font-bold ${stat.color} truncate`}>
+              <p className={`text-lg sm:text-xl lg:text-xl font-bold ${stat.color} truncate`}>
                 {stat.isText ? stat.value : stat.value}
               </p>
             </div>

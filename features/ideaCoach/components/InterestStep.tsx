@@ -6,6 +6,8 @@ import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { InterestStepProps } from "../types";
+import { motion } from "framer-motion";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 
 export function InterestStep({
@@ -44,17 +46,23 @@ export function InterestStep({
         </div>
       }
     >
-      <div className="flex flex-wrap gap-2">
+      <motion.div
+        className="flex flex-wrap gap-2"
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+      >
         {interests.map((interest) => (
-          <Chip
-            key={interest}
-            active={value === interest}
-            onClick={() => onChange(interest)}
-          >
-            {interest}
-          </Chip>
+          <motion.div key={interest} variants={staggerItem}>
+            <Chip
+              active={value === interest}
+              onClick={() => onChange(interest)}
+            >
+              {interest}
+            </Chip>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </StepLayout>
   );
 }

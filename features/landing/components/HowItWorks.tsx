@@ -1,8 +1,10 @@
 
 
-
+"use client";
 
 import { MessageSquare, Sparkles, Rocket } from "lucide-react";
+import { motion } from "framer-motion";
+import { fadeInLeft, fadeInRight, staggerContainer, staggerItem } from "@/lib/animations";
 
 export default function HowItWorks() {
   return (
@@ -12,7 +14,13 @@ export default function HowItWorks() {
     >
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-20 items-start">
         {/* LEFT — SVG */}
-        <div className="flex justify-center lg:justify-start">
+        <motion.div
+          className="flex justify-center lg:justify-start"
+          variants={fadeInLeft}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           <div className="w-72 sm:w-full text-muted-foreground/70">
              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" id="Smart-People-1--Streamline-Free-Illustrations">
   <desc>
@@ -30,10 +38,16 @@ export default function HowItWorks() {
   </g>
 </svg>
           </div>
-        </div>
+        </motion.div>
 
         {/* RIGHT — Content */}
-        <div className="space-y-12">
+        <motion.div
+          className="space-y-12"
+          variants={fadeInRight}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+        >
           {/* Intro */}
           <div>
             <p className="text-sm text-muted-foreground mb-3">
@@ -53,12 +67,18 @@ export default function HowItWorks() {
           </div>
 
           {/* Steps */}
-          <div className="relative space-y-10">
-            {/* Vertical guide line */}
+          <motion.div
+            className="relative space-y-10"
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+          >
+         
             {/* <div className="absolute left-[9px] top-2 bottom-2 w-px bg-border/60" /> */}
 
             {/* Step 1 */}
-            <div className="relative flex gap-5 group">
+            <motion.div className="relative flex gap-5 group" variants={staggerItem}>
               <MessageSquare className="w-5 h-5 text-muted-foreground mt-1 shrink-0 transition-transform group-hover:-translate-y-0.5" />
               <div>
                 <h3 className="text-lg font-medium text-foreground mb-1">
@@ -69,10 +89,10 @@ export default function HowItWorks() {
                   experience, interests, and goals — nothing generic.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Step 2 */}
-            <div className="relative flex gap-5 group">
+            <motion.div className="relative flex gap-5 group" variants={staggerItem}>
               <Sparkles className="w-5 h-5 text-muted-foreground mt-1 shrink-0 transition-transform group-hover:-translate-y-0.5" />
               <div>
                 <h3 className="text-lg font-medium text-foreground mb-1">
@@ -83,10 +103,10 @@ export default function HowItWorks() {
                   problems developers actually face.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
             {/* Step 3 */}
-            <div className="relative flex gap-5 group">
+            <motion.div className="relative flex gap-5 group" variants={staggerItem}>
               <Rocket className="w-5 h-5 text-muted-foreground mt-1 shrink-0 transition-transform group-hover:-translate-y-0.5" />
               <div>
                 <h3 className="text-lg font-medium text-foreground mb-1">
@@ -97,9 +117,9 @@ export default function HowItWorks() {
                   and start writing code.
                 </p>
               </div>
-            </div>
-          </div>
-        </div>
+            </motion.div>
+          </motion.div>
+        </motion.div>
       </div>
     </section>
   );

@@ -17,7 +17,7 @@ export function PreferenceItem({
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-xs text-muted-foreground mb-0.5">{label}</p>
-        <p className="text-sm sm:text-base text-foreground font-medium truncate" title={value}>
+        <p className="text-sm sm:texts text-foreground font-medium truncate" title={value}>
           {value}
         </p>
       </div>

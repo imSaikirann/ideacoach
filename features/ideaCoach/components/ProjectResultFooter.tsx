@@ -29,7 +29,7 @@ export function ProjectResultFooter({
     cooldown === 0 && !isGenerating && creditsLeft > 0;
     
   return (
-    <div className="flex flex-col gap-4 sm:gap-5">
+    <div className="flex flex-col gap-4 sm:gap-5 mt-10">
       {/* Credits info */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 rounded-lg border bg-muted/40 px-4 sm:px-5 py-3 sm:py-3.5 text-sm sm:text-base">
         <div className="flex items-center gap-2 text-muted-foreground">

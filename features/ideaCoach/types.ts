@@ -4,22 +4,40 @@ export interface EstimatedTime {
 }
 
 export interface Project {
-  // New API format
-  projectName: string;
-  description: string;
-  learningObjectives: string[];
-  technicalFocus: string[];
-  starterCodeExamples: string[];
-  stretchGoals: string[];
+  // Canonical schema fields
+  title: string;
+  oneLiner: string;
+  problemSolved: string;
+  mustHaveFeatures: string[];
+  whyItFitsYou: string[];
+  upgradePaths: {
+    beginner: string[];
+    intermediate: string[];
+    advanced: string[];
+  };
+  commonMistakes: string[];
+  interviewAngle: {
+    explain: string;
+    tradeoffs: string[];
+    improvements: string[];
+  };
+  firstThingsToGoogle: string[];
+  
+  // Metadata
+  savedIdeaId?: string;
   
   // Legacy fields (for backward compatibility)
-  title?: string;
+  projectName?: string;
+  description?: string;
+  learningObjectives?: string[];
+  technicalFocus?: string[];
+  starterCodeExamples?: string[];
+  stretchGoals?: string[];
   problemStatement?: string;
-  problemSolved?: string;
   features?: string[];
   whatYouWillLearn?: string[];
   estimatedTime?: EstimatedTime;
-  buildRoadmap?: string[];
+  projectSteps?: string[];
   designTradeoffs?: string[];
 }
 
@@ -64,12 +82,12 @@ export interface StackStepProps {
 }
 
 
-export interface SaveIdeaAlertProps {
+export type SaveIdeaAlertProps = {
   isOpen: boolean;
   projectTitle: string;
-  onSave: () => void;
+  onSave: (visibility: "PUBLIC" | "PRIVATE") => void;
   onSkip: () => void;
-}
+};
 
 export interface ProjectTypeStepProps {
   value: string;
@@ -94,13 +112,9 @@ export interface ProjectTitleProps {
 }
 
 
-export interface EstimatedTime {
-  days: string;
-  dailyEffort: string;
-}
 
 export interface ProjectTimeProps {
-  estimatedTime: EstimatedTime;
+  estimatedTime: string;
   revealed: boolean;
 }
 

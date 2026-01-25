@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { visibility = "PUBLIC", projectData, ...ideaData } = body;
+    const { visibility = "PRIVATE", savedIdeaId, projectData, ...ideaData } = body;
 
     // Ensure features is an array
     const features = Array.isArray(ideaData.features) 
@@ -23,6 +23,15 @@ export async function POST(req: Request) {
       : ideaData.features 
         ? [ideaData.features] 
         : [];
+
+    // If savedIdeaId exists, update visibility; otherwise create new
+    if (savedIdeaId) {
+      const idea = await prisma.idea.update({
+        where: { id: savedIdeaId, userId: session.user.id },
+        data: { visibility },
+      });
+      return NextResponse.json(idea);
+    }
 
     const idea = await prisma.idea.create({
       data: {

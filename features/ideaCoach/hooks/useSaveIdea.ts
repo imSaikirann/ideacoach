@@ -12,12 +12,13 @@ export function useSaveIdea() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ project, selections, visibility = "PUBLIC" }: SaveIdeaInput) => {
-      // Map the new project format to the database schema
+    mutationFn: async ({ project, selections, visibility = "PRIVATE" }: SaveIdeaInput) => {
+      // Map canonical schema to database format
       const ideaData = {
-        title: project.projectName || project.title || "Untitled Project",
-        problemSolved: project.description || project.problemStatement || project.problemSolved || "",
-        features: project.technicalFocus || project.features || [],
+        savedIdeaId: project.savedIdeaId, // Pass saved ID if exists to update instead of create
+        title: project.title || project.projectName || "Untitled Project",
+        problemSolved: project.problemSolved || project.oneLiner || project.description || "",
+        features: project.mustHaveFeatures || project.features || project.technicalFocus || [],
         projectType: selections.projectType || "",
         techStack: Array.isArray(selections.techStack) 
           ? selections.techStack.join(", ") 
@@ -42,7 +43,6 @@ export function useSaveIdea() {
       return data;
     },
     onSuccess: () => {
-      // Invalidate public ideas query to refresh the list
       queryClient.invalidateQueries({ queryKey: ["ideas"] });
     },
   });

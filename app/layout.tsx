@@ -2,14 +2,14 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import AppProviders from "@/components/AppProviders";
-import {  Bricolage_Grotesque } from "next/font/google";
+import {  Inter } from "next/font/google";
 import Script from "next/script";
 import { Lora } from "next/font/google";
 
 
 
 
-export const plex = Bricolage_Grotesque({
+export const plex = Inter({
   subsets: ["latin"],
   weight: ["400", "500", "600"],
   variable: "--font-bgro",
@@ -37,7 +37,7 @@ export default function RootLayout({
   <html lang="en" className={` ${plex.variable} ${lora.variable}`}>
 
       <head>
-        {/* ✅ Umami Analytics */}
+  
         <Script
           src="https://cloud.umami.is/script.js"
           data-website-id="c852ecdf-64a6-4ca8-8ab3-36131b25fc13"
@@ -45,7 +45,7 @@ export default function RootLayout({
         />
       </head>
 
-      <body className="font-bgro antialiased bg-background text-foreground">
+      <body className="font-inter antialiased bg-background text-foreground">
         <AppProviders>
           <Navbar />
           {children}

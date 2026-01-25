@@ -2,46 +2,32 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { getGeminiModel } from "@/lib/gemini";
 import { rateLimitCheck } from "@/lib/rateLimitCheck";
-
-const MAX_RETRIES = 1;
+import { generateProject } from "@/lib/ai/generateProject";
 
 export async function POST(req: NextRequest) {
   try {
-    
-      const rateLimitResponse = await rateLimitCheck(req);
-      if (rateLimitResponse) return rateLimitResponse;
-    const session = await getServerSession(authOptions);
+    const rateLimitResponse = await rateLimitCheck(req);
+    if (rateLimitResponse) return rateLimitResponse;
 
+    const session = await getServerSession(authOptions);
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { error: "Unauthorized" },
-        { status: 401 }
-      );
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-  
-    const userCredits = await prisma.userCredits.findUnique({
+    const credits = await prisma.userCredits.findUnique({
       where: { userId: session.user.id },
     });
 
-    if (!userCredits || userCredits.credits <= 0) {
+    if (!credits || credits.credits <= 0) {
       return NextResponse.json(
-        { error: "No credits left. Upgrade to Pro to continue." },
+        { error: "No credits left" },
         { status: 403 }
       );
     }
 
-   
     const body = await req.json();
-    const {
-      projectType,
-      techStack,
-      difficulty,
-      interest,
-      customProblem,
-    } = body;
+    const { projectType, techStack, difficulty, interest, customProblem } = body;
 
     if (!projectType || !techStack || !difficulty || !interest) {
       return NextResponse.json(
@@ -50,114 +36,38 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    const project = await generateProject({
+      projectType,
+      techStack,
+      difficulty,
+      interest,
+      customProblem,
+    });
 
-    const prompt = `
-You are IdeaCoach — a calm, experienced senior developer mentor who helps developers build REAL, practical projects while learning how to think like engineers.
-
-Your task:
-Generate ONE clear, realistic ${projectType} project idea that matches the selected difficulty and helps the developer learn by building.
-
-Context:
-- Project type: ${projectType}
-- Tech stack: ${techStack}
-- Difficulty level: ${difficulty}
-- Main interest / goal: ${interest}
-${
-  customProblem?.trim()
-    ? `- Specific problem to focus on: ${customProblem}`
-    : ""
-}
-
-STRICT OUTPUT RULES:
-- Return ONLY valid JSON
-- Do NOT use markdown
-- Do NOT add extra text
-`;
-
-    const model = await getGeminiModel();
-
-    let attempt = 0;
-    let result;
-
-    
-    while (attempt <= MAX_RETRIES) {
-      try {
-        result = await model.generateContent(prompt);
-        break;
-      } catch (error: any) {
-        attempt++;
-
-        if (error?.status === 429 || error?.message?.includes("429")) {
-          if (attempt > MAX_RETRIES) {
-            return NextResponse.json(
-              { error: "Rate limit exceeded. Try again later." },
-              { status: 429 }
-            );
-          }
-
-          await new Promise((res) => setTimeout(res, 500));
-          continue;
-        }
-
-        throw error;
-      }
-    }
-
-    if (!result) {
-      throw new Error("Model returned no result");
-    }
-
-  
-
-    const text = result.response.text();
-
-    const jsonStart = text.indexOf("{");
-    const jsonEnd = text.lastIndexOf("}");
-
-    if (jsonStart === -1 || jsonEnd === -1) {
-      console.error("Raw model output:", text);
-      return NextResponse.json(
-        { error: "Invalid AI response format" },
-        { status: 502 }
-      );
-    }
-
-    let parsed;
-    try {
-      parsed = JSON.parse(text.slice(jsonStart, jsonEnd + 1));
-    } catch (e) {
-      console.error("JSON parse error:", e);
-      return NextResponse.json(
-        { error: "Failed to parse AI response" },
-        { status: 502 }
-      );
-    }
-
-
+    // Deduct credit after successful generation
     await prisma.userCredits.updateMany({
-      where: { 
-        userId: session.user.id,
-        credits: { gt: 0 }
-      },
+      where: { userId: session.user.id, credits: { gt: 0 } },
+      data: { credits: { decrement: 1 } },
+    });
+
+    // Auto-save as PRIVATE
+    const savedIdea = await prisma.idea.create({
       data: {
-        credits: { decrement: 1 },
+        userId: session.user.id,
+        title: project.title,
+        problemSolved: project.problemSolved || project.oneLiner || "",
+        features: project.mustHaveFeatures,
+        projectType,
+        techStack: typeof techStack === "string" ? techStack : techStack.join(", "),
+        difficulty,
+        interest,
+        visibility: "PRIVATE",
       },
     });
 
-    return NextResponse.json(parsed);
-  } catch (err: any) {
-    console.error("Idea generation failed:", err);
-
-    if (err?.status === 429) {
-      return NextResponse.json(
-        {
-          error:
-            "Free access is temporarily limited. Need uninterrupted access? Email us for Pro.",
-        },
-        { status: 429 }
-      );
-    }
-
+    return NextResponse.json({ ...project, savedIdeaId: savedIdea.id });
+  } catch (err) {
+    console.error(err);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

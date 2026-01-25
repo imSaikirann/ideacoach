@@ -113,13 +113,34 @@
     border-color: hsl(var(--border));
   }
 
-@layer base {
+  html {
+    font-size: 16px;
+  }
+
+  @media (min-width: 640px) {
+    html {
+      font-size: 17px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
   html,
   body {
     @apply bg-background text-foreground font-bgro;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
   }
-}
 
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    font-weight: 600;
+  }
 
   /* Generating screen animations */
   @keyframes scan {

@@ -9,7 +9,6 @@ import { ProjectTimeProps } from "../types";
 
 export function ProjectTime({
   estimatedTime,
-  revealed,
 }: ProjectTimeProps) {
   if (!estimatedTime) return null;
 
@@ -18,14 +17,12 @@ export function ProjectTime({
       icon={<Clock className="w-4 h-4" />}
       title="Estimated time"
       delay={800}
-      revealed={revealed}
+      revealed={true}
     >
       <p className="text-lg font-semibold">
-        {estimatedTime.days}
+        {estimatedTime}
       </p>
-      <p className="text-muted-foreground">
-        {estimatedTime.dailyEffort}
-      </p>
+     
     </ProjectSection>
   );
 }

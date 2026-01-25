@@ -13,6 +13,8 @@ export interface Idea {
   category?: string;
   createdAt: string;
   author?: string;
+  visibility?: "PUBLIC" | "PRIVATE";
+  isOwn?: boolean;
 }
 
 export async function fetchIdeas(): Promise<Idea[]> {

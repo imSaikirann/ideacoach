@@ -1,20 +1,21 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
-  Clock,
-  Layers,
   User,
   Search,
   Sparkles,
   ArrowRight,
-  Bookmark,
-  ExternalLink,
-  Filter,
   X,
+  Lock,
+  Globe,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIdeas } from "../hooks/useIdeas";
+import { IdeaDetailModal } from "./IdeaDetailModal";
+import { FilterPanel } from "./FilterPanel";
+import { Pagination } from "./Pagination";
+import type { Idea } from "../services/ideas";
 
 const difficulties = ["All", "Beginner", "Intermediate", "Advanced"];
 const categories = [
@@ -27,17 +28,27 @@ const categories = [
   "Developer Tools",
 ];
 
+const ITEMS_PER_PAGE = 12;
+
 export default function PublicIdeas() {
   const { data: publicIdeas = [], isLoading, isError } = useIdeas();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [showFilters, setShowFilters] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const filteredIdeas = useMemo(() => {
     return publicIdeas.filter((idea) => {
-      const stackArray = Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : [];
+      const stackArray: string[] = Array.isArray(idea.stack) 
+        ? idea.stack 
+        : Array.isArray(idea.techStack) 
+          ? idea.techStack 
+          : typeof idea.techStack === 'string'
+            ? idea.techStack.split(", ").filter(Boolean)
+            : [];
       const matchesSearch =
         idea.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (idea.problem || idea.problemStatement || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -56,14 +67,28 @@ export default function PublicIdeas() {
     });
   }, [publicIdeas, searchQuery, selectedDifficulty, selectedCategory]);
 
+  // Pagination
+  const totalPages = Math.ceil(filteredIdeas.length / ITEMS_PER_PAGE);
+  const paginatedIdeas = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return filteredIdeas.slice(startIndex, endIndex);
+  }, [filteredIdeas, currentPage]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, selectedDifficulty, selectedCategory]);
+
   const clearFilters = () => {
     setSearchQuery("");
     setSelectedDifficulty("All");
     setSelectedCategory("All");
+    setCurrentPage(1);
   };
 
   const hasActiveFilters =
-    searchQuery || selectedDifficulty !== "All" || selectedCategory !== "All";
+    selectedDifficulty !== "All" || selectedCategory !== "All";
 
   /* ---------- Loading ---------- */
   if (isLoading) {
@@ -103,105 +128,126 @@ export default function PublicIdeas() {
         </p>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-2xl mx-auto mb-6">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
-        <input
-          type="text"
-          placeholder="Search ideas, problems, or tech stack..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full h-12 pl-12 pr-4 rounded-xl border bg-secondary/20"
+      {/* Search and Filters */}
+      <div className="max-w-4xl mx-auto mb-8">
+        {/* Search */}
+        <div className="relative mb-6">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <input
+            type="text"
+            placeholder="Search ideas, problems, or tech stack..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full h-12 pl-12 pr-12 rounded-xl border bg-card hover:bg-card/80 focus:bg-card focus:border-primary/50 transition-colors outline-none"
+          />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-secondary transition-colors"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Filter Panel */}
+        <FilterPanel
+          difficulties={difficulties}
+          categories={categories}
+          selectedDifficulty={selectedDifficulty}
+          selectedCategory={selectedCategory}
+          onDifficultyChange={setSelectedDifficulty}
+          onCategoryChange={setSelectedCategory}
+          onClear={clearFilters}
+          hasActiveFilters={hasActiveFilters}
         />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="absolute right-4 top-1/2 -translate-y-1/2"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        )}
       </div>
 
-      {/* Filters */}
-      <div className="space-y-4 mb-8">
-        <div className="flex flex-wrap justify-center gap-2">
-          {difficulties.map((difficulty) => (
-            <button
-              key={difficulty}
-              onClick={() => setSelectedDifficulty(difficulty)}
-              className={`px-3 py-1.5 rounded-full text-sm ${
-                selectedDifficulty === difficulty
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary"
-              }`}
-            >
-              {difficulty}
-            </button>
-          ))}
+      {/* Results Count */}
+      {filteredIdeas.length > 0 && (
+        <div className="mb-6 text-center sm:text-left">
+          <p className="text-sm text-muted-foreground">
+            Showing <span className="font-medium text-foreground">{paginatedIdeas.length}</span> of{" "}
+            <span className="font-medium text-foreground">{filteredIdeas.length}</span> ideas
+          </p>
         </div>
-
-        <div className="flex flex-wrap justify-center gap-2">
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setSelectedCategory(category)}
-              className={`px-3 py-1.5 rounded-full text-sm ${
-                selectedCategory === category
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary"
-              }`}
-            >
-              {category}
-            </button>
-          ))}
-        </div>
-
-        {hasActiveFilters && (
-          <div className="text-center">
-            <button
-              onClick={clearFilters}
-              className="text-sm underline text-muted-foreground"
-            >
-              Clear all filters
-            </button>
-          </div>
-        )}
-      </div>
+      )}
 
       {/* Grid */}
-      {filteredIdeas.length > 0 ? (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredIdeas.map((idea) => (
-            <div
+      {paginatedIdeas.length > 0 ? (
+        <>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {paginatedIdeas.map((idea) => (
+            <button
               key={idea.id}
-              className="rounded-2xl border bg-secondary/20 p-6 flex flex-col"
+              onClick={() => {
+                setSelectedIdea(idea);
+                setIsModalOpen(true);
+              }}
+              className="rounded-xl border bg-card hover:bg-card/80 hover:border-primary/30 transition-all duration-200 p-5 sm:p-6 flex flex-col text-left group cursor-pointer"
             >
-              <h3 className="text-lg font-semibold mb-2 text-foreground">{idea.title}</h3>
+              {/* Header with visibility indicator */}
+              <div className="flex items-start justify-between gap-2 mb-3">
+                <h3 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-primary transition-colors flex-1">
+                  {idea.title}
+                </h3>
+                {idea.visibility === "PRIVATE" && idea.isOwn ? (
+                  <Lock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                ) : idea.visibility === "PUBLIC" ? (
+                  <Globe className="w-4 h-4 text-primary flex-shrink-0" />
+                ) : null}
+              </div>
+
               <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
                 {idea.problem || idea.problemStatement || "No description available"}
               </p>
 
-              <div className="flex flex-wrap gap-2 mb-4">
-                {(Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : []).map((tech: string) => (
+              {/* Tech Stack */}
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {(Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : []).slice(0, 3).map((tech: string) => (
                   <span
                     key={tech}
-                    className="px-2 py-1 text-xs rounded bg-secondary text-foreground"
+                    className="px-2 py-1 text-xs rounded-md bg-secondary/50 border border-border text-foreground/80"
                   >
                     {tech}
                   </span>
                 ))}
+                {((Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : []).length > 3) && (
+                  <span className="px-2 py-1 text-xs rounded-md bg-secondary/50 border border-border text-muted-foreground">
+                    +{((Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : []).length - 3)}
+                  </span>
+                )}
               </div>
 
-              <div className="mt-auto pt-4 border-t flex justify-between text-xs text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <Clock className="w-3 h-3" /> {idea.time}
-                </span>
-                <span>{idea.difficulty}</span>
+              {/* Footer */}
+              <div className="mt-auto pt-4 border-t flex items-center justify-between text-xs text-muted-foreground">
+                <div className="flex items-center gap-3">
+                  {idea.difficulty && (
+                    <span className="flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-primary" />
+                      {idea.difficulty}
+                    </span>
+                  )}
+                  {idea.author && (
+                    <span className="flex items-center gap-1">
+                      <User className="w-3 h-3" />
+                      {idea.author}
+                    </span>
+                  )}
+                </div>
+                <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
-            </div>
-          ))}
-        </div>
+            </button>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
+        </>
       ) : (
         <div className="text-center py-16">
           <p className="text-muted-foreground">No ideas found.</p>
@@ -220,6 +266,16 @@ export default function PublicIdeas() {
           </Button>
         </a>
       </div>
+
+      {/* Idea Detail Modal */}
+      <IdeaDetailModal
+        idea={selectedIdea}
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedIdea(null);
+        }}
+      />
     </section>
   );
 }

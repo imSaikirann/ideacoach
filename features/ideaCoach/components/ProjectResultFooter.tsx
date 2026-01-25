@@ -29,9 +29,9 @@ export function ProjectResultFooter({
     cooldown === 0 && !isGenerating && creditsLeft > 0;
     
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-4 sm:gap-5">
       {/* Credits info */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 rounded-lg border bg-muted/40 px-3 sm:px-4 py-2.5 text-sm">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 rounded-lg border bg-muted/40 px-4 sm:px-5 py-3 sm:py-3.5 text-sm sm:text-base">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Coins className="h-4 w-4 flex-shrink-0" />
           <span>
@@ -51,7 +51,7 @@ export function ProjectResultFooter({
       </div>
 
       {/* Top actions */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
         <Button
           variant="outline"
           className="h-12 flex-1 bg-transparent"
@@ -67,8 +67,8 @@ export function ProjectResultFooter({
           className={`h-12 flex-1 bg-transparent ${
             isSaved ? "border-accent text-accent" : ""
           }`}
-          onClick={onSave}
-          disabled={isSaved || isSaving}
+          onClick={() => onSave?.()}
+          disabled={isSaving}
         >
           {isSaving ? (
             <>
@@ -78,7 +78,7 @@ export function ProjectResultFooter({
           ) : isSaved ? (
             <>
               <BookmarkCheck className="w-4 h-4 mr-2" />
-              Saved
+              Make public
             </>
           ) : (
             <>

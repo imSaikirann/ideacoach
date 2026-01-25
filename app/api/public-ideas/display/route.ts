@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export async function GET() {
   try {
-    // 1️⃣ Fetch PUBLIC ideas (no auth required for public ideas)
+    const session = await getServerSession(authOptions);
+    const currentUserId = session?.user?.id;
+
+    // 1️⃣ Fetch PUBLIC ideas + user's own PRIVATE ideas
     const ideas = await prisma.idea.findMany({
       where: {
-        visibility: "PUBLIC",
+        OR: [
+          { visibility: "PUBLIC" as const },
+          ...(currentUserId ? [{ visibility: "PRIVATE" as const, userId: currentUserId }] : []),
+        ],
       },
       orderBy: {
         createdAt: "desc",
@@ -44,6 +52,8 @@ export async function GET() {
         category: idea.interest || "General",
         createdAt: idea.createdAt.toISOString(),
         author: author?.name || author?.email || "Anonymous",
+        visibility: idea.visibility,
+        isOwn: currentUserId ? idea.userId === currentUserId : false,
       };
     });
 

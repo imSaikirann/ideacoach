@@ -3,7 +3,7 @@
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Lightbulb, Shield, Zap } from "lucide-react";
+import { Lightbulb } from "lucide-react";
 
 // Google Icon SVG Component
 function GoogleIcon({ className }: { className?: string }) {
@@ -29,119 +29,52 @@ function GoogleIcon({ className }: { className?: string }) {
   );
 }
 
-const features = [
-  {
-    icon: <Lightbulb className="w-4 h-4" />,
-    text: "Personalized project ideas",
-  },
-  {
-    icon: <Zap className="w-4 h-4" />,
-    text: "Save and track your progress",
-  },
-  {
-    icon: <Shield className="w-4 h-4" />,
-    text: "Access premium features",
-  },
-];
-
 export default function SignInPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden">
-      {/* Background decorative elements */}
-      <div className="absolute inset-0 -z-10">
-        <div
-          className="absolute inset-0 opacity-[0.015]"
-          style={{
-            backgroundImage: `linear-gradient(var(--foreground) 1px, transparent 1px), linear-gradient(90deg, var(--foreground) 1px, transparent 1px)`,
-            backgroundSize: "64px 64px",
-          }}
-        />
-        <div className="absolute top-1/4 -left-32 w-96 h-96 bg-chart-2/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 -right-32 w-96 h-96 bg-chart-4/10 rounded-full blur-3xl" />
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center px-6">
       <div className="max-w-md w-full space-y-8">
         {/* Logo / Brand */}
-        <div className="text-center space-y-2">
+        <div className="text-center space-y-3">
           <Link href="/" className="inline-block">
-            <div className="w-14 h-14 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto mb-4">
-              <Lightbulb className="w-7 h-7 text-primary" />
+            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+              <Lightbulb className="w-6 h-6 text-primary" />
             </div>
           </Link>
-          <h1 className="text-3xl sm:text-4xl font-bold text-foreground tracking-tight">
-            Welcome back
-          </h1>
-          <p className="text-muted-foreground text-base">
-            Sign in to continue to IdeaCoach
-          </p>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">
+              Welcome back
+            </h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              Sign in to IdeaCoach
+            </p>
+          </div>
         </div>
 
         {/* Sign In Card */}
-        <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm p-8 space-y-6 shadow-xl">
+        <div className="rounded-xl border border-border bg-card p-6 space-y-4 shadow-sm">
           {/* Google Sign In Button */}
           <Button
             size="lg"
             variant="outline"
-            className="w-full h-14 gap-3 text-base font-medium bg-background hover:bg-secondary/50 border-border/60 transition-all duration-300"
+            className="w-full h-12 gap-2 text-base font-medium bg-transparent"
             onClick={() =>
-signIn("google", {
-  callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/idea-form`,
-})
-
+              signIn("google", {
+                callbackUrl: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/idea-form`,
+              })
             }
           >
             <GoogleIcon className="w-5 h-5" />
             Continue with Google
           </Button>
 
-          {/* Divider */}
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-border/50" />
-            </div>
-            <div className="relative flex justify-center text-xs">
-              <span className="px-3 bg-card text-muted-foreground">
-                What you get
-              </span>
-            </div>
-          </div>
-
-          {/* Features List */}
-          <div className="space-y-3">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 border border-border/30"
-              >
-                <div className="w-8 h-8 rounded-lg bg-chart-2/20 flex items-center justify-center text-chart-2">
-                  {feature.icon}
-                </div>
-                <span className="text-sm font-medium text-foreground">
-                  {feature.text}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Footer */}
-        <div className="text-center space-y-4">
-          <p className="text-xs text-muted-foreground">
-            No spam. No credit card required. Just ideas.
-          </p>
-          <p className="text-xs text-muted-foreground">
+          {/* Legal Text */}
+          <p className="text-xs text-muted-foreground text-center pt-2">
             By signing in, you agree to our{" "}
-            <Link
-              href="/terms"
-              className="text-foreground hover:text-primary underline underline-offset-2"
-            >
+            <Link href="/terms" className="text-primary hover:underline">
               Terms of Service
             </Link>{" "}
             and{" "}
-            <Link
-              href="/privacy"
-              className="text-foreground hover:text-primary underline underline-offset-2"
-            >
+            <Link href="/privacy" className="text-primary hover:underline">
               Privacy Policy
             </Link>
           </p>

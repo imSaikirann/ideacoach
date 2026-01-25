@@ -66,7 +66,7 @@ export function DifficultyStep({
               className={cn(
                 "flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg border text-left transition-all duration-200",
                 "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
-                "min-h-[72px] touch-manipulation", // Better touch target
+                "min-h-[72px] touch-manipulation cursor-pointer",
                 isActive
                   ? "border-accent bg-accent/10 shadow-sm"
                   : "border-border bg-secondary/50 hover:border-accent/50"

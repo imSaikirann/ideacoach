@@ -1,273 +1,272 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import {
-  User,
-  Search,
-  Sparkles,
-  ArrowRight,
-  X,
-  Lock,
-  Globe,
-} from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { Search, Sparkles, ArrowRight, X, Code2, Zap, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIdeas } from "../hooks/useIdeas";
 import { IdeaDetailModal } from "./IdeaDetailModal";
-import { FilterPanel } from "./FilterPanel";
 import { Pagination } from "./Pagination";
 import type { Idea } from "../services/ideas";
 
-const difficulties = ["All", "Beginner", "Intermediate", "Advanced"];
-const categories = [
-  "All",
-  "Finance",
-  "Productivity",
-  "Marketplace",
-  "Education",
-  "Lifestyle",
-  "Developer Tools",
-];
-
-const ITEMS_PER_PAGE = 12;
+const ITEMS_PER_PAGE = 9;
 
 export default function PublicIdeas() {
   const { data: publicIdeas = [], isLoading, isError } = useIdeas();
+  const searchParams = useSearchParams();
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDifficulty, setSelectedDifficulty] = useState("All");
-  const [selectedCategory, setSelectedCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  // Show PUBLIC ideas + user's own ideas (both public and private)
+  const visibleIdeas = useMemo(() => {
+    return publicIdeas.filter(
+      (idea) => idea.visibility === "PUBLIC" || idea.isOwn
+    );
+  }, [publicIdeas]);
+
   const filteredIdeas = useMemo(() => {
-    return publicIdeas.filter((idea) => {
-      const stackArray: string[] = Array.isArray(idea.stack) 
-        ? idea.stack 
-        : Array.isArray(idea.techStack) 
-          ? idea.techStack 
-          : typeof idea.techStack === 'string'
-            ? idea.techStack.split(", ").filter(Boolean)
-            : [];
+    return visibleIdeas.filter((idea) => {
+      const stackArray: string[] = Array.isArray(idea.stack)
+        ? idea.stack
+        : Array.isArray(idea.techStack)
+        ? idea.techStack
+        : typeof idea.techStack === "string"
+        ? idea.techStack.split(", ").filter(Boolean)
+        : [];
+
       const matchesSearch =
+        searchQuery === "" ||
         idea.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (idea.problem || idea.problemStatement || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-        stackArray.some((tech: string) =>
+        (idea.problem || idea.problemStatement || "")
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        stackArray.some((tech) =>
           tech.toLowerCase().includes(searchQuery.toLowerCase())
         );
 
       const matchesDifficulty =
-        selectedDifficulty === "All" ||
-        idea.difficulty === selectedDifficulty;
+        selectedDifficulty === "All" || idea.difficulty === selectedDifficulty;
 
-      const matchesCategory =
-        selectedCategory === "All" || idea.category === selectedCategory;
-
-      return matchesSearch && matchesDifficulty && matchesCategory;
+      return matchesSearch && matchesDifficulty;
     });
-  }, [publicIdeas, searchQuery, selectedDifficulty, selectedCategory]);
+  }, [visibleIdeas, searchQuery, selectedDifficulty]);
 
-  // Pagination
   const totalPages = Math.ceil(filteredIdeas.length / ITEMS_PER_PAGE);
   const paginatedIdeas = useMemo(() => {
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    return filteredIdeas.slice(startIndex, endIndex);
+    return filteredIdeas.slice(startIndex, startIndex + ITEMS_PER_PAGE);
   }, [filteredIdeas, currentPage]);
 
-  // Reset to page 1 when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, selectedDifficulty, selectedCategory]);
+  }, [searchQuery, selectedDifficulty]);
 
-  const clearFilters = () => {
-    setSearchQuery("");
-    setSelectedDifficulty("All");
-    setSelectedCategory("All");
-    setCurrentPage(1);
-  };
+  // Auto-open modal if ideaId is in URL
+  useEffect(() => {
+    const ideaId = searchParams.get("ideaId");
+    if (!ideaId || !publicIdeas.length) return;
 
-  const hasActiveFilters =
-    selectedDifficulty !== "All" || selectedCategory !== "All";
+    const match = publicIdeas.find((idea) => idea.id === ideaId);
+    if (match) {
+      setSelectedIdea(match);
+      setIsModalOpen(true);
+    }
+  }, [searchParams, publicIdeas]);
 
-  /* ---------- Loading ---------- */
   if (isLoading) {
     return (
-      <section className="max-w-6xl mx-auto px-6 py-20 text-center">
-        <p className="text-muted-foreground">Loading public ideas…</p>
+      <section className="max-w-5xl mx-auto px-4 py-20 text-center">
+        <div className="inline-flex items-center gap-2 text-muted-foreground">
+          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          Loading ideas...
+        </div>
       </section>
     );
   }
 
-  /* ---------- Error ---------- */
   if (isError) {
     return (
-      <section className="max-w-6xl mx-auto px-6 py-20 text-center">
-        <p className="text-destructive">
-          Failed to load public ideas. Please try again later.
-        </p>
+      <section className="max-w-5xl mx-auto px-4 py-20 text-center">
+        <p className="text-destructive">Failed to load ideas. Please try again.</p>
       </section>
     );
   }
 
   return (
-    <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
+    <section className="max-w-5xl mx-auto px-4 py-12 sm:py-16">
       {/* Header */}
-      <div className="space-y-6 text-center mb-14">
-        <div className="inline-flex items-center gap-2.5 px-4 py-2 rounded-full bg-secondary/50 border border-border">
-          <Sparkles className="w-4 h-4 text-primary" />
-          <span className="text-sm font-medium">Community Showcase</span>
+      <div className="text-center mb-10">
+        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
+          <Sparkles className="w-4 h-4" />
+          Community Ideas
         </div>
-
-        <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold">
-          Public Ideas
-        </h2>
-
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Explore project ideas generated by developers using IdeaCoach.
+        <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+          Explore Project Ideas
+        </h1>
+        <p className="text-muted-foreground">
+          Discover what other developers are building
         </p>
       </div>
 
-      {/* Search and Filters */}
-      <div className="max-w-4xl mx-auto mb-8">
-        {/* Search */}
-        <div className="relative mb-6">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+      {/* Search & Filter */}
+      <div className="max-w-xl mx-auto mb-8 space-y-3">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <input
             type="text"
-            placeholder="Search ideas, problems, or tech stack..."
+            placeholder="Search ideas..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full h-12 pl-12 pr-12 rounded-xl border bg-card hover:bg-card/80 focus:bg-card focus:border-primary/50 transition-colors outline-none"
+            className="w-full h-10 pl-10 pr-10 rounded-lg border bg-background text-sm focus:border-primary/50 outline-none transition-colors"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 p-1 rounded-lg hover:bg-secondary transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4 text-muted-foreground hover:text-foreground" />
             </button>
           )}
         </div>
 
-        {/* Filter Panel */}
-        <FilterPanel
-          difficulties={difficulties}
-          categories={categories}
-          selectedDifficulty={selectedDifficulty}
-          selectedCategory={selectedCategory}
-          onDifficultyChange={setSelectedDifficulty}
-          onCategoryChange={setSelectedCategory}
-          onClear={clearFilters}
-          hasActiveFilters={hasActiveFilters}
-        />
+        <div className="flex justify-center gap-2">
+          {["All", "Beginner", "Intermediate", "Advanced"].map((level) => (
+            <button
+              key={level}
+              onClick={() => setSelectedDifficulty(level)}
+              className={`px-3 py-1.5 text-xs font-medium rounded-full transition-colors ${
+                selectedDifficulty === level
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {level}
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Results Count */}
+      {/* Results */}
       {filteredIdeas.length > 0 && (
-        <div className="mb-6 text-center sm:text-left">
-          <p className="text-sm text-muted-foreground">
-            Showing <span className="font-medium text-foreground">{paginatedIdeas.length}</span> of{" "}
-            <span className="font-medium text-foreground">{filteredIdeas.length}</span> ideas
-          </p>
-        </div>
+        <p className="text-xs text-muted-foreground mb-4 text-center">
+          {filteredIdeas.length} idea{filteredIdeas.length !== 1 && "s"} found
+        </p>
       )}
 
-      {/* Grid */}
+      {/* Ideas Grid */}
       {paginatedIdeas.length > 0 ? (
         <>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {paginatedIdeas.map((idea) => (
-            <button
-              key={idea.id}
-              onClick={() => {
-                setSelectedIdea(idea);
-                setIsModalOpen(true);
-              }}
-              className="rounded-xl border bg-card hover:bg-card/80 hover:border-primary/30 transition-all duration-200 p-5 sm:p-6 flex flex-col text-left group cursor-pointer"
-            >
-              {/* Header with visibility indicator */}
-              <div className="flex items-start justify-between gap-2 mb-3">
-                <h3 className="text-base sm:text-lg font-semibold text-foreground group-hover:text-primary transition-colors flex-1">
-                  {idea.title}
-                </h3>
-                {idea.visibility === "PRIVATE" && idea.isOwn ? (
-                  <Lock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-                ) : idea.visibility === "PUBLIC" ? (
-                  <Globe className="w-4 h-4 text-primary flex-shrink-0" />
-                ) : null}
-              </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginatedIdeas.map((idea) => {
+              const stackArray: string[] = Array.isArray(idea.stack)
+                ? idea.stack
+                : Array.isArray(idea.techStack)
+                ? idea.techStack
+                : [];
 
-              <p className="text-sm text-muted-foreground mb-4 line-clamp-3 leading-relaxed">
-                {idea.problem || idea.problemStatement || "No description available"}
-              </p>
+              return (
+                <button
+                  key={idea.id}
+                  onClick={() => {
+                    setSelectedIdea(idea);
+                    setIsModalOpen(true);
+                  }}
+                  className="text-left p-4 rounded-xl border bg-card hover:border-primary/40 transition-all group"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                      {idea.title}
+                    </h3>
+                    {idea.isOwn && idea.visibility === "PRIVATE" && (
+                      <Lock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                    )}
+                  </div>
 
-              {/* Tech Stack */}
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {(Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : []).slice(0, 3).map((tech: string) => (
-                  <span
-                    key={tech}
-                    className="px-2 py-1 text-xs rounded-md bg-secondary/50 border border-border text-foreground/80"
-                  >
-                    {tech}
-                  </span>
-                ))}
-                {((Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : []).length > 3) && (
-                  <span className="px-2 py-1 text-xs rounded-md bg-secondary/50 border border-border text-muted-foreground">
-                    +{((Array.isArray(idea.stack) ? idea.stack : Array.isArray(idea.techStack) ? idea.techStack : []).length - 3)}
-                  </span>
-                )}
-              </div>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mb-3">
+                    {idea.problem || idea.problemStatement || "No description"}
+                  </p>
 
-              {/* Footer */}
-              <div className="mt-auto pt-4 border-t flex items-center justify-between text-xs text-muted-foreground">
-                <div className="flex items-center gap-3">
-                  {idea.difficulty && (
-                    <span className="flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-primary" />
-                      {idea.difficulty}
-                    </span>
+                  {/* Stack chips */}
+                  {stackArray.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mb-3">
+                      {stackArray.slice(0, 2).map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 text-xs rounded bg-secondary text-muted-foreground"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                      {stackArray.length > 2 && (
+                        <span className="px-2 py-0.5 text-xs rounded bg-secondary text-muted-foreground">
+                          +{stackArray.length - 2}
+                        </span>
+                      )}
+                    </div>
                   )}
-                  {idea.author && (
-                    <span className="flex items-center gap-1">
-                      <User className="w-3 h-3" />
-                      {idea.author}
-                    </span>
-                  )}
-                </div>
-                <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            </button>
-            ))}
+
+                  {/* Footer */}
+                  <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
+                    <div className="flex items-center gap-2">
+                      {idea.difficulty && (
+                        <span className="flex items-center gap-1">
+                          <Zap className="w-3 h-3" />
+                          {idea.difficulty}
+                        </span>
+                      )}
+                      {idea.projectType && (
+                        <span className="flex items-center gap-1">
+                          <Code2 className="w-3 h-3" />
+                          {idea.projectType}
+                        </span>
+                      )}
+                    </div>
+                    <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </div>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Pagination */}
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={setCurrentPage}
-          />
+          {totalPages > 1 && (
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
+          )}
         </>
       ) : (
-        <div className="text-center py-16">
-          <p className="text-muted-foreground">No ideas found.</p>
-          <Button variant="outline" onClick={clearFilters} className="mt-4">
+        <div className="text-center py-12">
+          <p className="text-muted-foreground mb-4">No ideas found</p>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              setSearchQuery("");
+              setSelectedDifficulty("All");
+            }}
+          >
             Clear filters
           </Button>
         </div>
       )}
 
       {/* CTA */}
-      <div className="mt-16 text-center">
+      <div className="mt-12 text-center">
         <a href="/dashboard/idea-form">
-          <Button size="lg" className="gap-2">
-            Generate My Idea
-            <ArrowRight className="w-5 h-5" />
+          <Button className="gap-2">
+            <Sparkles className="w-4 h-4" />
+            Generate Your Own Idea
           </Button>
         </a>
       </div>
 
-      {/* Idea Detail Modal */}
+      {/* Modal */}
       <IdeaDetailModal
         idea={selectedIdea}
         isOpen={isModalOpen}

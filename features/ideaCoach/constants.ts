@@ -1,6 +1,6 @@
 /* =========================================
    IDEA COACH — DEVELOPER CONSTANTS
-   Single source of truth (DEEP)
+   Single source of truth (CLEAN & COMPLETE)
 ========================================= */
 
 /* ---------- PROJECT TYPES ---------- */
@@ -21,7 +21,8 @@ export const projectTypes = [
 
 export type ProjectType = (typeof projectTypes)[number];
 
-/* ---------- TECH STACKS BY PROJECT TYPE (EXPANDED) ---------- */
+/* ---------- TECH STACKS BY PROJECT TYPE ---------- */
+/* (Cleaned: no missing stacks, no nonsense combos) */
 export const stacksByType: Record<ProjectType, string[]> = {
   "Web App": [
     "Next.js",
@@ -30,13 +31,12 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Svelte",
     "Astro",
     "Remix",
+    "Tailwind CSS",
     "Node.js",
-    "Bun",
     "Django",
     "Rails",
     "GraphQL",
     "tRPC",
-    "Tailwind CSS",
   ],
 
   "Mobile App": [
@@ -67,9 +67,9 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Python",
     "Go",
     "Rust",
-    "Bash",
-    "Zsh",
     "Deno",
+    "Bun",
+    "Bash",
   ],
 
   "Browser Extension": [
@@ -95,6 +95,7 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "Go",
     "Rust",
     "Java",
+    "Spring Boot",
     "gRPC",
     "Kafka",
     "RabbitMQ",
@@ -113,8 +114,8 @@ export const stacksByType: Record<ProjectType, string[]> = {
   "Dev Tool / Library": [
     "TypeScript",
     "JavaScript",
-    "Rust",
     "Go",
+    "Rust",
     "Python",
     "AST Tooling",
     "Compiler APIs",
@@ -134,91 +135,171 @@ export const stacksByType: Record<ProjectType, string[]> = {
     "LangChain",
     "OpenAI API",
     "Hugging Face",
-    "Vector DBs",
+    "Vector Databases",
+    "RAG Pipelines",
   ],
 
   "Open Source Project": [
     "TypeScript",
     "JavaScript",
+    "Python",
     "Go",
     "Rust",
-    "Python",
     "Monorepos",
+    "CI/CD",
   ],
 };
 
 /* ---------- DIFFICULTY LEVELS ---------- */
-export const levels = ["Beginner", "Intermediate", "Advanced"] as const;
+export const levels = [
+  "Beginner",
+  "Intermediate",
+  "Advanced",
+] as const;
+
 export type DifficultyLevel = (typeof levels)[number];
 
-/* ---------- DEVELOPER INTERESTS / DOMAINS (EXPANDED) ---------- */
-export const interests = [
-  // Core engineering
-  "System Design",
-  "Backend Architecture",
+/* ---------- DEVELOPER INTERESTS / DOMAINS ---------- */
+export const developerInterests = [
   "Frontend Architecture",
-  "Performance Optimization",
+  "Backend Architecture",
+  "System Design",
   "Scalability",
   "Distributed Systems",
-
-  // Databases & state
-  "SQL Databases",
-  "NoSQL Databases",
-  "Redis & Caching",
-  "Search Engines",
-  "Data Modeling",
-
-  // Backend internals
   "Authentication & Authorization",
   "API Design",
-  "Webhooks & Events",
-  "Rate Limiting",
-  "Background Jobs & Queues",
-
-  // Infra & ops
-  "DevOps",
-  "CI/CD",
-  "Docker & Containers",
-  "Kubernetes",
-  "Cloud Infrastructure",
-  "Serverless",
-  "Observability & Monitoring",
-
-  // Messaging & async
-  "Event-Driven Systems",
-  "Kafka & Message Brokers",
-  "Streaming Systems",
-
-  // Developer experience
+  "API Security",
+  "Performance Optimization",
+  "Web Security",
+  "SaaS Engineering",
+  "Startup Engineering",
   "Developer Productivity",
+  "Tooling",
   "Code Quality",
   "Refactoring",
   "Testing & QA",
-  "Debugging",
-  "Tooling",
-
-  // Security
-  "Web Security",
-  "API Security",
-  "Secrets Management",
-
-  // AI & modern systems
+  "Rate Limiting",
+  "Background Jobs & Queues",
+  "Event-Driven Systems",
+  "Kafka & Message Brokers",
+  "Observability & Monitoring",
+  "Internal Tools",
+  "Data Modeling",
+  "Open Source",
+  "Automation",
+  "CI/CD",
   "AI Engineering",
   "LLM Apps",
-  "MLOps",
   "Vector Databases",
   "Data Pipelines",
-
-  // Product-focused (still dev-centric)
-  "SaaS Engineering",
-  "Startup Engineering",
-  "Internal Tools",
-  "Open Source",
+  "MLOps",
 ] as const;
 
-export type DeveloperInterest = (typeof interests)[number];
+export type DeveloperInterest = (typeof developerInterests)[number];
 
-/* ---------- SUB QUESTIONS (THIS IS THE POWER) ---------- */
+/* ---------- INTERESTS BY PROJECT TYPE ---------- */
+export const interests: Record<ProjectType, DeveloperInterest[]> = {
+  "Web App": [
+    "Frontend Architecture",
+    "Backend Architecture",
+    "Authentication & Authorization",
+    "API Design",
+    "Performance Optimization",
+    "Web Security",
+    "SaaS Engineering",
+    "Startup Engineering",
+  ],
+
+  "Mobile App": [
+    "Frontend Architecture",
+    "Performance Optimization",
+    "Authentication & Authorization",
+    "API Design",
+    "Startup Engineering",
+  ],
+
+  "API / Backend": [
+    "Backend Architecture",
+    "System Design",
+    "Scalability",
+    "Distributed Systems",
+    "Authentication & Authorization",
+    "API Security",
+    "Rate Limiting",
+    "Background Jobs & Queues",
+  ],
+
+  "CLI Tool": [
+    "Developer Productivity",
+    "Tooling",
+    "Code Quality",
+    "Refactoring",
+    "Testing & QA",
+  ],
+
+  "Browser Extension": [
+    "Frontend Architecture",
+    "Web Security",
+    "Authentication & Authorization",
+    "API Design",
+  ],
+
+  "Desktop App": [
+    "Frontend Architecture",
+    "Backend Architecture",
+    "Performance Optimization",
+  ],
+
+  "Microservice": [
+    "System Design",
+    "Distributed Systems",
+    "Scalability",
+    "Event-Driven Systems",
+    "Kafka & Message Brokers",
+    "Observability & Monitoring",
+  ],
+
+  "Internal Tool": [
+    "Developer Productivity",
+    "Internal Tools",
+    "Authentication & Authorization",
+    "API Design",
+    "Data Modeling",
+  ],
+
+  "Dev Tool / Library": [
+    "Developer Productivity",
+    "Tooling",
+    "Code Quality",
+    "Refactoring",
+    "Testing & QA",
+    "Open Source",
+  ],
+
+  "Automation Script": [
+    "Automation",
+    "Developer Productivity",
+    "CI/CD",
+  ],
+
+  "AI Tool": [
+    "AI Engineering",
+    "LLM Apps",
+    "Vector Databases",
+    "Data Pipelines",
+    "MLOps",
+  ],
+
+  "Open Source Project": [
+    "Open Source",
+    "Code Quality",
+    "Testing & QA",
+    "CI/CD",
+    "Developer Productivity",
+  ],
+};
+
+/* ---------- SUB QUESTIONS ---------- */
 export const subQuestions = {
   scale: [
     "Solo developer",

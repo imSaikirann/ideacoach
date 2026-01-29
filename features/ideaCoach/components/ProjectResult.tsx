@@ -6,11 +6,9 @@ import { useTypewriter } from "@/hooks/useTypewriter";
 import { SaveIdeaAlert } from "./SaveIdeaAlert";
 import { ProjectResultFooter } from "./ProjectResultFooter";
 import { ProjectTitle } from "./ProjectTitle";
-// import { ProjectCreditsHeader } from "./ProjectCreditsHeader";
 import { ProjectPreferences } from "./ProjectPreferences";
 import { ProjectFeatures } from "./ProjectFeatures";
 import { ProjectLearning } from "./ProjectLearning";
-import { ProjectTime } from "./ProjectTime";
 import { ProjectRoadmap } from "./ProjectRoadmap";
 import { ProjectTradeoffs } from "./ProjectTradeoffs";
 import { ProjectProblemStatement } from "./ProjectProblemStatement";
@@ -27,9 +25,7 @@ import { Share2 } from "lucide-react";
 import { ProjectFirstThingsToGoogle } from "./ProjectFirstThingsToGoogle";
 import { ShareProjectDialog } from "./ShareProjectDialog";
 import { useSaveIdea } from "../hooks/useSaveIdea";
-import type { Project, ProjectResultProps } from "../types";
-import { ShareProjectCard } from "./ShareProjectCard";
-
+import type { ProjectResultProps } from "../types";
 
 const COOLDOWN_SECONDS = 60;
 
@@ -39,35 +35,45 @@ export function ProjectResult({
   onBack,
   onGenerateAnother,
   isGenerating = false,
-  creditsLeft ,
-  creditsPerMonth
+  creditsLeft,
+  creditsPerMonth,
 }: ProjectResultProps) {
   const [revealed, setRevealed] = useState(false);
   const [isSaved, setIsSaved] = useState(!!project.savedIdeaId);
+  const [isPublic, setIsPublic] = useState(false);
   const [cooldown, setCooldown] = useState(0);
   const [showSaveAlert, setShowSaveAlert] = useState(false);
   const [showShareDialog, setShowShareDialog] = useState(false);
-  
+  const [shareUrl, setShareUrl] = useState<string | undefined>(undefined);
+
   const saveIdeaMutation = useSaveIdea();
 
   const subtitleText = useTypewriter(
     revealed
       ? project.oneLiner ||
           (project.description ??
-          project.problemStatement ??
-          project.problemSolved ??
-          "A project tailored to your preferences.")
+            project.problemStatement ??
+            project.problemSolved ??
+            "A project tailored to your preferences.")
       : "",
     20
   );
 
-  /* Reveal animation */
   useEffect(() => {
     const timer = setTimeout(() => setRevealed(true), 300);
     return () => clearTimeout(timer);
   }, []);
 
-  /* Cooldown */
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (project.savedIdeaId) {
+      const origin = window.location.origin;
+      setShareUrl(`${origin}/dashboard/public-ideas?ideaId=${project.savedIdeaId}`);
+    } else {
+      setShareUrl(window.location.href);
+    }
+  }, [project.savedIdeaId]);
+
   useEffect(() => {
     if (cooldown <= 0) return;
     const interval = setInterval(
@@ -79,14 +85,11 @@ export function ProjectResult({
 
   function handleSaveIdea(visibility: "PRIVATE" | "PUBLIC" = "PUBLIC") {
     saveIdeaMutation.mutate(
-      {
-        project,
-        selections,
-        visibility,
-      },
+      { project, selections, visibility },
       {
         onSuccess: () => {
           setIsSaved(true);
+          if (visibility === "PUBLIC") setIsPublic(true);
         },
         onError: (error) => {
           console.error("Failed to save idea:", error);
@@ -95,15 +98,34 @@ export function ProjectResult({
     );
   }
 
+  // When user clicks share, make idea PUBLIC first, then show dialog
+  function handleShareClick() {
+    if (!isPublic && project.savedIdeaId) {
+      // Make it public before sharing
+      saveIdeaMutation.mutate(
+        { project, selections, visibility: "PUBLIC" },
+        {
+          onSuccess: () => {
+            setIsPublic(true);
+            setShowShareDialog(true);
+          },
+          onError: () => {
+            // Still show dialog even if save fails
+            setShowShareDialog(true);
+          },
+        }
+      );
+    } else {
+      setShowShareDialog(true);
+    }
+  }
+
   function handleGenerateAnother() {
     if (cooldown > 0 || isGenerating) return;
-    
-    // Show save alert before generating
     setShowSaveAlert(true);
   }
 
   function handleConfirmGenerate(visibility: "PRIVATE" | "PUBLIC" = "PRIVATE") {
-    // Save the idea before generating another (PRIVATE by default)
     if (!isSaved) {
       handleSaveIdea(visibility);
     }
@@ -120,40 +142,25 @@ export function ProjectResult({
 
   return (
     <>
-      <StepLayout
-        title=""
-        subtitle=""
-      >
+      <StepLayout title="" subtitle="">
         <div className="flex justify-end mb-4">
           <button
-            onClick={() => setShowShareDialog(true)}
-            className="p-2 rounded-lg hover:bg-secondary/50 transition-colors"
+            onClick={handleShareClick}
+            disabled={saveIdeaMutation.isPending}
+            className="p-2 rounded-lg hover:bg-secondary/50 transition-colors disabled:opacity-50"
             aria-label="Share project"
           >
             <Share2 className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
           </button>
         </div>
-        <div className="space-y-6">
-          {/* Credits Header */}
-          {/* <div
-            className={`transition-all duration-700 ${
-              revealed ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-            }`}
-          >
-            <ProjectCreditsHeader
-              creditsLeft={creditsLeft}
-              creditsPerMonth={creditsPerMonth}
-            />
-          </div> */}
 
-          {/* Title */}
+        <div className="space-y-6">
           <ProjectTitle
             title={project.title || project.projectName || "Project Idea"}
             subtitle={subtitleText}
             revealed={revealed}
           />
 
-          {/* Problem Solved */}
           {project.problemSolved && (
             <ProjectProblemStatement
               problemStatement={project.problemSolved}
@@ -161,7 +168,6 @@ export function ProjectResult({
             />
           )}
 
-          {/* Legacy description fallback */}
           {!project.problemSolved && project.description && (
             <ProjectDescription
               description={project.description}
@@ -169,44 +175,38 @@ export function ProjectResult({
             />
           )}
 
-          {/* Stats Overview */}
           <ProjectStats
-            features={project.mustHaveFeatures?.length || project.features?.length || project.technicalFocus?.length || 0}
-            skills={project.whyItFitsYou?.length || project.learningObjectives?.length || project.whatYouWillLearn?.length || 0}
+            features={
+              project.mustHaveFeatures?.length ||
+              project.features?.length ||
+              project.technicalFocus?.length ||
+              0
+            }
+            skills={
+              project.whyItFitsYou?.length ||
+              project.learningObjectives?.length ||
+              project.whatYouWillLearn?.length ||
+              0
+            }
             revealed={revealed}
           />
 
-          {/* Preferences */}
-          <ProjectPreferences
-            selections={selections}
-            revealed={revealed}
-          />
+          <ProjectPreferences selections={selections} revealed={revealed} />
 
-          {/* Why It Fits You */}
           {project.whyItFitsYou && project.whyItFitsYou.length > 0 && (
-            <ProjectWhyItFits
-              reasons={project.whyItFitsYou}
-              revealed={revealed}
-            />
+            <ProjectWhyItFits reasons={project.whyItFitsYou} revealed={revealed} />
           )}
 
-          {/* Must Have Features */}
           {project.mustHaveFeatures && project.mustHaveFeatures.length > 0 && (
-            <ProjectFeatures
-              features={project.mustHaveFeatures}
-              revealed={revealed}
-            />
+            <ProjectFeatures features={project.mustHaveFeatures} revealed={revealed} />
           )}
 
-          {/* Legacy features fallback */}
-          {!project.mustHaveFeatures && project.features && project.features.length > 0 && (
-            <ProjectFeatures
-              features={project.features}
-              revealed={revealed}
-            />
-          )}
+          {!project.mustHaveFeatures &&
+            project.features &&
+            project.features.length > 0 && (
+              <ProjectFeatures features={project.features} revealed={revealed} />
+            )}
 
-          {/* Upgrade Paths */}
           {project.upgradePaths && (
             <ProjectUpgradePaths
               upgradePaths={project.upgradePaths}
@@ -214,7 +214,6 @@ export function ProjectResult({
             />
           )}
 
-          {/* Common Mistakes */}
           {project.commonMistakes && project.commonMistakes.length > 0 && (
             <ProjectCommonMistakes
               mistakes={project.commonMistakes}
@@ -222,7 +221,6 @@ export function ProjectResult({
             />
           )}
 
-          {/* Interview Angle */}
           {project.interviewAngle && (
             <ProjectInterviewAngle
               interviewAngle={project.interviewAngle}
@@ -230,35 +228,39 @@ export function ProjectResult({
             />
           )}
 
-          {/* First Things to Google */}
-          {project.firstThingsToGoogle && project.firstThingsToGoogle.length > 0 && (
-            <ProjectFirstThingsToGoogle
-              searchTerms={project.firstThingsToGoogle}
-              revealed={revealed}
-            />
-          )}
+          {project.firstThingsToGoogle &&
+            project.firstThingsToGoogle.length > 0 && (
+              <ProjectFirstThingsToGoogle
+                searchTerms={project.firstThingsToGoogle}
+                revealed={revealed}
+              />
+            )}
 
-          {/* Legacy sections for backward compatibility */}
-          {project.learningObjectives && project.learningObjectives.length > 0 && !project.whyItFitsYou && (
-            <ProjectLearning
-              skills={project.learningObjectives}
-              revealed={revealed}
-            />
-          )}
+          {project.learningObjectives &&
+            project.learningObjectives.length > 0 &&
+            !project.whyItFitsYou && (
+              <ProjectLearning
+                skills={project.learningObjectives}
+                revealed={revealed}
+              />
+            )}
 
-          {project.technicalFocus && project.technicalFocus.length > 0 && !project.mustHaveFeatures && (
-            <ProjectTechnicalFocus
-              technicalFocus={project.technicalFocus}
-              revealed={revealed}
-            />
-          )}
+          {project.technicalFocus &&
+            project.technicalFocus.length > 0 &&
+            !project.mustHaveFeatures && (
+              <ProjectTechnicalFocus
+                technicalFocus={project.technicalFocus}
+                revealed={revealed}
+              />
+            )}
 
-          {project.starterCodeExamples && project.starterCodeExamples.length > 0 && (
-            <ProjectStarterCode
-              starterCodeExamples={project.starterCodeExamples}
-              revealed={revealed}
-            />
-          )}
+          {project.starterCodeExamples &&
+            project.starterCodeExamples.length > 0 && (
+              <ProjectStarterCode
+                starterCodeExamples={project.starterCodeExamples}
+                revealed={revealed}
+              />
+            )}
 
           {project.stretchGoals && project.stretchGoals.length > 0 && (
             <ProjectStretchGoals
@@ -268,10 +270,7 @@ export function ProjectResult({
           )}
 
           {project.projectSteps && project.projectSteps.length > 0 && (
-            <ProjectRoadmap
-              roadmap={project.projectSteps}
-              revealed={revealed}
-            />
+            <ProjectRoadmap roadmap={project.projectSteps} revealed={revealed} />
           )}
 
           {project.designTradeoffs && project.designTradeoffs.length > 0 && (
@@ -280,13 +279,8 @@ export function ProjectResult({
               revealed={revealed}
             />
           )}
-
-          {/* Share Project Card */}
-          {/* <ShareProjectCard
-            projectTitle={project.title || project.projectName || "Project Idea"}
-            revealed={revealed}
-          /> */}
         </div>
+
         <ProjectResultFooter
           isSaved={isSaved}
           cooldown={cooldown}
@@ -300,7 +294,6 @@ export function ProjectResult({
         />
       </StepLayout>
 
-      {/* Save Idea Alert */}
       <SaveIdeaAlert
         isOpen={showSaveAlert}
         projectTitle={project.projectName || project.title || "Project Idea"}
@@ -308,11 +301,11 @@ export function ProjectResult({
         onSkip={handleSkipSave}
       />
 
-      {/* Share Dialog */}
       <ShareProjectDialog
         isOpen={showShareDialog}
         onClose={() => setShowShareDialog(false)}
         projectTitle={project.title || project.projectName || "Project Idea"}
+        projectUrl={shareUrl}
       />
     </>
   );

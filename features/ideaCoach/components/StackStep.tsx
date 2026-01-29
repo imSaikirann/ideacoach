@@ -4,7 +4,7 @@ import { stacksByType } from "../constants";
 import { StepLayout } from "./StepLayout";
 import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { StackStepProps } from "../types";
 import { motion } from "framer-motion";
 import { staggerContainer, staggerItem } from "@/lib/animations";
@@ -32,12 +32,9 @@ export function StackStep({
       subtitle={`Select one or more technologies for your ${projectType.toLowerCase()}`}
       currentStep={2}
       totalSteps={5}
+      onBack={onBack}
       footer={
         <div className="flex gap-3">
-          <Button variant="outline" className="h-12 flex-1 bg-transparent" onClick={onBack}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
           <Button
             className="h-12 flex-1"
             disabled={!value.length}

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Sparkle } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { staggerContainer, staggerItem } from "@/lib/animations";
@@ -40,11 +40,11 @@ export default function Cta() {
         <Button
           asChild
           size="lg"
-          className="gap-2 rounded-full px-8"
+          className="gap-2  px-8"
         >
           <Link href="/dashboard/idea-form">
             Generate my project
-            <ArrowRight className="h-4 w-4" />
+            <Sparkle className="h-4 w-4" />
           </Link>
         </Button>
 

@@ -6,6 +6,7 @@ import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Coins, Crown } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ProjectTypeStepProps } from "../types";
 import { CreditsSkeleton } from "./CreditsSkeleton";
 import { motion } from "framer-motion";
@@ -20,6 +21,7 @@ export function ProjectTypeStep({
   creditsPerMonth,
   loading = false,
 }: ProjectTypeStepProps) {
+  const router = useRouter();
   const hasNoCredits = !loading && creditsLeft === 0;
 
   return (
@@ -28,6 +30,7 @@ export function ProjectTypeStep({
       subtitle="Select the type of project you have in mind"
       currentStep={1}
       totalSteps={5}
+      onBack={() => router.back()}
       footer={
         <div className="space-y-3">
           {/* Credits card */}

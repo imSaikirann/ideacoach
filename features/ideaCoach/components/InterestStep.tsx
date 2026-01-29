@@ -1,10 +1,10 @@
 "use client";
 
-import { interests } from "../constants";
+import { developerInterests, interests } from "../constants";
 import { StepLayout } from "./StepLayout";
 import { Chip } from "./Chip";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { InterestStepProps } from "../types";
 import { motion } from "framer-motion";
 import { staggerContainer, staggerItem } from "@/lib/animations";
@@ -15,25 +15,23 @@ export function InterestStep({
   onChange,
   onBack,
   onNext,
+  projectType,
 }: InterestStepProps) {
+  // Prefer interests for the chosen projectType; fall back to the full list
+  const interestOptions =
+    projectType && projectType in interests
+      ? interests[projectType as keyof typeof interests]
+      : developerInterests;
+
   return (
     <StepLayout
       title="What field interests you?"
       subtitle="Choose a domain for your project"
       currentStep={4}
       totalSteps={5}
+      onBack={onBack}
       footer={
         <div className="flex gap-3">
-          {/* Back */}
-          <Button
-            variant="outline"
-            className="h-12 flex-1 bg-transparent"
-            onClick={onBack}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
-
           {/* Continue */}
           <Button
             className="h-12 flex-1"
@@ -52,7 +50,7 @@ export function InterestStep({
         initial="hidden"
         animate="visible"
       >
-        {interests.map((interest) => (
+        {interestOptions.map((interest) => (
           <motion.div key={interest} variants={staggerItem}>
             <Chip
               active={value === interest}

@@ -182,6 +182,7 @@ export interface InterestStepProps {
   onChange: (value: string) => void;
   onBack: () => void;
   onNext: () => void;
+  projectType: string;
 }
 
 

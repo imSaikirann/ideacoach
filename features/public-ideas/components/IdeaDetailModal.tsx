@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
-import { X, Lock, Globe, User, Clock, Code2, Gauge, Heart, Copy, Share2, Check, Sparkles } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { X, Copy, Share2, Check, Code2, Zap, Heart, Globe, Lock } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { Idea } from "../services/ideas";
 
 interface IdeaDetailModalProps {
@@ -19,122 +17,133 @@ interface IdeaDetailModalProps {
 }
 
 export function IdeaDetailModal({ idea, isOpen, onClose }: IdeaDetailModalProps) {
-  const router = useRouter();
   const [copied, setCopied] = useState(false);
+  const [visibility, setVisibility] = useState<"PUBLIC" | "PRIVATE">("PUBLIC");
+  const queryClient = useQueryClient();
+
+  // Sync visibility when idea changes
+  useEffect(() => {
+    if (idea?.visibility) {
+      setVisibility(idea.visibility as "PUBLIC" | "PRIVATE");
+    }
+  }, [idea?.id, idea?.visibility]);
+
+  const toggleMutation = useMutation({
+    mutationFn: async (newVisibility: "PUBLIC" | "PRIVATE") => {
+      const res = await fetch("/api/ideas/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          savedIdeaId: idea?.id,
+          visibility: newVisibility,
+        }),
+      });
+      if (!res.ok) throw new Error("Failed to update");
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["ideas"] });
+    },
+  });
 
   if (!idea) return null;
 
   const stackArray: string[] = Array.isArray(idea.stack)
     ? idea.stack
     : Array.isArray(idea.techStack)
-      ? idea.techStack
-      : typeof idea.techStack === "string"
-        ? idea.techStack.split(", ").filter(Boolean)
-        : [];
+    ? idea.techStack
+    : typeof idea.techStack === "string"
+    ? idea.techStack.split(", ").filter(Boolean)
+    : [];
 
   const handleCopy = async () => {
-    const ideaText = `
-${idea.title}
-
-Problem: ${idea.problem || idea.problemStatement || "N/A"}
-
-Features:
-${idea.features?.map((f: string) => `• ${f}`).join("\n") || "N/A"}
-
-Tech Stack: ${stackArray.join(", ") || "N/A"}
-Difficulty: ${idea.difficulty || "N/A"}
-Type: ${idea.projectType || "N/A"}
-Interest: ${idea.interest || "N/A"}
-    `.trim();
-
+    const text = `${idea.title}\n\n${idea.problem || idea.problemStatement || ""}\n\nTech: ${stackArray.join(", ")}`;
     try {
-      await navigator.clipboard.writeText(ideaText);
+      await navigator.clipboard.writeText(text);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
-      console.error("Failed to copy:", err);
+      console.error("Copy failed:", err);
     }
   };
 
   const handleShare = async () => {
-    const shareData = {
-      title: idea.title,
-      text: idea.problem || idea.problemStatement || "",
-      url: typeof window !== "undefined" ? window.location.href : "",
-    };
+    const url =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/dashboard/public-ideas?ideaId=${idea.id}`
+        : "";
 
     try {
       if (navigator.share) {
-        await navigator.share(shareData);
+        await navigator.share({ title: idea.title, url });
       } else {
-        // Fallback: copy to clipboard
-        await navigator.clipboard.writeText(
-          `${idea.title}\n${idea.problem || idea.problemStatement || ""}\n${window.location.href}`
-        );
+        await navigator.clipboard.writeText(url);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
       }
     } catch (err) {
-      console.error("Failed to share:", err);
+      console.error("Share failed:", err);
     }
   };
 
-  const handleUseIdea = () => {
-    // Navigate to idea form with pre-filled data
-    const params = new URLSearchParams();
-    if (idea.projectType) params.set("type", idea.projectType);
-    if (stackArray.length > 0) params.set("stack", stackArray.join(","));
-    if (idea.difficulty) params.set("difficulty", idea.difficulty);
-    if (idea.interest) params.set("interest", idea.interest);
-    if (idea.problem || idea.problemStatement) {
-      params.set("problem", idea.problem || idea.problemStatement || "");
-    }
-    
-    router.push(`/dashboard/idea-form?${params.toString()}`);
-    onClose();
+  const handleToggleVisibility = () => {
+    const newVisibility = visibility === "PUBLIC" ? "PRIVATE" : "PUBLIC";
+    setVisibility(newVisibility);
+    toggleMutation.mutate(newVisibility);
   };
 
   return (
     <AlertDialog open={isOpen} onOpenChange={onClose}>
-      <AlertDialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-        <AlertDialogHeader>
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-2">
-                {idea.visibility === "PRIVATE" ? (
-                  <Lock className="w-4 h-4 text-muted-foreground" />
-                ) : (
-                  <Globe className="w-4 h-4 text-primary" />
-                )}
-                <AlertDialogTitle className="text-xl sm:text-2xl font-semibold">
-                  {idea.title}
-                </AlertDialogTitle>
-              </div>
-              {idea.visibility === "PRIVATE" && idea.isOwn && (
-                <span className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs bg-secondary text-muted-foreground">
-                  <Lock className="w-3 h-3" />
-                  Your private idea
-                </span>
-              )}
-            </div>
-            <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </button>
-          </div>
-        </AlertDialogHeader>
+      <AlertDialogContent className="max-w-lg max-h-[85vh] overflow-y-auto p-0">
+        {/* Header */}
+        <div className="sticky top-0 bg-background border-b px-4 py-3 flex items-center justify-between">
+          <h2 className="font-semibold text-lg line-clamp-1 pr-4">{idea.title}</h2>
+          <button
+            onClick={onClose}
+            className="p-1 rounded hover:bg-secondary transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
-        <div className="space-y-6 pt-4">
-          {/* Problem/Description */}
+        {/* Content */}
+        <div className="p-4 space-y-5">
+          {/* Visibility Toggle - only show for own ideas */}
+          {idea.isOwn && (
+            <div className="flex items-center justify-between p-3 rounded-lg bg-secondary/50 border">
+              <div className="flex items-center gap-2">
+                {visibility === "PUBLIC" ? (
+                  <Globe className="w-4 h-4 text-primary" />
+                ) : (
+                  <Lock className="w-4 h-4 text-muted-foreground" />
+                )}
+                <span className="text-sm font-medium">
+                  {visibility === "PUBLIC" ? "Public" : "Private"}
+                </span>
+              </div>
+              <button
+                onClick={handleToggleVisibility}
+                disabled={toggleMutation.isPending}
+                className={`relative w-11 h-6 rounded-full transition-colors ${
+                  visibility === "PUBLIC" ? "bg-primary" : "bg-muted"
+                } ${toggleMutation.isPending ? "opacity-50" : ""}`}
+              >
+                <span
+                  className={`absolute top-1 w-4 h-4 rounded-full bg-white transition-transform ${
+                    visibility === "PUBLIC" ? "left-6" : "left-1"
+                  }`}
+                />
+              </button>
+            </div>
+          )}
+
+          {/* Problem */}
           {(idea.problem || idea.problemStatement) && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-2">
-                Problem Solved
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
+                Problem
               </h3>
-              <p className="text-sm sm:text-base text-foreground/90 leading-relaxed">
+              <p className="text-sm leading-relaxed">
                 {idea.problem || idea.problemStatement}
               </p>
             </div>
@@ -143,14 +152,14 @@ Interest: ${idea.interest || "N/A"}
           {/* Features */}
           {idea.features && idea.features.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">
-                Key Features
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
+                Features
               </h3>
-              <ul className="space-y-2">
-                {idea.features.map((feature, index) => (
-                  <li key={index} className="flex gap-2 text-sm sm:text-base text-foreground/90">
-                    <span className="text-primary mt-1.5 flex-shrink-0">•</span>
-                    <span>{feature}</span>
+              <ul className="space-y-1.5">
+                {idea.features.map((f, i) => (
+                  <li key={i} className="text-sm flex gap-2">
+                    <span className="text-primary">•</span>
+                    {f}
                   </li>
                 ))}
               </ul>
@@ -160,14 +169,14 @@ Interest: ${idea.interest || "N/A"}
           {/* Tech Stack */}
           {stackArray.length > 0 && (
             <div>
-              <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+              <h3 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-2">
                 Tech Stack
               </h3>
-              <div className="flex flex-wrap gap-2">
-                {stackArray.map((tech, index) => (
+              <div className="flex flex-wrap gap-1.5">
+                {stackArray.map((tech, i) => (
                   <span
-                    key={index}
-                    className="px-3 py-1.5 rounded-lg bg-secondary border border-border text-sm font-medium"
+                    key={i}
+                    className="px-2 py-1 text-xs rounded bg-secondary font-medium"
                   >
                     {tech}
                   </span>
@@ -176,81 +185,43 @@ Interest: ${idea.interest || "N/A"}
             </div>
           )}
 
-          {/* Metadata Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4 border-t">
+          {/* Meta info */}
+          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground pt-2 border-t">
             {idea.projectType && (
-              <div>
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
-                  <Code2 className="w-3 h-3" />
-                  <span>Type</span>
-                </div>
-                <p className="text-sm font-medium">{idea.projectType}</p>
-              </div>
+              <span className="flex items-center gap-1.5">
+                <Code2 className="w-3.5 h-3.5" />
+                {idea.projectType}
+              </span>
             )}
             {idea.difficulty && (
-              <div>
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
-                  <Gauge className="w-3 h-3" />
-                  <span>Difficulty</span>
-                </div>
-                <p className="text-sm font-medium">{idea.difficulty}</p>
-              </div>
+              <span className="flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5" />
+                {idea.difficulty}
+              </span>
             )}
             {idea.interest && (
-              <div>
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
-                  <Heart className="w-3 h-3" />
-                  <span>Interest</span>
-                </div>
-                <p className="text-sm font-medium">{idea.interest}</p>
-              </div>
-            )}
-            {idea.author && (
-              <div>
-                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
-                  <User className="w-3 h-3" />
-                  <span>Author</span>
-                </div>
-                <p className="text-sm font-medium">{idea.author}</p>
-              </div>
+              <span className="flex items-center gap-1.5">
+                <Heart className="w-3.5 h-3.5" />
+                {idea.interest}
+              </span>
             )}
           </div>
+        </div>
 
-          {/* Action Buttons */}
-          <div className="pt-6 border-t flex flex-col sm:flex-row gap-3">
-            <Button
-              variant="outline"
-              onClick={handleCopy}
-              className="flex-1"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4 mr-2" />
-                  Copied!
-                </>
-              ) : (
-                <>
-                  <Copy className="w-4 h-4 mr-2" />
-                  Copy Details
-                </>
-              )}
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleShare}
-              className="flex-1"
-            >
-              <Share2 className="w-4 h-4 mr-2" />
-              Share
-            </Button>
-            <Button
-              onClick={handleUseIdea}
-              className="flex-1 bg-primary text-primary-foreground hover:bg-primary/90"
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Use This Idea
-            </Button>
-          </div>
+        {/* Actions */}
+        <div className="sticky bottom-0 bg-background border-t p-4 flex gap-2">
+          <Button variant="outline" size="sm" onClick={handleCopy} className="flex-1">
+            {copied ? (
+              <Check className="w-4 h-4 mr-1.5" />
+            ) : (
+              <Copy className="w-4 h-4 mr-1.5" />
+            )}
+            {copied ? "Copied" : "Copy"}
+          </Button>
+          <Button size="sm" onClick={handleShare} className="flex-1">
+            <Share2 className="w-4 h-4 mr-1.5" />
+            Share
+          </Button>
         </div>
       </AlertDialogContent>
     </AlertDialog>

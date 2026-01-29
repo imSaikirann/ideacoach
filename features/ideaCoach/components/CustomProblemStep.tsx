@@ -3,7 +3,7 @@
 import { StepLayout } from "./StepLayout";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Sparkles, Coins } from "lucide-react";
+import { Sparkles, Coins } from "lucide-react";
 import { CustomProblemStepProps } from "../types";
 
 export function CustomProblemStep({
@@ -24,6 +24,7 @@ export function CustomProblemStep({
       subtitle="Optional — skip if you're not sure, or add your idea here"
       currentStep={5}
       totalSteps={5}
+      onBack={onBack}
       footer={
         <div className="space-y-3">
           {/* Credits info */}
@@ -48,17 +49,6 @@ export function CustomProblemStep({
 
           {/* Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
-            {/* Back */}
-            <Button
-              variant="outline"
-              className="h-12 flex-1 bg-transparent"
-              onClick={onBack}
-              disabled={loading}
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
-            </Button>
-
             {/* Skip */}
             <Button
               variant="outline"

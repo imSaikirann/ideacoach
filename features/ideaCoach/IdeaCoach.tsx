@@ -229,6 +229,7 @@ export function IdeaCoach() {
           onChange={setInterest}
           onBack={() => setStep("difficulty")}
           onNext={() => setStep("customProblem")}
+          projectType={projectType}
         />
       )}
 

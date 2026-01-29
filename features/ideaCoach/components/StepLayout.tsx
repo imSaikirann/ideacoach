@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import { ArrowLeft } from "lucide-react";
 import { StepProgress } from "./StepProgress";
 
 interface StepLayoutProps {
@@ -10,6 +11,7 @@ interface StepLayoutProps {
   footer?: React.ReactNode;
   currentStep?: number;
   totalSteps?: number;
+  onBack?: () => void;
 }
 
 export function StepLayout({
@@ -19,10 +21,24 @@ export function StepLayout({
   footer,
   currentStep,
   totalSteps,
+  onBack,
 }: StepLayoutProps) {
   return (
     <div className="min-h-screen bg-background">
       <div className="mx-auto w-full max-w-2xl px-4 sm:px-6 py-8 sm:py-12 lg:py-16">
+        {onBack && (
+          <div className="mb-4">
+            <button
+              type="button"
+              onClick={onBack}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-card/80 text-muted-foreground hover:bg-card hover:text-foreground transition-colors"
+              aria-label="Back"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+
         {typeof currentStep === "number" && typeof totalSteps === "number" && (
           <div>
             <StepProgress currentStep={currentStep} totalSteps={totalSteps} />

@@ -1,75 +1,93 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Session } from "next-auth";
-import { Button } from "@/components/ui/button";
-import { LogOut, Settings } from "lucide-react";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
+import { LogOut, User } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 interface UserDropdownProps {
   user: Session["user"];
 }
 
 export function UserDropdown({ user }: UserDropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // close on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, []);
 
   return (
-    <div className="relative">
+    <div ref={ref} className="relative">
+      {/* Avatar Button */}
       <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-secondary transition-colors"
+        onClick={() => setOpen((v) => !v)}
+        className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-secondary transition"
       >
-        <div className="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
-          <span className="text-sm font-semibold text-accent">
-            {user?.name?.[0]?.toUpperCase() || "U"}
-          </span>
+        <div className="relative h-8 w-8 rounded-full overflow-hidden bg-accent/10">
+          {user?.image ? (
+            <Image
+              src={user.image}
+              alt={user.name ?? "User"}
+              fill
+              sizes="32px"
+              className="object-cover"
+            />
+          ) : (
+            <div className="h-full w-full flex items-center justify-center text-sm font-semibold text-accent">
+              {user?.name?.[0]?.toUpperCase() || "U"}
+            </div>
+          )}
         </div>
-        <span className="text-sm font-medium hidden sm:inline max-w-[120px] truncate">
-          {user?.name || "User"}
+
+        <span className="hidden sm:inline text-sm font-medium max-w-[120px] truncate">
+          {user?.name}
         </span>
       </button>
 
-      {isOpen && (
-        <>
-          <div
-            className="fixed inset-0"
-            onClick={() => setIsOpen(false)}
-          />
-          <div className="absolute right-0 top-full mt-2 w-48 rounded-lg border border-border bg-background shadow-lg z-50">
-            <div className="p-3 border-b border-border/50">
-              <p className="text-sm font-semibold truncate">{user?.name}</p>
-              <p className="text-xs text-muted-foreground truncate">
-                {user?.email}
-              </p>
-            </div>
-
-            <div className="p-2 space-y-1">
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  window.location.href = "/profile";
-                }}
-                className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary transition-colors text-foreground"
-              >
-                <Settings className="h-4 w-4" />
-                Profile
-              </button>
-
-              <button
-                onClick={() => {
-                  setIsOpen(false);
-                  signOut();
-                }}
-                className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary transition-colors text-foreground"
-              >
-                <LogOut className="h-4 w-4" />
-                Sign Out
-              </button>
-            </div>
+      {/* Dropdown */}
+      {open && (
+        <div className="absolute right-0 mt-2 w-56 rounded-xl border border-border bg-background shadow-lg z-50">
+          {/* User info */}
+          <div className="px-4 py-3 border-b">
+            <p className="text-sm font-semibold truncate">{user?.name}</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {user?.email}
+            </p>
           </div>
-        </>
+
+          {/* Actions */}
+          <div className="p-2 space-y-1">
+            <Link
+              href="/profile"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary transition"
+            >
+              <User className="h-4 w-4" />
+              Profile
+            </Link>
+
+            <button
+              onClick={() => {
+                setOpen(false);
+                signOut();
+              }}
+              className="w-full flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-secondary transition"
+            >
+              <LogOut className="h-4 w-4" />
+              Sign out
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

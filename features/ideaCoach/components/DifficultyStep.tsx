@@ -3,7 +3,7 @@
 import { levels } from "../constants";
 import { StepLayout } from "./StepLayout";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, Zap, Flame, Rocket } from "lucide-react";
+import { ArrowRight, Zap, Flame, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { DifficultyStepProps } from "../types";
 import { motion } from "framer-motion";
@@ -37,12 +37,9 @@ export function DifficultyStep({
       subtitle="Choose a difficulty level that matches your skills"
       currentStep={3}
       totalSteps={5}
+      onBack={onBack}
       footer={
         <div className="flex gap-3">
-          <Button variant="outline" className="h-12 flex-1 bg-transparent" onClick={onBack}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back
-          </Button>
           <Button
             className="h-12 flex-1"
             disabled={!value}

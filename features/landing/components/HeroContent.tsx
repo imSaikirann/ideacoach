@@ -2,29 +2,30 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowRight,
-  Sparkles,
-  Zap,
-  GraduationCap,
-  Rocket,
-} from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
-import { fadeInUp, staggerContainer, staggerItem } from "@/lib/animations";
+import {
+  fadeInUp,
+  staggerContainer,
+  staggerItem,
+} from "@/lib/animations";
 
 export default function HeroContent() {
   return (
     <motion.div
-      className="mx-auto max-w-xl lg:max-w-2xl text-center lg:text-left space-y-10"
+      className="mx-auto max-w-xl space-y-10 text-center lg:mx-0 lg:text-left"
       variants={staggerContainer}
       initial="hidden"
       animate="visible"
     >
-      {/* Status Badge */}
-      <motion.div className="flex justify-center lg:justify-start" variants={staggerItem}>
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-secondary/50 border border-border backdrop-blur-sm">
+      {/* Badge */}
+      <motion.div
+        className="flex justify-center lg:justify-start"
+        variants={staggerItem}
+      >
+        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary/50 px-4 py-2 backdrop-blur-sm">
           <span className="relative flex h-2 w-2">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-primary opacity-75 animate-ping" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-primary" />
           </span>
           <span className="text-xs font-medium tracking-wide">
@@ -35,113 +36,61 @@ export default function HeroContent() {
 
       {/* Headline */}
       <motion.div className="space-y-4" variants={staggerItem}>
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight tracking-tight text-balance">
-          Build projects that actually
-          <span className="text-primary"> matter</span>
+        <h1 className="text-balance text-4xl font-bold tracking-tight sm:text-5xl lg:text-5xl">
+          Build portfolio projects that
+          <span className="text-primary"> get noticed</span>
         </h1>
 
-        <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground font-medium">
-          Stop guessing. Start building portfolio-ready projects with clarity.
+        <p className="text-lg font-medium text-muted-foreground sm:text-xl">
+          Stop overthinking ideas. Get clear, real-world project plans tailored
+          to your skills.
         </p>
       </motion.div>
 
       {/* Description */}
       <motion.p
-        className="mx-auto lg:mx-0 max-w-lg text-base sm:text-lg leading-relaxed text-muted-foreground"
+        className="mx-auto max-w-lg text-base leading-relaxed text-muted-foreground lg:mx-0"
         variants={staggerItem}
       >
-        IdeaCoach helps you discover **high-signal project ideas** tailored to
-        your skills, goals, and experience complete with scope, features, and
-        real-world relevance.
+        IdeaCoach generates high-signal project ideas with scope, features, and
+        real-world relevance  so you always know what to build next and why it
+        matters.
       </motion.p>
 
-      {/* Primary CTAs */}
+      {/* CTAs */}
       <motion.div
-        className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+        className="flex flex-col gap-4 sm:flex-row sm:justify-center lg:justify-start"
         variants={staggerItem}
       >
-        <Link href="/dashboard/idea-form" className="w-full sm:w-auto">
-          <Button
-            size="lg"
-            className="
-              w-full sm:w-auto
-              px-8 text-base font-semibold
-              shadow-lg shadow-primary/20
-              hover:shadow-primary/30
-              transition-all
-              group
-            "
-          >
-            <Rocket className="mr-2 h-5 w-5" />
+        <Link href="/dashboard/idea-form">
+          <Button size="lg" className="group w-full sm:w-auto">
             Generate my project
             <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
         </Link>
 
-        <Link href="/dashboard/public-ideas" className="hidden sm:block">
+        <Link href="/dashboard/public-ideas">
           <Button
             size="lg"
             variant="outline"
-            className="
-              px-8 text-base font-semibold
-              border-border/60
-              bg-transparent
-              hover:bg-secondary/40
-              transition-all
-              group
-            "
+            className="w-full sm:w-auto"
           >
             <Sparkles className="mr-2 h-5 w-5" />
             Browse real ideas
-            <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
           </Button>
         </Link>
       </motion.div>
 
-      {/* Build School */}
+      {/* Trust */}
       <motion.div
-        className="flex justify-center lg:justify-start"
-        variants={staggerItem}
-      >
-        <Link
-          href="/dashboard/playbook"
-          className="
-            inline-flex items-center gap-2
-            px-4 py-2 rounded-full
-            border border-border/50
-            bg-secondary/40
-            hover:bg-secondary/60
-            transition-all
-            group
-          "
-        >
-          <GraduationCap className="h-4 w-4" />
-          <span className="text-sm font-semibold">
-            Build School
-          </span>
-          <span className="hidden sm:inline text-sm text-muted-foreground">
-            Learn how to execute projects end-to-end
-          </span>
-          <ArrowRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-1" />
-        </Link>
-      </motion.div>
-
-      {/* Social Proof */}
-      <motion.div
-        className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2"
+        className="flex items-center justify-center gap-4 pt-2 lg:justify-start"
         variants={staggerItem}
       >
         <div className="flex -space-x-3">
-          {["JS", "TS", "FE", "BE"].map((label, i) => (
+          {["JS", "TS", "FE", "BE"].map((label) => (
             <div
-              key={i}
-              className="
-                h-9 w-9 rounded-full
-                bg-secondary
-                border-2 border-background
-                flex items-center justify-center
-                text-[10px] font-semibold text-muted-foreground
-              "
+              key={label}
+              className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-background bg-secondary text-[10px] font-semibold text-muted-foreground"
             >
               {label}
             </div>

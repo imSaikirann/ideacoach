@@ -5,55 +5,56 @@ export const fadeIn: Variants = {
   hidden: { opacity: 0 },
   visible: { 
     opacity: 1,
-    transition: { duration: 0.6, ease: "easeOut" }
+    // Short, lightweight fade
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
 export const fadeInUp: Variants = {
   hidden: { 
     opacity: 0, 
-    y: 30 
+    y: 12 
   },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.3, ease: "easeOut" }
   }
 };
 
 export const fadeInDown: Variants = {
   hidden: { 
     opacity: 0, 
-    y: -30 
+    y: -12 
   },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.3, ease: "easeOut" }
   }
 };
 
 export const fadeInLeft: Variants = {
   hidden: { 
     opacity: 0, 
-    x: -30 
+    x: -16 
   },
   visible: { 
     opacity: 1, 
     x: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.3, ease: "easeOut" }
   }
 };
 
 export const fadeInRight: Variants = {
   hidden: { 
     opacity: 0, 
-    x: 30 
+    x: 16 
   },
   visible: { 
     opacity: 1, 
     x: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.3, ease: "easeOut" }
   }
 };
 
@@ -61,26 +62,26 @@ export const fadeInRight: Variants = {
 export const scaleIn: Variants = {
   hidden: { 
     opacity: 0, 
-    scale: 0.9 
+    scale: 0.96 
   },
   visible: { 
     opacity: 1, 
     scale: 1,
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
 export const scaleInUp: Variants = {
   hidden: { 
     opacity: 0, 
-    scale: 0.8,
-    y: 20
+    scale: 0.94,
+    y: 10
   },
   visible: { 
     opacity: 1, 
     scale: 1,
     y: 0,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.3, ease: "easeOut" }
   }
 };
 
@@ -90,8 +91,9 @@ export const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
+      // Tighter stagger so lists feel snappy
+      staggerChildren: 0.05,
+      delayChildren: 0.05
     }
   }
 };
@@ -99,12 +101,12 @@ export const staggerContainer: Variants = {
 export const staggerItem: Variants = {
   hidden: { 
     opacity: 0, 
-    y: 20 
+    y: 10 
   },
   visible: { 
     opacity: 1, 
     y: 0,
-    transition: { duration: 0.5, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
@@ -112,24 +114,24 @@ export const staggerItem: Variants = {
 export const slideInLeft: Variants = {
   hidden: { 
     opacity: 0, 
-    x: -50 
+    x: -24 
   },
   visible: { 
     opacity: 1, 
     x: 0,
-    transition: { duration: 0.7, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
 export const slideInRight: Variants = {
   hidden: { 
     opacity: 0, 
-    x: 50 
+    x: 24 
   },
   visible: { 
     opacity: 1, 
     x: 0,
-    transition: { duration: 0.7, ease: "easeOut" }
+    transition: { duration: 0.25, ease: "easeOut" }
   }
 };
 
@@ -137,14 +139,14 @@ export const slideInRight: Variants = {
 export const rotateIn: Variants = {
   hidden: { 
     opacity: 0, 
-    rotate: -10,
-    scale: 0.9
+    rotate: -6,
+    scale: 0.96
   },
   visible: { 
     opacity: 1, 
     rotate: 0,
     scale: 1,
-    transition: { duration: 0.6, ease: "easeOut" }
+    transition: { duration: 0.3, ease: "easeOut" }
   }
 };
 
@@ -173,13 +175,13 @@ export const hoverLift: Variants = {
 export const viewportFadeIn: Variants = {
   hidden: { 
     opacity: 0, 
-    y: 30 
+    y: 16 
   },
   visible: { 
     opacity: 1, 
     y: 0,
     transition: { 
-      duration: 0.6, 
+      duration: 0.3, 
       ease: "easeOut" 
     }
   }
@@ -188,13 +190,13 @@ export const viewportFadeIn: Variants = {
 export const viewportFadeInUp: Variants = {
   hidden: { 
     opacity: 0, 
-    y: 50 
+    y: 20 
   },
   visible: { 
     opacity: 1, 
     y: 0,
     transition: { 
-      duration: 0.8, 
+      duration: 0.35, 
       ease: "easeOut" 
     }
   }

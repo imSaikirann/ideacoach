@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { ProjectTypeStep } from "./components/ProjectTypeStep";
 import { StackStep } from "./components/StackStep";
@@ -63,19 +63,6 @@ export function IdeaCoach() {
 
   const [project, setProject] = useState<Project | null>(null);
 
-  /* ---------- animation state (MUST BE ABOVE RETURNS) ---------- */
-  const stepOrder: Step[] = [
-    "projectType",
-    "stack",
-    "difficulty",
-    "interest",
-    "customProblem",
-    "result",
-  ];
-
-  const [direction, setDirection] = useState(1);
-  const [prevStep, setPrevStep] = useState<Step>("projectType");
-
   /* ---------- data ---------- */
   const { data: credits, isLoading } = useCredits();
   const generateIdeaMutation = useGenerateIdea();
@@ -122,20 +109,6 @@ export function IdeaCoach() {
       setHydrated(true);
     }
   }, []);
-
-  /* ---------------------------------------------
-   * Track animation direction
-   * -------------------------------------------*/
-
-  useEffect(() => {
-    const prevIndex = stepOrder.indexOf(prevStep);
-    const currentIndex = stepOrder.indexOf(step);
-
-    if (prevIndex > currentIndex) setDirection(-1);
-    if (prevIndex < currentIndex) setDirection(1);
-
-    setPrevStep(step);
-  }, [step]);
 
   /* ---------------------------------------------
    * Generate project
@@ -213,115 +186,81 @@ export function IdeaCoach() {
     );
   }
 
-  /* ---------------------------------------------
-   * Animations
-   * -------------------------------------------*/
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 300 : -300,
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction > 0 ? -300 : 300,
-      opacity: 0,
-    }),
-  };
-
   return (
-    <AnimatePresence mode="wait" custom={direction}>
+    <motion.div
+      key={step}
+      initial={{ opacity: 0, y: 8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
+    >
       {step === "projectType" && (
-        <motion.div
-          key="projectType"
-          custom={direction}
-          variants={slideVariants}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-        >
-          <ProjectTypeStep
-            value={projectType}
-            onChange={setProjectType}
-            onNext={() => setStep("stack")}
-            creditsLeft={credits?.creditsLeft ?? 0}
-            creditsPerMonth={credits?.creditsPerMonth ?? 0}
-            loading={isLoading}
-          />
-        </motion.div>
+        <ProjectTypeStep
+          value={projectType}
+          onChange={setProjectType}
+          onNext={() => setStep("stack")}
+          creditsLeft={credits?.creditsLeft ?? 0}
+          creditsPerMonth={credits?.creditsPerMonth ?? 0}
+          loading={isLoading}
+        />
       )}
 
       {step === "stack" && (
-        <motion.div key="stack" custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit">
-          <StackStep
-            projectType={projectType}
-            value={techStack}
-            onChange={setTechStack}
-            onBack={() => setStep("projectType")}
-            onNext={() => setStep("difficulty")}
-          />
-        </motion.div>
+        <StackStep
+          projectType={projectType}
+          value={techStack}
+          onChange={setTechStack}
+          onBack={() => setStep("projectType")}
+          onNext={() => setStep("difficulty")}
+        />
       )}
 
       {step === "difficulty" && (
-        <motion.div key="difficulty" custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit">
-          <DifficultyStep
-            value={difficulty}
-            onChange={setDifficulty}
-            onBack={() => setStep("stack")}
-            onNext={() => setStep("interest")}
-          />
-        </motion.div>
+        <DifficultyStep
+          value={difficulty}
+          onChange={setDifficulty}
+          onBack={() => setStep("stack")}
+          onNext={() => setStep("interest")}
+        />
       )}
 
       {step === "interest" && (
-        <motion.div key="interest" custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit">
-          <InterestStep
-            value={interest}
-            onChange={setInterest}
-            onBack={() => setStep("difficulty")}
-            onNext={() => setStep("customProblem")}
-          />
-        </motion.div>
+        <InterestStep
+          value={interest}
+          onChange={setInterest}
+          onBack={() => setStep("difficulty")}
+          onNext={() => setStep("customProblem")}
+        />
       )}
 
       {step === "customProblem" && (
-        <motion.div key="customProblem" custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit">
-          <CustomProblemStep
-            value={customProblem}
-            onChange={setCustomProblem}
-            onBack={() => setStep("interest")}
-            onGenerate={generate}
-            loading={loading}
-            creditsLeft={credits?.creditsLeft ?? 0}
-            creditsPerMonth={credits?.creditsPerMonth ?? 0}
-          />
-        </motion.div>
+        <CustomProblemStep
+          value={customProblem}
+          onChange={setCustomProblem}
+          onBack={() => setStep("interest")}
+          onGenerate={generate}
+          loading={loading}
+          creditsLeft={credits?.creditsLeft ?? 0}
+          creditsPerMonth={credits?.creditsPerMonth ?? 0}
+        />
       )}
 
       {step === "result" && project && (
-        <motion.div key="result" custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit">
-          <ProjectResult
-            project={project}
-            selections={{
-              projectType,
-              techStack,
-              difficulty,
-              interest,
-              customProblem: customProblem || undefined,
-            }}
-            onBack={reset}
-            onGenerateAnother={generate}
-            isGenerating={loading}
-            creditsLeft={credits?.creditsLeft ?? 0}
-            creditsPerMonth={credits?.creditsPerMonth ?? 0}
-          />
-        </motion.div>
+        <ProjectResult
+          project={project}
+          selections={{
+            projectType,
+            techStack,
+            difficulty,
+            interest,
+            customProblem: customProblem || undefined,
+          }}
+          onBack={reset}
+          onGenerateAnother={generate}
+          isGenerating={loading}
+          creditsLeft={credits?.creditsLeft ?? 0}
+          creditsPerMonth={credits?.creditsPerMonth ?? 0}
+        />
       )}
-    </AnimatePresence>
+    </motion.div>
   );
 }

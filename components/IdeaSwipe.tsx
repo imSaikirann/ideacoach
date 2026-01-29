@@ -64,8 +64,8 @@ export default function IdeaSwipe() {
   const nextIdeas = ideas.slice(1);
 
   const x = useMotionValue(0);
-  const rotate = useTransform(x, [-200, 200], [-15, 15]);
-  const opacity = useTransform(x, [-200, 0, 200], [0, 1, 0]);
+  const rotate = useTransform(x, [-160, 160], [-10, 10]);
+  const opacity = useTransform(x, [-160, 0, 160], [0, 1, 0]);
 
   return (
     <div className="relative flex justify-center items-center h-[80vh] w-full overflow-hidden">
@@ -87,10 +87,10 @@ export default function IdeaSwipe() {
         style={{ x, rotate, opacity }}
         drag="x"
         dragConstraints={{ left: 0, right: 0 }}
-        dragElastic={1.2}
+        dragElastic={0.8}
         onDragEnd={(event, info) => {
-          if (info.offset.x > 150) handleSwipe("right");
-          else if (info.offset.x < -150) handleSwipe("left");
+          if (info.offset.x > 120) handleSwipe("right");
+          else if (info.offset.x < -120) handleSwipe("left");
         }}
       >
         <h3 className="text-2xl font-bold mb-2 text-card-foreground">{topIdea.title}</h3>

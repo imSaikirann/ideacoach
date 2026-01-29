@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { fadeInUp, staggerContainer, staggerItem } from "@/lib/animations";
+import { Button } from "@/components/ui/button";
+import { staggerContainer, staggerItem } from "@/lib/animations";
 
 export default function Cta() {
   return (
     <motion.section
-      className="max-w-4xl mx-auto px-6 py-24 text-center"
+      className="mx-auto max-w-4xl px-6 py-24 text-center"
       variants={staggerContainer}
       initial="hidden"
       whileInView="visible"
@@ -16,50 +17,40 @@ export default function Cta() {
     >
       {/* Headline */}
       <motion.h2
-        className="text-3xl sm:text-4xl font-semibold text-foreground mb-4"
+        className="mb-4 text-3xl font-semibold tracking-tight sm:text-4xl"
         variants={staggerItem}
       >
-        Build your next project with clarity
+        Know exactly what to build next
       </motion.h2>
 
       {/* Sub copy */}
       <motion.p
-        className="text-lg text-muted-foreground max-w-2xl mx-auto mb-10 leading-relaxed"
+        className="mx-auto mb-10 max-w-2xl text-lg leading-relaxed text-muted-foreground"
         variants={staggerItem}
       >
-        IdeaCoach helps you decide what to build next based on your skills,
-        interests, and real-world relevance — so you can stop guessing
-        and start executing.
+        Get a clear, build-ready project idea tailored to your skills 
+        with features, learning goals, and next steps already mapped out.
       </motion.p>
 
-      {/* CTA */}
-      <motion.div variants={staggerItem}>
-        <Link
-          href="/dashboard/idea-form"
-          className="
-            inline-flex items-center gap-2
-            px-7 py-3.5
-            rounded-full
-            bg-primary text-primary-foreground
-            font-medium
-            transition-all
-            hover:scale-[1.03]
-            hover:shadow-lg hover:shadow-primary/25
-            focus:outline-none
-          "
+      {/* CTA buttons */}
+      <motion.div
+        className="flex flex-col items-center justify-center gap-3 sm:flex-row"
+        variants={staggerItem}
+      >
+        <Button
+          asChild
+          size="lg"
+          className="gap-2 rounded-full px-8"
         >
-          Generate my project
-          <ArrowRight className="w-4 h-4" />
-        </Link>
+          <Link href="/dashboard/idea-form">
+            Generate my project
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+        </Button>
+
+       
       </motion.div>
 
-      {/* Footnote */}
-      <motion.p
-        className="text-sm text-muted-foreground mt-6"
-        variants={staggerItem}
-      >
-        Takes less than a minute. No signup required.
-      </motion.p>
     </motion.section>
   );
 }

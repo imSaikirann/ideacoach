@@ -35,9 +35,9 @@ export default function HowItWorks() {
       {/* Section Header */}
       <motion.div
         className="text-center mb-16"
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 16 }}
         whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ duration: 0.3 }}
         viewport={{ once: true }}
       >
         <h2 className="text-4xl md:text-5xl font-bold mb-4">
@@ -53,11 +53,11 @@ export default function HowItWorks() {
         {steps.map((step, i) => (
           <motion.div
             key={i}
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: i * 0.15 }}
+            transition={{ duration: 0.25, delay: i * 0.05 }}
             viewport={{ once: true }}
-            className="bg-card/60 border border-border rounded-2xl p-8 text-center hover:border-primary/40 transition-all group"
+            className="bg-card/60 border border-border rounded-2xl p-8 text-center hover:border-primary/40 transition-colors group"
           >
             <div className="flex justify-center mb-5">
               <step.icon className="w-12 h-12 text-primary group-hover:scale-110 transition-transform" />
@@ -70,11 +70,9 @@ export default function HowItWorks() {
         ))}
       </div>
 
-      {/* Subtle Glow Background */}
-      <motion.div
+      {/* Subtle static glow background (no infinite animation for smoother perf) */}
+      <div
         className="absolute -bottom-32 left-1/2 -translate-x-1/2 w-[600px] h-[600px] bg-primary/10 blur-3xl rounded-full -z-10"
-        animate={{ opacity: [0.3, 0.6, 0.3], scale: [1, 1.1, 1] }}
-        transition={{ duration: 6, repeat: Infinity }}
       />
     </section>
   );

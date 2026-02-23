@@ -10,7 +10,7 @@ export async function GET() {
     const session = await getServerSession(authOptions);
     const currentUserId = session?.user?.id;
 
-    // 1️⃣ Fetch PUBLIC ideas + user's own PRIVATE ideas
+  
     const ideas = await prisma.idea.findMany({
       where: {
         OR: [
@@ -21,10 +21,10 @@ export async function GET() {
       orderBy: {
         createdAt: "desc",
       },
-      take: 100, // Limit to 100 most recent
+      take: 100, 
     });
 
-    // 2️⃣ Safely resolve author (some older records may reference deleted users)
+
     const userIds = Array.from(new Set(ideas.map((i) => i.userId)));
     const users = await prisma.user.findMany({
       where: { id: { in: userIds } },
@@ -32,7 +32,7 @@ export async function GET() {
     });
     const userById = new Map(users.map((u) => [u.id, u]));
 
-    // 3️⃣ Map to frontend format
+
     const mappedIdeas = ideas.map((idea) => {
       const author = userById.get(idea.userId);
       const stack = idea.techStack
@@ -50,7 +50,7 @@ export async function GET() {
         stack,
         projectType: idea.projectType,
         interest: idea.interest,
-        time: "1-2 weeks", // Default (can be improved later)
+        time: "1-2 weeks", 
         category: idea.interest || "General",
         createdAt: idea.createdAt.toISOString(),
         author: author?.name || author?.email || "Anonymous",

@@ -9,12 +9,12 @@ if (!GEMINI_KEYS.length) {
 
 export async function getGeminiModel() {
 
-  const index = await redis.incr("ideacoach:gemini:key:index");
+  const index = await redis.incr("ideacoach:gemini:key:index"); //0
 
   const keyIndex = index % GEMINI_KEYS.length;
   const apiKey = GEMINI_KEYS[keyIndex];
 
-  console.log("Using Gemini key index:", keyIndex);
+
 
   const genAI = new GoogleGenerativeAI(apiKey);
 

@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+
 import { signIn, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -34,9 +34,7 @@ export default function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Brand */}
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent/10 group-hover:bg-accent/15 transition">
-              <Sparkles className="h-5 w-5 text-accent" />
-            </div>
+           
             <span className="hidden sm:inline text-lg font-bold">
               Idea<span className="text-accent">Coach</span>
             </span>

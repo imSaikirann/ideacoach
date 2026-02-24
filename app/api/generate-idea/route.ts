@@ -7,8 +7,8 @@ import { generateProject } from "@/lib/ai/generateProject";
 
 export async function POST(req: NextRequest) {
   try {
-    const rateLimitResponse = await rateLimitCheck(req);
-    if (rateLimitResponse) return rateLimitResponse;
+    // const rateLimitResponse = await rateLimitCheck(req);
+    // if (rateLimitResponse) return rateLimitResponse;
 
     const session = await getServerSession(authOptions);
     if (!session?.user?.id) {

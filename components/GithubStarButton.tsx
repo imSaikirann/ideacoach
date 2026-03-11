@@ -16,14 +16,21 @@ export function GithubStarButton() {
   const [stars, setStars] = useState<number | null>(null);
 
   useEffect(() => {
-    fetch(`https://api.github.com/repos/${REPO}`)
-      .then((res) => res.json())
-      .then((data) => setStars(data?.stargazers_count ?? null))
-      .catch(() => {});
+    async function fetchStars() {
+      try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}`);
+        const data = await res.json();
+        setStars(data?.stargazers_count ?? null);
+      } catch {
+        setStars(null);
+      }
+    }
+
+    fetchStars();
   }, []);
 
   return (
-    <TooltipProvider delayDuration={300}>
+    <TooltipProvider delayDuration={200}>
       <Tooltip>
         <TooltipTrigger asChild>
           <a
@@ -34,19 +41,13 @@ export function GithubStarButton() {
             <Button
               variant="outline"
               size="sm"
-              className="
-              
-                flex items-center gap-2
-                hover:bg-transparent
-             
-               
-              "
+              className="flex items-center gap-2"
             >
               <Github className="h-4 w-4" />
 
               <span className="hidden sm:inline">Star</span>
 
-              {typeof stars === "number" && (
+              {stars !== null && (
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
                   <Star className="h-3 w-3 fill-current" />
                   {stars}
@@ -57,7 +58,7 @@ export function GithubStarButton() {
         </TooltipTrigger>
 
         <TooltipContent>
-          Star on GitHub
+          Star IdeaCoach on GitHub
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

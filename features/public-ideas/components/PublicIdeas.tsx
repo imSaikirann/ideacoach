@@ -2,17 +2,25 @@
 
 import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
-import { Search, Sparkles, ArrowRight, X, Code2, Zap, Lock } from "lucide-react";
+import {
+  Search,
+  Sparkles,
+  ArrowRight,
+  X,
+  Code2,
+  Zap,
+  Lock,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useIdeas } from "../hooks/useIdeas";
 import { IdeaDetailModal } from "./IdeaDetailModal";
 import { Pagination } from "./Pagination";
 import type { Idea } from "../services/ideas";
+import BackButton from "@/components/common/back-button";
 
 const ITEMS_PER_PAGE = 9;
 
 export default function PublicIdeas() {
-  const { data: publicIdeas = [], isLoading, isError } = useIdeas();
   const searchParams = useSearchParams();
 
   const [searchQuery, setSearchQuery] = useState("");
@@ -21,7 +29,12 @@ export default function PublicIdeas() {
   const [selectedIdea, setSelectedIdea] = useState<Idea | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Show PUBLIC ideas + user's own ideas (both public and private)
+  const { data, isLoading, isError } = useIdeas(currentPage, ITEMS_PER_PAGE);
+
+  const publicIdeas = data?.data ?? [];
+  const totalPages = data?.pagination?.totalPages ?? 1;
+
+  // Show PUBLIC ideas + user's own ideas
   const visibleIdeas = useMemo(() => {
     return publicIdeas.filter(
       (idea) => idea.visibility === "PUBLIC" || idea.isOwn
@@ -55,12 +68,6 @@ export default function PublicIdeas() {
     });
   }, [visibleIdeas, searchQuery, selectedDifficulty]);
 
-  const totalPages = Math.ceil(filteredIdeas.length / ITEMS_PER_PAGE);
-  const paginatedIdeas = useMemo(() => {
-    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-    return filteredIdeas.slice(startIndex, startIndex + ITEMS_PER_PAGE);
-  }, [filteredIdeas, currentPage]);
-
   useEffect(() => {
     setCurrentPage(1);
   }, [searchQuery, selectedDifficulty]);
@@ -91,31 +98,38 @@ export default function PublicIdeas() {
   if (isError) {
     return (
       <section className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <p className="text-destructive">Failed to load ideas. Please try again.</p>
+        <p className="text-destructive">
+          Failed to load ideas. Please try again.
+        </p>
       </section>
     );
   }
 
   return (
-    <section className="max-w-5xl mx-auto px-4 py-12 sm:py-16">
+    <section className="max-w-5xl mx-auto px-4 py-12 sm:py-16 mt-10">
+      <BackButton />
+
       {/* Header */}
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium mb-4">
           <Sparkles className="w-4 h-4" />
           Community Ideas
         </div>
+
         <h1 className="text-2xl sm:text-3xl font-bold mb-2">
           Explore Project Ideas
         </h1>
+
         <p className="text-muted-foreground">
           Discover what other developers are building
         </p>
       </div>
 
-      {/* Search & Filter */}
+      {/* Search */}
       <div className="max-w-xl mx-auto mb-8 space-y-3">
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+
           <input
             type="text"
             placeholder="Search ideas..."
@@ -123,6 +137,7 @@ export default function PublicIdeas() {
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full h-10 pl-10 pr-10 rounded-lg border bg-background text-sm focus:border-primary/50 outline-none transition-colors"
           />
+
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
@@ -133,6 +148,7 @@ export default function PublicIdeas() {
           )}
         </div>
 
+        {/* Difficulty filter */}
         <div className="flex justify-center gap-2">
           {["All", "Beginner", "Intermediate", "Advanced"].map((level) => (
             <button
@@ -150,18 +166,11 @@ export default function PublicIdeas() {
         </div>
       </div>
 
-      {/* Results */}
-      {filteredIdeas.length > 0 && (
-        <p className="text-xs text-muted-foreground mb-4 text-center">
-          {filteredIdeas.length} idea{filteredIdeas.length !== 1 && "s"} found
-        </p>
-      )}
-
-      {/* Ideas Grid */}
-      {paginatedIdeas.length > 0 ? (
+      {/* Grid */}
+      {filteredIdeas.length > 0 ? (
         <>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {paginatedIdeas.map((idea) => {
+            {filteredIdeas.map((idea) => {
               const stackArray: string[] = Array.isArray(idea.stack)
                 ? idea.stack
                 : Array.isArray(idea.techStack)
@@ -178,11 +187,10 @@ export default function PublicIdeas() {
                   className="text-left p-4 rounded-xl border bg-card hover:border-primary/40 transition-all group"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
-                      {idea.title}
-                    </h3>
+                    <h3 className="font-semibold line-clamp-1">{idea.title}</h3>
+
                     {idea.isOwn && idea.visibility === "PRIVATE" && (
-                      <Lock className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
+                      <Lock className="w-3.5 h-3.5 text-muted-foreground" />
                     )}
                   </div>
 
@@ -190,26 +198,19 @@ export default function PublicIdeas() {
                     {idea.problem || idea.problemStatement || "No description"}
                   </p>
 
-                  {/* Stack chips */}
                   {stackArray.length > 0 && (
                     <div className="flex flex-wrap gap-1 mb-3">
                       {stackArray.slice(0, 2).map((tech) => (
                         <span
                           key={tech}
-                          className="px-2 py-0.5 text-xs rounded bg-secondary text-muted-foreground"
+                          className="px-2 py-0.5 text-xs rounded bg-secondary"
                         >
                           {tech}
                         </span>
                       ))}
-                      {stackArray.length > 2 && (
-                        <span className="px-2 py-0.5 text-xs rounded bg-secondary text-muted-foreground">
-                          +{stackArray.length - 2}
-                        </span>
-                      )}
                     </div>
                   )}
 
-                  {/* Footer */}
                   <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t">
                     <div className="flex items-center gap-2">
                       {idea.difficulty && (
@@ -225,6 +226,7 @@ export default function PublicIdeas() {
                         </span>
                       )}
                     </div>
+
                     <ArrowRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </button>
@@ -243,6 +245,7 @@ export default function PublicIdeas() {
       ) : (
         <div className="text-center py-12">
           <p className="text-muted-foreground mb-4">No ideas found</p>
+
           <Button
             variant="outline"
             size="sm"
@@ -256,17 +259,6 @@ export default function PublicIdeas() {
         </div>
       )}
 
-      {/* CTA */}
-      <div className="mt-12 text-center">
-        <a href="/dashboard/idea-form">
-          <Button className="gap-2">
-            <Sparkles className="w-4 h-4" />
-            Generate Your Own Idea
-          </Button>
-        </a>
-      </div>
-
-      {/* Modal */}
       <IdeaDetailModal
         idea={selectedIdea}
         isOpen={isModalOpen}

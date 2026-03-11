@@ -17,16 +17,34 @@ export interface Idea {
   isOwn?: boolean;
 }
 
-export async function fetchIdeas(): Promise<Idea[]> {
-  const res = await fetch("/api/public-ideas/display", {
-    method: "GET",
-    credentials: "include", // important for auth
-  });
+export interface IdeasResponse {
+  data: Idea[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+}
+
+export async function fetchIdeas(
+  page: number,
+  limit: number
+): Promise<IdeasResponse> {
+  const res = await fetch(
+    `/api/public-ideas/display?page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+      credentials: "include",
+    }
+  );
 
   if (!res.ok) {
     if (res.status === 401) {
       throw new Error("UNAUTHORIZED");
     }
+
     throw new Error("FAILED_TO_FETCH_IDEAS");
   }
 

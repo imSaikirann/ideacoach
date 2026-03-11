@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-
 import { signIn, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import { UserDropdown } from "@/components/UserDropdown";
@@ -14,9 +13,9 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const handleScroll = () => setScrolled(window.scrollY > 12);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const isAuthed = !!session?.user;
@@ -24,24 +23,25 @@ export default function Navbar() {
   return (
     <nav
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300 border-b",
         scrolled
-          ? "bg-background/95 backdrop-blur-md border-border/40 shadow-sm"
+          ? "bg-background/90 backdrop-blur-md border-border/50 shadow-sm"
           : "bg-transparent border-transparent"
       )}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
+          
           {/* Brand */}
-          <Link href="/" className="flex items-center gap-2.5 group">
-           
-            <span className="hidden sm:inline text-lg font-bold">
-              Idea<span className="text-accent">Coach</span>
-            </span>
+          <Link
+            href="/"
+            className="flex items-center gap-2 text-lg font-semibold tracking-tight"
+          >
+            Idea<span className="text-primary">Coach</span>
           </Link>
 
-          {/* Right side (same for mobile + desktop) */}
-          <div className="flex items-center gap-2">
+          {/* Right section */}
+          <div className="flex items-center gap-2 sm:gap-3">
             {isAuthed ? (
               <>
                 <GithubStarButton />
@@ -50,7 +50,7 @@ export default function Navbar() {
             ) : (
               <Button
                 size="sm"
-                className="bg-accent hover:bg-accent/90 text-accent-foreground"
+                className="px-4"
                 onClick={() => signIn("google")}
               >
                 Get Started

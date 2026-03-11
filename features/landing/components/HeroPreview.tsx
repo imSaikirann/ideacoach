@@ -16,25 +16,26 @@ export default function HeroPreview() {
   const { project, next, isAnimating } = useHeroProjects();
 
   return (
-    <div className="relative w-full max-w-lg">
-      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/95 backdrop-blur-xl shadow-[0_20px_60px_-20px_rgba(0,0,0,0.6)]">
-        {/* Top glow */}
+    <div className="relative w-full max-w-md sm:max-w-lg lg:max-w-xl">
+      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/95 backdrop-blur-lg shadow-xl">
+
+        {/* subtle top highlight */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
 
         {/* Header */}
-        <div className="flex items-center justify-between border-b border-border/50 px-6 py-5">
+        <div className="flex items-center justify-between border-b border-border/50 px-5 py-4 sm:px-6 sm:py-5">
           <div className="flex items-center gap-3">
-            <div className="relative flex h-10 w-10 items-center justify-center rounded-xl bg-accent/15">
-              <Lightbulb className="h-5 w-5 text-accent" />
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-accent/15">
+              <Lightbulb className="h-4 w-4 text-accent" />
               <span className="absolute -right-1 -top-1 h-2 w-2 animate-pulse rounded-full bg-accent" />
             </div>
 
-            <div>
+            <div className="leading-tight">
               <h3 className="text-sm font-semibold tracking-tight">
-                AI-Generated Project
+                AI Project Idea
               </h3>
               <p className="text-xs text-muted-foreground">
-                Built to stretch your skills
+                tailored for your growth
               </p>
             </div>
           </div>
@@ -43,7 +44,7 @@ export default function HeroPreview() {
         </div>
 
         {/* Content */}
-        <div className="space-y-6 px-6 py-6">
+        <div className="space-y-5 px-5 py-5 sm:px-6 sm:py-6">
           <div
             className={cn(
               "space-y-4 transition-all duration-500 ease-out",
@@ -53,17 +54,17 @@ export default function HeroPreview() {
             )}
           >
             {/* Title */}
-            <h4 className="text-balance text-xl font-semibold sm:text-2xl">
+            <h4 className="text-lg font-semibold leading-snug sm:text-xl">
               {project.title}
             </h4>
 
-            {/* One-liner */}
-            <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
+            {/* One liner */}
+            <p className="text-sm leading-relaxed text-muted-foreground">
               {project.oneLiner}
             </p>
 
             {/* Problem */}
-            <div className="rounded-xl border border-border/60 bg-secondary/50 p-4">
+            <div className="rounded-lg border border-border/60 bg-secondary/50 p-4">
               <p className="text-sm">
                 <span className="font-medium text-foreground">
                   Problem it solves:
@@ -77,25 +78,26 @@ export default function HeroPreview() {
             {/* Features */}
             <div className="space-y-2">
               <p className="text-sm font-medium">Must-have features</p>
+
               <ul className="space-y-1.5">
                 {project.mustHaveFeatures.slice(0, 3).map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-center gap-2 text-sm text-muted-foreground"
+                    className="flex items-start gap-2 text-sm text-muted-foreground"
                   >
-                    <CheckCircle2 className="h-4 w-4 text-accent" />
+                    <CheckCircle2 className="mt-[2px] h-4 w-4 text-accent" />
                     {feature}
                   </li>
                 ))}
               </ul>
             </div>
 
-            {/* Why it fits you */}
+            {/* Why it fits */}
             <div className="flex flex-wrap gap-2 pt-1">
               {project.whyItFitsYou.slice(0, 2).map((reason) => (
                 <div
                   key={reason}
-                  className="flex items-center gap-2 rounded-full border border-border/60 bg-secondary/60 px-4 py-1.5"
+                  className="flex items-center gap-2 rounded-full border border-border/60 bg-secondary/60 px-3 py-1.5"
                 >
                   <Target className="h-3.5 w-3.5 text-accent" />
                   <span className="text-xs font-medium">{reason}</span>
@@ -105,16 +107,16 @@ export default function HeroPreview() {
           </div>
 
           {/* Actions */}
-          <div className="flex gap-3 pt-2">
+          <div className="flex items-center gap-3 pt-2">
             <Button
               onClick={next}
               disabled={isAnimating}
-              className="relative flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
+              className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
             >
               {isAnimating ? (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                  Generating…
+                  Generating...
                 </>
               ) : (
                 <>
@@ -124,13 +126,17 @@ export default function HeroPreview() {
               )}
             </Button>
 
-            <Button size="icon" variant="outline">
+            <Button
+              size="icon"
+              variant="outline"
+              className="shrink-0"
+            >
               <ArrowUpRight className="h-4 w-4" />
             </Button>
           </div>
         </div>
 
-        {/* Bottom beam */}
+        {/* bottom accent beam */}
         <div className="h-[2px] w-full bg-gradient-to-r from-transparent via-accent/50 to-transparent" />
       </div>
     </div>

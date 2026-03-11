@@ -3,16 +3,15 @@
 import Image from "next/image";
 import { useProfile } from "@/features/ideaCoach/hooks/useProfile";
 import BackButton from "@/components/common/back-button";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import Loading from "@/components/common/Loading";
 
 export default function Page() {
   const { data: profile, isLoading, error } = useProfile();
 
   if (isLoading) {
-    return (
-      <div className="min-h-[70vh] flex items-center justify-center">
-        <p className="text-sm text-muted-foreground">Loading dashboard...</p>
-      </div>
-    );
+     return <Loading text="Loading profile..." />;
   }
 
   if (error || !profile) {
@@ -63,9 +62,11 @@ export default function Page() {
               </div>
 
               {/* UPGRADE BUTTON */}
-              <button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition">
+              <Link href="/dashboard/upgrade-page">
+              <Button className="px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition">
                 Upgrade
-              </button>
+              </Button>
+              </Link>
 
             </div>
           </div>
@@ -163,10 +164,10 @@ export default function Page() {
 
               {/* UPGRADE CTA */}
               <div className="mt-8 flex justify-end">
-
-                <button className="px-5 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition">
+      <Link href="/dashboard/upgrade-page"> <Button className="px-5 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:opacity-90 transition">
                   Upgrade Plan
-                </button>
+                </Button></Link>
+               
 
               </div>
 

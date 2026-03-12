@@ -17,15 +17,15 @@ export default function HeroPreview() {
 
   return (
     <div className="relative w-full max-w-md sm:max-w-lg lg:max-w-xl">
-      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/95 backdrop-blur-lg shadow-xl">
+      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card/95 backdrop-blur-lg shadow-2xl ring-1 ring-white/5">
 
-        {/* subtle top highlight */}
+        {/* top highlight */}
         <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-accent/60 to-transparent" />
 
         {/* Header */}
         <div className="flex items-center justify-between border-b border-border/50 px-5 py-4 sm:px-6 sm:py-5">
           <div className="flex items-center gap-3">
-            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-accent/15">
+            <div className="relative flex h-9 w-9 items-center justify-center rounded-lg bg-accent/15 ring-1 ring-accent/20">
               <Lightbulb className="h-4 w-4 text-accent" />
               <span className="absolute -right-1 -top-1 h-2 w-2 animate-pulse rounded-full bg-accent" />
             </div>
@@ -40,7 +40,10 @@ export default function HeroPreview() {
             </div>
           </div>
 
-          <Sparkles className="h-4 w-4 text-accent/70" />
+          <div className="flex items-center gap-1.5 rounded-full border border-border/60 bg-secondary/60 px-2.5 py-1">
+            <Sparkles className="h-3 w-3 text-accent" />
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Live</span>
+          </div>
         </div>
 
         {/* Content */}
@@ -54,7 +57,7 @@ export default function HeroPreview() {
             )}
           >
             {/* Title */}
-            <h4 className="text-lg font-semibold leading-snug sm:text-xl">
+            <h4 className="text-xl font-bold leading-snug tracking-tight sm:text-2xl">
               {project.title}
             </h4>
 
@@ -64,9 +67,9 @@ export default function HeroPreview() {
             </p>
 
             {/* Problem */}
-            <div className="rounded-lg border border-border/60 bg-secondary/50 p-4">
-              <p className="text-sm">
-                <span className="font-medium text-foreground">
+            <div className="rounded-xl border border-border/60 bg-secondary/40 px-4 py-3.5">
+              <p className="text-sm leading-relaxed">
+                <span className="font-semibold text-foreground">
                   Problem it solves:
                 </span>{" "}
                 <span className="text-muted-foreground">
@@ -76,16 +79,18 @@ export default function HeroPreview() {
             </div>
 
             {/* Features */}
-            <div className="space-y-2">
-              <p className="text-sm font-medium">Must-have features</p>
+            <div className="space-y-2.5">
+              <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                Must-have features
+              </p>
 
-              <ul className="space-y-1.5">
+              <ul className="space-y-2">
                 {project.mustHaveFeatures.slice(0, 3).map((feature) => (
                   <li
                     key={feature}
-                    className="flex items-start gap-2 text-sm text-muted-foreground"
+                    className="flex items-start gap-2.5 text-sm text-muted-foreground"
                   >
-                    <CheckCircle2 className="mt-[2px] h-4 w-4 text-accent" />
+                    <CheckCircle2 className="mt-[2px] h-4 w-4 shrink-0 text-accent" />
                     {feature}
                   </li>
                 ))}
@@ -97,7 +102,7 @@ export default function HeroPreview() {
               {project.whyItFitsYou.slice(0, 2).map((reason) => (
                 <div
                   key={reason}
-                  className="flex items-center gap-2 rounded-full border border-border/60 bg-secondary/60 px-3 py-1.5"
+                  className="flex items-center gap-1.5 rounded-full border border-border/60 bg-secondary/60 px-3 py-1.5 transition-colors hover:bg-secondary"
                 >
                   <Target className="h-3.5 w-3.5 text-accent" />
                   <span className="text-xs font-medium">{reason}</span>
@@ -107,16 +112,16 @@ export default function HeroPreview() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3 pt-2">
+          <div className="flex items-center gap-3 border-t border-border/40 pt-4">
             <Button
               onClick={next}
               disabled={isAnimating}
-              className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90"
+              className="flex-1 bg-accent text-accent-foreground hover:bg-accent/90 font-semibold"
             >
               {isAnimating ? (
                 <>
                   <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
+                  Generating…
                 </>
               ) : (
                 <>
@@ -129,7 +134,7 @@ export default function HeroPreview() {
             <Button
               size="icon"
               variant="outline"
-              className="shrink-0"
+              className="shrink-0 hover:bg-secondary"
             >
               <ArrowUpRight className="h-4 w-4" />
             </Button>

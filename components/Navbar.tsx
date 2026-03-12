@@ -35,7 +35,7 @@ export default function Navbar() {
           {/* Brand */}
           <Link
             href="/"
-            className="flex items-center gap-2 text-lg font-semibold tracking-tight"
+            className="flex items-center  text-lg font-semibold tracking-tight"
           >
             Idea<span className="text-primary">Coach</span>
           </Link>

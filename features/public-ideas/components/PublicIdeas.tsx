@@ -17,6 +17,7 @@ import { IdeaDetailModal } from "./IdeaDetailModal";
 import { Pagination } from "./Pagination";
 import type { Idea } from "../services/ideas";
 import BackButton from "@/components/common/back-button";
+import Loading from "@/components/common/Loading";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -86,12 +87,7 @@ export default function PublicIdeas() {
 
   if (isLoading) {
     return (
-      <section className="max-w-5xl mx-auto px-4 py-20 text-center">
-        <div className="inline-flex items-center gap-2 text-muted-foreground">
-          <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-          Loading ideas...
-        </div>
-      </section>
+     <Loading/>
     );
   }
 
@@ -184,7 +180,7 @@ export default function PublicIdeas() {
                     setSelectedIdea(idea);
                     setIsModalOpen(true);
                   }}
-                  className="text-left p-4 rounded-xl border bg-card hover:border-primary/40 transition-all group"
+                  className="text-left p-4 rounded-xl border bg-card border-primary/10 cursor-pointer hover:border-primary/15 transition-all group"
                 >
                   <div className="flex items-start justify-between gap-2 mb-2">
                     <h3 className="font-semibold line-clamp-1">{idea.title}</h3>
